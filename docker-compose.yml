@@ -13,7 +13,7 @@ services:
   openvidu:
     image: openvidu/openvidu-server-kms:latest
     environment:
-      OPENVIDU_SECRET: ${OPENVIDEU_SECRET}
+      OPENVIDU_SECRET: ${OPENVIDU_SECRET}
     ports:
       - 4443:4443
 
