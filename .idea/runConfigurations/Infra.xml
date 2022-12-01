@@ -1,0 +1,43 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Infra" type="docker-deploy" factoryName="docker-compose.yml" singleton="false" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="DB_NAME" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="DB_PASSWORD" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="DB_USERNAME" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="OPENVIDU_SECRET" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_USER" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_PASSWORD" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_DB" />
+              <option name="value" value="entretien-rh" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="sourceFilePath" value="docker-compose.yml" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>

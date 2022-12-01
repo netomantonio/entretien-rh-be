@@ -1,4 +1,4 @@
-package com.enthetien.model
+package br.ufpr.tcc.entretien.backend.model
 
 import java.util.Date
 import javax.persistence.*

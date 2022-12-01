@@ -1,4 +1,4 @@
-package com.enthetien.model
+package br.ufpr.tcc.entretien.backend.model
 
 import javax.persistence.Entity
 import javax.persistence.Table

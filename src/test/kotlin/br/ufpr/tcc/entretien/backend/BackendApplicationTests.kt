@@ -1,10 +1,10 @@
-package com.enthetien
+package br.ufpr.tcc.entretien.backend
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class EnthetienRhApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	fun contextLoads() {
