@@ -1,4 +1,4 @@
-# ENTHETIEN-RH
+# ENTRETIEN-RH
 
 ## Instructions
 
@@ -8,3 +8,5 @@
    1. DB_PASSWORD
    2. DB_USERNAME
    3. OPENVIDU_SECRET
+3. Export environments variables from system with code:
+   1. `export set DB_USERNAME=entretien-rh DB_PASSWORD=entretien-rh OPENVIDU_SECRET=entretien-rh`

@@ -1,4 +1,4 @@
-package com.enthetien.controller
+package br.ufpr.tcc.entretien.backend.controller
 
 import io.openvidu.java.client.*
 import org.springframework.beans.factory.annotation.Value

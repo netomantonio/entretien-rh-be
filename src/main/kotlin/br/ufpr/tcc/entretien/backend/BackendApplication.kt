@@ -1,11 +1,11 @@
-package com.enthetien
+package br.ufpr.tcc.entretien.backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class EnthetienRhApplication
+class BackendApplication
 
 fun main(args: Array<String>) {
-	runApplication<EnthetienRhApplication>(*args)
+	runApplication<BackendApplication>(*args)
 }
