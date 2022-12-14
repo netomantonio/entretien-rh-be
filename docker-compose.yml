@@ -2,14 +2,23 @@ version: '3.8'
 
 services:
   db:
+    container_name: postgres-container
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+      POSTGRES_USER: user
     ports:
       - 6543:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8181:8080
+    depends_on:
+      - db
 
   openvidu:
     image: openvidu/openvidu-server-kms:latest
@@ -18,8 +27,22 @@ services:
     ports:
       - 4443:4443
 
-  adminer:
-    image: adminer
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.1
+    container_name: keycloak-container
     restart: always
+    command:
+      - start-dev
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres-container
+      DB_DATABASE: db
+      #      DB_SCHEMA: public
+      DB_USER: user
+      DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-    - 8080:8080
+      - 8282:8080
+    depends_on:
+      - db

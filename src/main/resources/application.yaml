@@ -1,0 +1,5 @@
+keycloak:
+  realm: entretien-rh
+  resource: entretien
+  bearer-only: true
+  auth-server-url: http://localhost:8282
