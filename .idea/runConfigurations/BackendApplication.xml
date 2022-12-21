@@ -1,16 +1,25 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="BackendApplication" type="JetRunConfigurationType">
+    <option name="ALTERNATIVE_JRE_PATH" value="11" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="DB_NAME" value="entretien-rh" />
-      <env name="DB_PASSWORD" value="entretien-rh" />
-      <env name="DB_USERNAME" value="entretien-rh" />
-      <env name="OPENVIDU_SECRET" value="entretien-rh" />
-      <env name="POSTGRES_DB" value="entretien-rh" />
-      <env name="POSTGRES_PASSWORD" value="entretien-rh" />
-      <env name="POSTGRES_USER" value="entretien-rh" />
+      <env name="DB_PASSWORD" value="example" />
+      <env name="OPENVIDU_SECRET" value="secret" />
+      <env name="DB_USENAME" value="postgres" />
     </envs>
+    <option name="MAIN_CLASS_NAME" value="br.ufpr.tcc.entretien.backend.BackendApplicationKt" />
     <module name="backend.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="br.ufpr.tcc.entretien.backend.BackendApplication" />
+    <shortenClasspath name="NONE" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+      </ENTRIES>
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
