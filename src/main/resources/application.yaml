@@ -1,9 +1,24 @@
-keycloak:
-  realm: entretien-rh
-  resource: entretien-rh
-  bearer-only: true
-  auth-server-url: http://localhost:8282
-  credentials:
-      secret: 3jT2z52Wtp7p2VnsRLTtv6M4HQDtXPOx
-      user-name: example_user
-      password: password
+entretien:
+  app:
+    jwtSecret: secret
+    jwtExpirationMs: 86400000
+server:
+    port: 5000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6543/db
+    driverClassName: org.postgresql.Driver
+    username: user
+    password: password
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        lob:
+          non_contextual_creation: true

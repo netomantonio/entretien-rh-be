@@ -70,4 +70,7 @@ class FruitController {
     // @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     fun removeFruitById(@PathVariable id: Long) = fruitService.remove(id)
+
+    @GetMapping("/public")
+    fun publicContent() = "public content"
 }
