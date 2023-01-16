@@ -1,8 +1,8 @@
 package br.ufpr.tcc.entretien.backend.model
 
 enum class ERole {
-    CANDIDATE,
-    RECRUITER,
-    MANAGER,
-    ADMIN
+    ROLE_CANDIDATE,
+    ROLE_RECRUITER,
+    ROLE_MANAGER,
+    ROLE_ADMIN
 }

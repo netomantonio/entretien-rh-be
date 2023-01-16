@@ -12,7 +12,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -20,17 +19,14 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
-
-
-
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @EnableGlobalMethodSecurity(
     // securedEnabled = true,
     // jsr250Enabled = true,
     prePostEnabled = true
 )
-class SecurityConfig() {
+class SecurityConfig {
 
     @Autowired
     private lateinit var userDetailsService: UserDetailsServiceImpl
@@ -65,26 +61,28 @@ class SecurityConfig() {
     @Bean
     fun config(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf().and().cors().disable()
-            .authorizeRequests().anyRequest().authenticated()
-
-        http
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         http
+            .authorizeHttpRequests()
+//            .requestMatchers(RegexRequestMatcher("/api/auth", "POST")).permitAll()
+            .anyRequest().permitAll()
+//            .anyRequest().authenticated()
+
+        http
             .authenticationProvider(authenticationProvider())
 
-        http
-            .formLogin().disable()
-//        http.addFilter(JWTAuthorizationFilter(authenticationManager()))
-
-//        http.httpBasic(Customizer.withDefaults())
-        http
-            .httpBasic().disable()
+//        http.formLogin().disable()
+//        http.httpBasic().disable()
 
         http
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
+
+        http
+//            .httpBasic().authenticationEntryPoint(authenticationEntryPoint).and().
+            .cors().and()
+            .csrf().disable()
 
         return http.build()
     }

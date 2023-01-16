@@ -41,7 +41,7 @@ class UserDetailsImpl : UserDetails {
                 .map { role -> SimpleGrantedAuthority(role.name.name) }
                 .collect(Collectors.toList())
             return UserDetailsImpl(
-                user.getId(),
+                user.id,
                 user.username,
                 user.email,
                 user.password,

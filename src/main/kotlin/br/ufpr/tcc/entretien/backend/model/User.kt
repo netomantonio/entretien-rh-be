@@ -14,6 +14,10 @@ data class User(
 //    @Column(nullable = false) val cpf: String,
 //    val firstName: String,
 //    val lastName: String,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_seq")
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
+    var id: Long = 0,
     val username: String,
     val email: String,
     val password: String,
@@ -23,9 +27,13 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    val roles: Set<Role>
+    var roles: Set<Role>
 //    @Temporal(TemporalType.DATE) val birthDay: Date,
 //    val professionalDocument: String
     // TODO attendance time
-) : AbstractJpaPersistable<Long>() {
+) {
+
+//    constructor(username: String, email: String, password: String) : this(
+//        username, email, password, emptySet<Role>()
+//    )
 }

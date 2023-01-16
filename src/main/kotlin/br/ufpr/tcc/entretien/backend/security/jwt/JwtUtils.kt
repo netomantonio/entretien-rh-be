@@ -17,7 +17,9 @@ class JwtUtils {
     var jwtExpirationMs: Long = 0
 
     fun generateJwtToken(authentication: Authentication): String {
-        val userPrincipal: UserDetailsImpl = authentication.getPrincipal() as UserDetailsImpl
+
+        val userPrincipal: UserDetailsImpl = authentication.principal as UserDetailsImpl
+
         return Jwts.builder()
             .setSubject(userPrincipal.username)
             .setIssuedAt(Date())
