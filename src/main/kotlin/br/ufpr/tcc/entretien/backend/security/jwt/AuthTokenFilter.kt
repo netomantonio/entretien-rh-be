@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class AuthTokenFilter: OncePerRequestFilter() {
+class AuthTokenFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var jwtUtils: JwtUtils
 
@@ -24,8 +24,10 @@ class AuthTokenFilter: OncePerRequestFilter() {
 //    private val logger: Logger = LoggerFactory.getLogger(AuthTokenFilter::class.java)
 
     private fun parseJwt(request: HttpServletRequest): String? {
+        println("[LOG] parseJwt()")
         val headerAuth = request.getHeader("Authorization")
         return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            println("[LOG] headerAuth.substring(7, headerAuth.length)" + headerAuth.substring(7, headerAuth.length))
             headerAuth.substring(7, headerAuth.length)
         } else null
     }
@@ -35,19 +37,27 @@ class AuthTokenFilter: OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        println("[LOG] doFilterInternal()")
         try {
             val jwt = parseJwt(request)
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                println("[LOG] jwt != null && jwtUtils.validateJwtToken(jwt)")
                 val username: String = jwtUtils.getUserNameFromJwtToken(jwt)
-                val userDetails = userDetailsService!!.loadUserByUsername(username)
+
+                val userDetails = userDetailsService.loadUserByUsername(username)
                 val authentication = UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails!!.authorities
+                    userDetails, null, userDetails?.authorities
                 )
+                println("[LOG] username: " + username)
+                println("[LOG] userDetails.authorities: " + userDetails?.authorities.toString())
+                println("[LOG] authentication.isAuthenticated: " + authentication.isAuthenticated)
+
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {
-            logger.error("Cannot set user authentication: {}", e)
+            println("[LOG] Cannot set user authentication: {}" + e.message)
+//            logger.error("Cannot set user authentication: {}", e)
         }
         filterChain.doFilter(request, response)
     }

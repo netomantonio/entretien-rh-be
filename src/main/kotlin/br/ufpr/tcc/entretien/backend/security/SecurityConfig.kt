@@ -35,21 +35,24 @@ class SecurityConfig {
     private lateinit var unauthorizedHandler: AuthEntryPointJwt
 
     @Bean
-    fun authenticationJwtTokenFilter(): AuthTokenFilter? {
+    fun authenticationJwtTokenFilter(): AuthTokenFilter {
         return AuthTokenFilter()
     }
 
     @Bean
-    fun authenticationProvider(): DaoAuthenticationProvider? {
+    fun authenticationProvider(): DaoAuthenticationProvider {
+
         val authProvider = DaoAuthenticationProvider()
+
         authProvider.setUserDetailsService(userDetailsService)
         authProvider.setPasswordEncoder(passwordEncoder())
+
         return authProvider
     }
 
     @Bean
     @Throws(Exception::class)
-    fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager? {
+    fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager {
         return authConfig.authenticationManager
     }
 
@@ -63,22 +66,17 @@ class SecurityConfig {
         http
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
         http
             .authorizeHttpRequests()
 //            .requestMatchers(RegexRequestMatcher("/api/auth", "POST")).permitAll()
             .anyRequest().permitAll()
 //            .anyRequest().authenticated()
-
         http
             .authenticationProvider(authenticationProvider())
-
 //        http.formLogin().disable()
 //        http.httpBasic().disable()
-
         http
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
-
         http
 //            .httpBasic().authenticationEntryPoint(authenticationEntryPoint).and().
             .cors().and()
