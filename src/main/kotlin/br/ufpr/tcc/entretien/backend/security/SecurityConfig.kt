@@ -1,8 +1,12 @@
 package br.ufpr.tcc.entretien.backend.security
 
 
+import br.ufpr.tcc.entretien.backend.model.ERole
+import br.ufpr.tcc.entretien.backend.model.Role
+import br.ufpr.tcc.entretien.backend.model.User
 import br.ufpr.tcc.entretien.backend.security.jwt.AuthEntryPointJwt
 import br.ufpr.tcc.entretien.backend.security.jwt.AuthTokenFilter
+import br.ufpr.tcc.entretien.backend.service.AuthService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -17,6 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import javax.annotation.PostConstruct
+
+
+
 
 
 @Configuration
@@ -33,6 +41,9 @@ class SecurityConfig {
 
     @Autowired
     private lateinit var unauthorizedHandler: AuthEntryPointJwt
+
+//    @Autowired
+//    private lateinit var authService: AuthService
 
     @Bean
     fun authenticationJwtTokenFilter(): AuthTokenFilter {
@@ -85,4 +96,15 @@ class SecurityConfig {
         return http.build()
     }
 
+//    @PostConstruct
+//    fun addFirstUser() {
+//        val user = User(
+//                username = "admin",
+//                email = "email@gmai.com",
+//                password = passwordEncoder()!!.encode("password"),
+//                roles = setOf(Role(ERole.ROLE_ADMIN)))
+//        if(!authService.userAlreadyExists(user)){
+//            authService.registerUser(user)
+//        }
+//    }
 }

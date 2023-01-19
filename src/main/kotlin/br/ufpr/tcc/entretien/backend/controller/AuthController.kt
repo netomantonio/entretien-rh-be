@@ -12,6 +12,7 @@ import br.ufpr.tcc.entretien.backend.security.jwt.JwtUtils
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -73,6 +74,7 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody signUpRequest: SignupRequest): ResponseEntity<*> {
+        // TODO: move to service
         if (userRepository.existsByUsername(signUpRequest.username)) {
             return ResponseEntity
                 .badRequest()
@@ -86,6 +88,7 @@ class AuthController {
             }
         }
 
+        // TODO: move to service
         val strRoles: Set<String> = setOf(signUpRequest.role.toString())
         val roles: MutableSet<Role> = HashSet()
         if (strRoles == null) {
@@ -141,7 +144,7 @@ class AuthController {
                 }
             })
         }
-
+        // TODO: move to service
         userRepository.save(
             User(
                 username = signUpRequest.username,
@@ -153,16 +156,10 @@ class AuthController {
         return ResponseEntity.ok<Any>("User registered successfully!")
     }
 
-    @GetMapping("/test")
-    fun getTest() = ResponseEntity.ok<Any>("GET Test content")
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/roles")
     fun listAllRoles(): ResponseEntity<*> {
-
+        // TODO: move to service
         return ResponseEntity.ok<Any>(roleRepository.findAll().toString())
     }
-
-    @PostMapping("/test")
-    fun postTest() = ResponseEntity.ok<Any>("POST Test content")
-
 }

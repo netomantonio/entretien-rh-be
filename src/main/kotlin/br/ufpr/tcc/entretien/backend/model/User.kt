@@ -3,6 +3,7 @@ package br.ufpr.tcc.entretien.backend.model
 //import java.util.Date
 import javax.persistence.*
 
+// TODO: implement diagram's properties
 @Table(
     name = "users",
     uniqueConstraints = [

@@ -3,6 +3,7 @@ package br.ufpr.tcc.entretien.backend.controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+// TODO: review
 @RestController
 @RequestMapping("/api/user")
 class UserController(
