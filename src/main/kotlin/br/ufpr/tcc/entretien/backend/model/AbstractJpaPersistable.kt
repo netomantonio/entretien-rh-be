@@ -15,9 +15,9 @@ abstract class AbstractJpaPersistable<T : Serializable> {
 
     @Id
     @GeneratedValue
-    private var id: T? = null
+    private lateinit var id: T
 
-    fun getId(): T? {
+    fun getId(): T {
         return id
     }
 

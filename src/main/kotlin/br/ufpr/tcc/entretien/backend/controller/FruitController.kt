@@ -35,39 +35,42 @@ class FruitController {
         ResponseEntity(e.message, HttpStatus.NOT_FOUND)
 
     @GetMapping("/fruit/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun getFruitById(@PathVariable id: Long): Fruit = fruitService.getById(id)
 
     @GetMapping("/fruit/name/{name}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun getFruitByName(@PathVariable name: String): Fruit = fruitService.getByName(name)
 
     @GetMapping("/fruits")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun getAllFruits(): Iterable<Fruit> = fruitService.getAll()
 
     @PostMapping("/fruit")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     fun saveFruit(@RequestBody fruit: Fruit) = fruitService.save(fruit)
 
     @PostMapping("/fruits")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun saveFruits(@RequestBody fruits: List<Fruit>) = fruitService.save(fruits)
 
     @PutMapping("/fruit")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     @ResponseStatus(HttpStatus.OK)
     fun updateFruit(@RequestBody fruit: Fruit) = fruitService.update(fruit)
 
     @DeleteMapping("/fruit/name/{name}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun removeFruitByName(@PathVariable name: String) = fruitService.remove(name)
 
     @DeleteMapping("/fruit/{id}")
     // @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
     fun removeFruitById(@PathVariable id: Long) = fruitService.remove(id)
+
+    @GetMapping("/public")
+    fun publicContent() = "public content"
 }

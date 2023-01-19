@@ -7,6 +7,7 @@
       <env name="OPENVIDU_SECRET" value="secret" />
       <env name="DB_USENAME" value="postgres" />
     </envs>
+    <log_file alias="LogMe" path="$PROJECT_DIR$/../logs" />
     <option name="MAIN_CLASS_NAME" value="br.ufpr.tcc.entretien.backend.BackendApplicationKt" />
     <module name="backend.main" />
     <shortenClasspath name="NONE" />
