@@ -7,9 +7,16 @@ VALUES
 ON CONFLICT
     DO NOTHING;
 
-INSERT INTO users (id, email, password, username)
-VALUES
-    (1, 'admin@email.com', '$2a$12$8FFHzw7x1oC7YCXiXL6.QekYh5WhKboJXeWT16hOfS5M2LOeEDR7u', 'admin')
+INSERT INTO users (id, email, password, username, created_at, updated_at, activated, cpf)
+VALUES (
+    1,
+    'admin@email.com',
+    '$2a$12$8FFHzw7x1oC7YCXiXL6.QekYh5WhKboJXeWT16hOfS5M2LOeEDR7u',
+    'admin',
+    NOW(),
+    NOW(),
+    true,
+    '08458465078')
 ON CONFLICT
     DO NOTHING;
 
