@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class AuthService {
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: UserRepository<User>
 
     @Autowired
     lateinit var roleRepository: RoleRepository

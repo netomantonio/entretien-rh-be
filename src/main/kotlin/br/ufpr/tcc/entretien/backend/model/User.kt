@@ -13,10 +13,9 @@ import javax.persistence.*
 )
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-open class User(
-    // USER's
+abstract class User(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "users_id_seq")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
     var id: Long = 0,
     var firstName: String = "",
@@ -30,8 +29,8 @@ open class User(
     // TODO: (val gender: ENUM)
     var email: String = "",
     var password: String = "",
-    @Column(nullable = false) val cpf: String = "",
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Column(nullable = false) var cpf: String = "",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
@@ -50,8 +49,4 @@ open class User(
 //    @ElementCollection
 //    var specialties: Set<String> = emptySet()
 //    // TODO attendance time
-) {
-//    constructor(username: String, email: String, password: String) : this(
-//        username, email, password, emptySet<Role>()
-//    )
-}
+)

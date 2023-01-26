@@ -33,7 +33,7 @@ class AuthController {
     lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: UserRepository<User>
 
     @Autowired
     lateinit var roleRepository: RoleRepository

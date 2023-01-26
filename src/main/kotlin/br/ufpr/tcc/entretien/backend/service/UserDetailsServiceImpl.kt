@@ -15,7 +15,7 @@ import javax.transaction.Transactional
 class UserDetailsServiceImpl: UserDetailsService {
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: UserRepository<User>
 
     @Transactional
     @Throws(UsernameNotFoundException::class)
