@@ -145,14 +145,15 @@ class AuthController {
             })
         }
         // TODO: move to service
-        userRepository.save(
-            User(
-                username = signUpRequest.username,
-                email = signUpRequest.email,
-                password = encoder.encode(signUpRequest.password),
-                roles = roles
-            )
-        )
+        // TODO: change to ADMIN
+//        userRepository.save(
+//            User(
+//                username = signUpRequest.username,
+//                email = signUpRequest.email,
+//                password = encoder.encode(signUpRequest.password),
+//                roles = roles
+//            )
+        //)
         return ResponseEntity.ok<Any>("User registered successfully!")
     }
 
