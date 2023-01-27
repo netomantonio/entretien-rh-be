@@ -12,5 +12,5 @@ class Candidate(
     var cep: String = "",
     @OneToOne(cascade=[CascadeType.ALL])
     @JoinColumn(name = "fk_resume")
-    var resume: Resume = Resume(),
+    var resume: Resume? = null,
 ) : User()

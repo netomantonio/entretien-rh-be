@@ -113,14 +113,6 @@ class CandidateServiceI : IUserService<Candidate, CandidateSignupRequest> {
         candidade.email = candidateSignupRequest.email
         candidade.phone = candidateSignupRequest.phone
 
-        candidade.resume = this.buildResume(
-            candidateSignupRequest.presentation,
-            candidateSignupRequest.educationLevel,
-            candidateSignupRequest.professionalHistory,
-            candidateSignupRequest.languages,
-            candidateSignupRequest.desiredJobTitle
-        )
-
         return candidade
     }
 
