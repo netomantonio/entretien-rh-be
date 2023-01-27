@@ -2,6 +2,9 @@ package br.ufpr.tcc.entretien.backend.model
 
 import javax.persistence.*
 
+/**
+ * Entity class that models Candidate-specific attributes.
+ */
 @Entity
 class Candidate(
     var socialNetworkig: String = "",

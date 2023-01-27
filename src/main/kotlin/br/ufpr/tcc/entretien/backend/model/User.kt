@@ -4,7 +4,9 @@ import java.time.Instant
 import java.util.Date
 import javax.persistence.*
 
-// TODO: implement diagram's properties
+/**
+ * Entity class that models User-base attributes for Candidate, Admin, Recruiter and Manager entity classes.
+ */
 @Table(
     name = "users",
     uniqueConstraints = [
@@ -22,8 +24,8 @@ abstract class User(
     var lastName: String = "",
     var username: String = "",
     @Temporal(TemporalType.DATE) val birthDay: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val createdAt :Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val updatedAt :Date = Date.from(Instant.now()),
+    @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
+    @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     var activated: Boolean = false,
     var phone: String = "",
     // TODO: (val gender: ENUM)
