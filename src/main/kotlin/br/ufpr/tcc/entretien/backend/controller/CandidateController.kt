@@ -1,16 +1,9 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
-import br.ufpr.tcc.entretien.backend.model.Candidate
-import br.ufpr.tcc.entretien.backend.model.enums.ERole
-import br.ufpr.tcc.entretien.backend.model.Role
-import br.ufpr.tcc.entretien.backend.repository.RoleRepository
-import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import br.ufpr.tcc.entretien.backend.service.CandidateService
-import br.ufpr.tcc.entretien.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -18,9 +11,6 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/candidate")
 class CandidateController {
-
-    @Autowired
-    lateinit var userService: UserService
 
     @Autowired
     lateinit var candidateService: CandidateService
@@ -47,7 +37,6 @@ class CandidateController {
             ResponseEntity.ok<Any>("User registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
-            println("[MESSAGE]")
             println(ex.message)
             ResponseEntity.internalServerError().body("Persistence error.")
         }
