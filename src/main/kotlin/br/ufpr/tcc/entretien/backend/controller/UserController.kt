@@ -1,17 +1,54 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
+import br.ufpr.tcc.entretien.backend.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 // TODO: review
 @RestController
 @RequestMapping("/api/user")
-class UserController(
-//    private val userService: UserService,
-//    private val roleService: RoleService
-) {
+class UserController {
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @Autowired
+    lateinit var userService: UserService
+
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("")
+    fun registerAdmin(@Valid @RequestBody signupRequest: SignupRequest): ResponseEntity<*> {
+
+        if (signupRequest != null) {
+            if (userService.existsByUsername(signupRequest.username)) {
+                return ResponseEntity
+                    .badRequest()
+                    .body<Any>(("Error: Username is already taken!"))
+            }
+            if (userService.existsByEmail(signupRequest.email)) {
+                return ResponseEntity
+                    .badRequest()
+                    .body<Any>("Error: Email is already in use!")
+            }
+        }
+
+        val admin = userService.build(signupRequest)
+
+        return try {
+            userService.register(admin)
+            ResponseEntity.ok<Any>("User registered successfully!")
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
+    //    @PreAuthorize("hasRole('ADMIN')")
 //    @GetMapping
 //    fun findAll() =
 //        userService.findAll()
@@ -53,4 +90,5 @@ class UserController(
 //        val role = roleService.findByName(roleName)
 //        userService.assignRole(userId, role)
 //    }
+
 }

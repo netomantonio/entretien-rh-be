@@ -1,19 +1,27 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
 import br.ufpr.tcc.entretien.backend.model.*
-import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
-import br.ufpr.tcc.entretien.backend.repository.EducationLevelRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
+import br.ufpr.tcc.entretien.backend.repository.UserRepository
+import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.function.Consumer
 
 @Service
-class UserService {
+class UserService : IUserService<Admin, SignupRequest> {
 
     @Autowired
     lateinit var roleRepository: RoleRepository
+
+    @Autowired
+    lateinit var userRepository: UserRepository<Admin>
+
+    @Autowired
+    lateinit var encoder: PasswordEncoder
 
     fun getRoles(roles: Set<String>): MutableSet<Role> {
 
@@ -69,5 +77,40 @@ class UserService {
 
         return roles
     }
+
+    override fun existsByUsername(username: String): Boolean = userRepository.existsByUsername(username)
+
+    override fun existsByEmail(email: String): Boolean = userRepository.existsByEmail(email)
+
+    override fun getRole(): Role = roleRepository.findByName(ERole.ROLE_ADMIN)
+        .orElseThrow {
+            RuntimeException(
+                "Error: Role is not found."
+            )
+        }
+
+    override fun build(signupRequest: SignupRequest): Admin {
+        val roles: MutableSet<Role> = HashSet()
+        val adminRole: Role = this.getRole()
+        roles.add(adminRole)
+
+        var admin = Admin()
+
+
+        admin.username = signupRequest.username
+        admin.password = encoder.encode(signupRequest.password)
+        admin.activated = true
+        admin.roles = roles
+        admin.firstName = signupRequest.firstName
+        admin.lastName = signupRequest.lastName
+//      admindidade.birthDay = signupRequest.birthDay
+        admin.cpf = signupRequest.cpf
+        admin.email = signupRequest.email
+        admin.phone = signupRequest.phone
+
+        return admin
+    }
+
+    override fun register(user: Admin): User = userRepository.save(user)
 
 }
