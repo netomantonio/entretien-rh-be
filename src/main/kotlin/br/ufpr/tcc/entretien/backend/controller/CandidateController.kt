@@ -1,7 +1,7 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
-import br.ufpr.tcc.entretien.backend.service.CandidateService
+import br.ufpr.tcc.entretien.backend.service.CandidateServiceI
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +13,7 @@ import javax.validation.Valid
 class CandidateController {
 
     @Autowired
-    lateinit var candidateService: CandidateService
+    lateinit var candidateService: CandidateServiceI
 
     @PostMapping("")
     fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
@@ -30,10 +30,10 @@ class CandidateController {
             }
         }
 
-        val candidate = candidateService.buildCandidate(candidateSignupRequest)
+        val candidate = candidateService.build(candidateSignupRequest)
 
         return try {
-            candidateService.registerCandidate(candidate)
+            candidateService.register(candidate)
             ResponseEntity.ok<Any>("User registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
