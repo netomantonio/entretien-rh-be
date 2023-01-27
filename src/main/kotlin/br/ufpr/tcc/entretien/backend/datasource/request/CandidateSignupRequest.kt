@@ -6,5 +6,9 @@ class CandidateSignupRequest(
     var socialNetworkig: String,
     var pcd: Boolean,
     var cep: String,
-    var resume: Resume
+    var presentation: String,
+    var educationLevel: String,
+    var professionalHistory: Set<String>,
+    var languages: Set<String>,
+    var desiredJobTitle: String
 ) : SignupRequest()

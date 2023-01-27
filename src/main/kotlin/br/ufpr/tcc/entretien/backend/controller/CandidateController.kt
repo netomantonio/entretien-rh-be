@@ -6,6 +6,7 @@ import br.ufpr.tcc.entretien.backend.model.ERole
 import br.ufpr.tcc.entretien.backend.model.Role
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
+import br.ufpr.tcc.entretien.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -18,8 +19,10 @@ import javax.validation.Valid
 class CandidateController {
 
     @Autowired
-    lateinit var candidateRepository: UserRepository<Candidate>
+    lateinit var userService: UserService
 
+    @Autowired
+    lateinit var candidateRepository: UserRepository<Candidate>
     @Autowired
     lateinit var roleRepository: RoleRepository
 
@@ -27,7 +30,7 @@ class CandidateController {
     lateinit var encoder: PasswordEncoder
 
     @PostMapping("")
-    fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest) : ResponseEntity<*> {
+    fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
         if (candidateRepository.existsByUsername(candidateSignupRequest.username)) {
             return ResponseEntity
                 .badRequest()
@@ -66,16 +69,24 @@ class CandidateController {
         candidade.email = candidateSignupRequest.email
         candidade.phone = candidateSignupRequest.phone
 
+        candidade.resume = userService.buildResume(
+            candidateSignupRequest.presentation,
+            candidateSignupRequest.educationLevel,
+            candidateSignupRequest.professionalHistory,
+            candidateSignupRequest.languages,
+            candidateSignupRequest.desiredJobTitle
+        )
+
         try {
             candidateRepository.save(candidade)
-        return ResponseEntity.ok<Any>("User registered successfully!")
+            return ResponseEntity.ok<Any>("User registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
             println("[MESSAGE]")
             println(ex.message)
             println("[STACKTRACE]")
             println(ex.stackTrace)
-        return ResponseEntity.internalServerError().body("Persistence error.")
+            return ResponseEntity.internalServerError().body("Persistence error.")
         }
 
     }

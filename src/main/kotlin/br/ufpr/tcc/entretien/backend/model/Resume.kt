@@ -5,7 +5,8 @@ import javax.persistence.*
 @Entity
 class Resume(
     var presentation: String = "",
-    @Column(nullable = false) @Enumerated(EnumType.STRING) var educationLevel: EEducationLevel = EEducationLevel.ENSINO_MEDIO,
+    @ManyToOne
+    var educationLevel: EducationLevel = EducationLevel(EEducationLevel.ENSINO_FUNDAMENTAL),
     @ElementCollection
     var professionalHistory: Set<String> = emptySet(),
     @ElementCollection
