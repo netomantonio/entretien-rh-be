@@ -1,11 +1,22 @@
-INSERT INTO roles (id, name)
+INSERT INTO
+    roles (id, name)
 VALUES
     (1, 'ROLE_CANDIDATE'),
     (2, 'ROLE_RECRUITER'),
     (3, 'ROLE_MANAGER'),
     (4, 'ROLE_ADMIN')
-ON CONFLICT
-    DO NOTHING;
+ON CONFLICT DO NOTHING;
+
+INSERT INTO
+    education_level (id, name)
+VALUES
+    (1, 'ENSINO_FUNDAMENTAL'),
+    (2, 'ENSINO_MEDIO'),
+    (3, 'GRADUACAO'),
+    (4, 'POS_GRADUACAO'),
+    (5, 'MESTRADO'),
+    (6, 'DOUTORADO')
+ON CONFLICT DO NOTHING;
 --
 --INSERT INTO users (id, email, password, username, created_at, updated_at, activated, cpf)
 --VALUES (
