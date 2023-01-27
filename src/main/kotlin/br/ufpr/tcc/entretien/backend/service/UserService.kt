@@ -15,9 +15,6 @@ class UserService {
     @Autowired
     lateinit var roleRepository: RoleRepository
 
-    @Autowired
-    lateinit var educationLevelRepository: EducationLevelRepository
-
     fun getRoles(roles: Set<String>): MutableSet<Role> {
 
         val strRoles: Set<String> = setOf(roles.toString())
@@ -71,58 +68,6 @@ class UserService {
         }
 
         return roles
-    }
-
-    fun getEducationLevel(educationLevel: String): EducationLevel {
-        if (educationLevel == null) {
-            throw (RuntimeException("Error: invalid input."))
-        } else {
-            when (educationLevel) {
-                "Ensino Fundamental" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.ENSINO_FUNDAMENTAL)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Ensino Medio" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.ENSINO_MEDIO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Graduação" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.GRADUACAO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Ensino Medio" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.POS_GRADUACAO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Mestrado" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.MESTRADO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Doutorado" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.DOUTORADO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                else -> throw RuntimeException("User was not created")
-            }
-        }
-    }
-
-    fun buildResume(
-        presentation: String,
-        educationLevel: String,
-        professionalHistory: Set<String>,
-        languages: Set<String>,
-        desiredJobTitle: String
-    ): Resume {
-
-        val educationLevel = this.getEducationLevel(educationLevel)
-        return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle)
     }
 
 }
