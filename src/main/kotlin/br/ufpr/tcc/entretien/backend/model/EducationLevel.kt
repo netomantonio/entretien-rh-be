@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model
 
+import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
 import javax.persistence.*
 
 @Entity

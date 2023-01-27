@@ -3,7 +3,7 @@ package br.ufpr.tcc.entretien.backend.controller
 import br.ufpr.tcc.entretien.backend.datasource.request.LoginRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.JwtResponse
-import br.ufpr.tcc.entretien.backend.model.ERole
+import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.Role
 import br.ufpr.tcc.entretien.backend.model.User
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository

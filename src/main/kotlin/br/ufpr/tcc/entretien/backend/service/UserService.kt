@@ -1,6 +1,8 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.model.*
+import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
+import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.repository.EducationLevelRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import org.springframework.beans.factory.annotation.Autowired
