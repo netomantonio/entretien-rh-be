@@ -75,11 +75,11 @@ class CandidateServiceI : IUserService<Candidate, CandidateSignupRequest> {
 
     override fun register(candidate: Candidate) = candidateRepository.save(candidate)
 
-    private fun buildResume(
+    fun buildResume(
         presentation: String,
         educationLevel: String,
-        professionalHistory: Set<String>,
-        languages: Set<String>,
+        professionalHistory: MutableSet<String>,
+        languages: MutableSet<String>,
         desiredJobTitle: String
     ): Resume {
         val educationLevel = this.getEducationLevel(educationLevel)
@@ -115,5 +115,13 @@ class CandidateServiceI : IUserService<Candidate, CandidateSignupRequest> {
 
         return candidade
     }
+
+    fun getCandidateById(id: Long): Candidate = candidateRepository.findById(id)
+        .orElseThrow {
+            RuntimeException(
+                "Error: User not found."
+            )
+        }
+
 
 }

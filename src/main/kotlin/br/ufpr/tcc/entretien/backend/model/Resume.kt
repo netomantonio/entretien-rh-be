@@ -5,12 +5,12 @@ import javax.persistence.*
 
 @Entity
 class Resume(
-    var presentation: String = "",
+    var presentation: String? = null,
     @ManyToOne
-    var educationLevel: EducationLevel = EducationLevel(EEducationLevel.ENSINO_FUNDAMENTAL),
+    var educationLevel: EducationLevel? = null,
     @ElementCollection
-    var professionalHistory: Set<String> = emptySet(),
+    var professionalHistory: MutableSet<String>? = null,
     @ElementCollection
-    var languages: Set<String> = emptySet(),
-    var desiredJobTitle: String = ""
+    var languages: MutableSet<String>? = null,
+    var desiredJobTitle: String? = null
 ) : AbstractJpaPersistable<Long>()

@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.service.CandidateServiceI
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,17 +18,15 @@ class CandidateController {
 
     @PostMapping("")
     fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
-        if (candidateSignupRequest != null) {
-            if (candidateService.existsByUsername(candidateSignupRequest.username)) {
-                return ResponseEntity
-                    .badRequest()
-                    .body<Any>(("Error: Username is already taken!"))
-            }
-            if (candidateService.existsByEmail(candidateSignupRequest.email)) {
-                return ResponseEntity
-                    .badRequest()
-                    .body<Any>("Error: Email is already in use!")
-            }
+        if (candidateService.existsByUsername(candidateSignupRequest.username)) {
+            return ResponseEntity
+                .badRequest()
+                .body<Any>(("Error: Username is already taken!"))
+        }
+        if (candidateService.existsByEmail(candidateSignupRequest.email)) {
+            return ResponseEntity
+                .badRequest()
+                .body<Any>("Error: Email is already in use!")
         }
 
         val candidate = candidateService.build(candidateSignupRequest)
@@ -40,7 +39,28 @@ class CandidateController {
             println(ex.message)
             ResponseEntity.internalServerError().body("Persistence error.")
         }
+    }
 
+    @PostMapping("/resume")
+    fun saveResume(@Valid @RequestBody candidateResumeRequest: CandidateResumeRequest): ResponseEntity<*> {
+        var candidate = candidateService.getCandidateById(candidateResumeRequest.id)
+
+        candidate.resume = candidateService.buildResume(
+            candidateResumeRequest.presentation,
+            candidateResumeRequest.educationLevel,
+            candidateResumeRequest.professionalHistory,
+            candidateResumeRequest.languages,
+            candidateResumeRequest.desiredJobTitle
+        )
+
+        return try {
+            candidateService.register(candidate)
+            ResponseEntity.ok<Any>("User updated successfully!")
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
     }
 
 }
