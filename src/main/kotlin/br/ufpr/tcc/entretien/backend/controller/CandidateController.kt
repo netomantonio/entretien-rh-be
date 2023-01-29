@@ -5,6 +5,7 @@ import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.service.CandidateServiceI
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -42,15 +43,18 @@ class CandidateController {
     }
 
     @PostMapping("/resume")
+    @PreAuthorize(
+        "hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE') and #candidateResumeRequest.candidateId == principal.id")
     fun saveResume(@Valid @RequestBody candidateResumeRequest: CandidateResumeRequest): ResponseEntity<*> {
-        var candidate = candidateService.getCandidateById(candidateResumeRequest.id)
+        var candidate = candidateService.getCandidateById(candidateResumeRequest.candidateId)
 
         candidate.resume = candidateService.buildResume(
             candidateResumeRequest.presentation,
             candidateResumeRequest.educationLevel,
             candidateResumeRequest.professionalHistory,
             candidateResumeRequest.languages,
-            candidateResumeRequest.desiredJobTitle
+            candidateResumeRequest.desiredJobTitle,
+            candidate
         )
 
         return try {

@@ -1,6 +1,5 @@
 package br.ufpr.tcc.entretien.backend.model
 
-import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
 import javax.persistence.*
 
 @Entity
@@ -12,5 +11,7 @@ class Resume(
     var professionalHistory: MutableSet<String>? = null,
     @ElementCollection
     var languages: MutableSet<String>? = null,
-    var desiredJobTitle: String? = null
+    var desiredJobTitle: String? = null,
+    @OneToOne(mappedBy = "resume")
+    var candidate: Candidate
 ) : AbstractJpaPersistable<Long>()

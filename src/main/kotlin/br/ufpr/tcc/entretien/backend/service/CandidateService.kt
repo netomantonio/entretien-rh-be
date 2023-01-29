@@ -80,10 +80,11 @@ class CandidateServiceI : IUserService<Candidate, CandidateSignupRequest> {
         educationLevel: String,
         professionalHistory: MutableSet<String>,
         languages: MutableSet<String>,
-        desiredJobTitle: String
+        desiredJobTitle: String,
+        candidate: Candidate
     ): Resume {
         val educationLevel = this.getEducationLevel(educationLevel)
-        return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle)
+        return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle, candidate)
     }
 
     override fun getRole(): Role = roleRepository.findByName(ERole.ROLE_CANDIDATE)
