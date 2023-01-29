@@ -7,9 +7,9 @@ import javax.persistence.*
  */
 @Entity
 class Candidate(
-    var socialNetworkig: String = "",
+    var socialNetworkig: String? = null,
     var pcd: Boolean = false,
-    var cep: String = "",
+    var cep: String? = null,
     @OneToOne(cascade=[CascadeType.ALL])
     @JoinColumn(name = "fk_resume")
     var resume: Resume? = null,

@@ -20,14 +20,14 @@ abstract class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "users_id_seq")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
     var id: Long = 0,
-    var firstName: String = "",
-    var lastName: String = "",
+    var firstName: String? = null,
+    var lastName: String? = null,
     var username: String = "",
-    @Temporal(TemporalType.DATE) val birthDay: Date = Date.from(Instant.now()),
+    @Temporal(TemporalType.DATE) val birthDay: Date? = null,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     var activated: Boolean = false,
-    var phone: String = "",
+    var phone: String? = null,
     // TODO: (val gender: ENUM)
     var email: String = "",
     var password: String = "",
