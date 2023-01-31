@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
-import br.ufpr.tcc.entretien.backend.service.CandidateServiceI
+import br.ufpr.tcc.entretien.backend.service.CandidateService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -15,7 +15,7 @@ import javax.validation.Valid
 class CandidateController {
 
     @Autowired
-    lateinit var candidateService: CandidateServiceI
+    lateinit var candidateService: CandidateService
 
     @PostMapping("")
     fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
