@@ -1,8 +1,10 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
-import br.ufpr.tcc.entretien.backend.model.*
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
+import br.ufpr.tcc.entretien.backend.model.infra.Role
+import br.ufpr.tcc.entretien.backend.model.users.Admin
+import br.ufpr.tcc.entretien.backend.model.users.User
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService

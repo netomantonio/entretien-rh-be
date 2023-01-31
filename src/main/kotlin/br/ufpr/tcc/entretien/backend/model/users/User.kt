@@ -1,5 +1,6 @@
-package br.ufpr.tcc.entretien.backend.model
+package br.ufpr.tcc.entretien.backend.model.users
 
+import br.ufpr.tcc.entretien.backend.model.infra.Role
 import java.time.Instant
 import java.util.Date
 import javax.persistence.*

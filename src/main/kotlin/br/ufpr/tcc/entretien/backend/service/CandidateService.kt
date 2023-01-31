@@ -4,6 +4,8 @@ import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.model.*
 import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
+import br.ufpr.tcc.entretien.backend.model.infra.Role
+import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.repository.EducationLevelRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
@@ -13,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class CandidateServiceI : IUserService<Candidate, CandidateSignupRequest> {
+class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
 
     @Autowired
     lateinit var educationLevelRepository: EducationLevelRepository

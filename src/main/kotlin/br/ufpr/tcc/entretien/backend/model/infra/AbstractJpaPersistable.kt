@@ -1,4 +1,4 @@
-package br.ufpr.tcc.entretien.backend.model
+package br.ufpr.tcc.entretien.backend.model.infra
 
 import org.springframework.data.util.ProxyUtils
 import java.io.Serializable

@@ -1,5 +1,7 @@
 package br.ufpr.tcc.entretien.backend.model
 
+import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
+import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import javax.persistence.*
 
 @Entity

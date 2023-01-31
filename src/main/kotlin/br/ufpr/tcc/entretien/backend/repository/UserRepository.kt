@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.repository
 
-import br.ufpr.tcc.entretien.backend.model.User
+import br.ufpr.tcc.entretien.backend.model.users.User
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional

@@ -1,11 +1,8 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.LoginRequest
-import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.JwtResponse
-import br.ufpr.tcc.entretien.backend.model.enums.ERole
-import br.ufpr.tcc.entretien.backend.model.Role
-import br.ufpr.tcc.entretien.backend.model.User
+import br.ufpr.tcc.entretien.backend.model.users.User
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import br.ufpr.tcc.entretien.backend.security.jwt.JwtUtils
@@ -20,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
-import java.util.function.Consumer
 import java.util.stream.Collectors
 import javax.validation.Valid
 
