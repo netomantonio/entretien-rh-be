@@ -104,7 +104,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         var candidade = Candidate()
         candidade.cep = candidateSignupRequest.cep
         candidade.pcd = candidateSignupRequest.pcd
-        candidade.socialNetworkig = candidateSignupRequest.socialNetworkig
+        candidade.socialNetworkig = candidateSignupRequest.socialNetworking
         candidade.username = candidateSignupRequest.username
         candidade.password = encoder.encode(candidateSignupRequest.password)
         candidade.activated = true
