@@ -17,6 +17,19 @@ VALUES
     (5, 'MESTRADO'),
     (6, 'DOUTORADO')
 ON CONFLICT DO NOTHING;
+
+INSERT INTO
+    interview_status (id, name)
+VALUES
+    (1, 'SCHEDULE'),
+    (2, 'IN_PROGRESS'),
+    (3, 'ABSENT_CANDIDATE'),
+    (4, 'ABSENT_RECRUITER'),
+    (5, 'CONCLUDED'),
+    (6, 'DID_NOT_OCCUR'),
+    (7, 'OTHER')
+ON CONFLICT DO NOTHING;
+
 --
 --INSERT INTO users (id, email, password, username, created_at, updated_at, activated, cpf)
 --VALUES (
