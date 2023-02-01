@@ -1,6 +1,8 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
+import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.service.RecruiterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -18,7 +20,6 @@ class RecruiterController {
     @Autowired
     lateinit var recruiterService: RecruiterService
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     fun registerRecruiter(@Valid @RequestBody recruiterSignupRequest: RecruiterSignupRequest): ResponseEntity<*> {
 
@@ -47,6 +48,15 @@ class RecruiterController {
         }
     }
 
-
-
+    @PostMapping("/schedule")
+    fun addScheduleEntry(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest): ResponseEntity<*> {
+        return try {
+            recruiterService.addScheduleEntry(recruiterScheduleRequest)
+            ResponseEntity.ok<Any>("User updated successfully!")
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
 }

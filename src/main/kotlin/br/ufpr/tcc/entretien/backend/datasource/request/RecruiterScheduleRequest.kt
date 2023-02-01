@@ -1,0 +1,12 @@
+package br.ufpr.tcc.entretien.backend.datasource.request
+
+import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
+import java.time.LocalTime
+import javax.validation.constraints.NotBlank
+
+class RecruiterScheduleRequest(
+    @NotBlank var recruiterId: Long,
+    @NotBlank var dayOfTheWeek: EDayOfTheWeek,
+    var startingAt: LocalTime,
+    var endingAt: LocalTime
+)

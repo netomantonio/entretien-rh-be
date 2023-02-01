@@ -1,6 +1,9 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
+import br.ufpr.tcc.entretien.backend.model.Schedule
+import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
@@ -10,6 +13,7 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalTime
 
 @Service
 class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
@@ -64,12 +68,36 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
 
     // TODO: Schedule builder(?); Setter/Getter;
 
+    fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest){
+        // TODO: check recruiterId
+        var recruiter = this.getRecruiterById(recruiterScheduleRequest.recruiterId)
+
+        if(recruiter.schedule == null){
+            recruiter.schedule = mutableSetOf()
+        }
+
+        val schedule = this.buildSchedule(recruiter, recruiterScheduleRequest.dayOfTheWeek, recruiterScheduleRequest.startingAt, recruiterScheduleRequest.endingAt)
+
+        recruiter.schedule!!.add(schedule)
+
+        this.recruiterRepository.save(recruiter)
+    }
+
+    // TODO:
+    fun buildSchedule(
+        recruiter: Recruiter,
+        dayOfTheWeek: EDayOfTheWeek,
+        startingAt: LocalTime,
+        endingAt: LocalTime
+    ): Schedule {
+        return Schedule(recruiter = recruiter, dayOfTheWeek = dayOfTheWeek, startingAt = startingAt, endingAt = endingAt)
+    }
+
     fun getRecruiterById(id: Long): Recruiter = recruiterRepository.findById(id)
         .orElseThrow {
             RuntimeException(
                 "Error: User not found."
             )
         }
-
 
 }

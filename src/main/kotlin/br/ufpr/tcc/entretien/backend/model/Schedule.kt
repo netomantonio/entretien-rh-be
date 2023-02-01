@@ -5,6 +5,7 @@ import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import java.time.Instant
+import java.time.LocalTime
 import java.util.*
 import javax.persistence.*
 
@@ -15,9 +16,10 @@ import javax.persistence.*
 class Schedule(
     @ManyToOne
     @JoinColumn(name = "fk_recruiter")
-    var recruiter: Recruiter,
+    val recruiter: Recruiter,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
-    @Enumerated(EnumType.ORDINAL)
-    var dayOfTheWeek: EDayOfTheWeek
+    @Temporal(TemporalType.TIMESTAMP) var updatedAt: Date = Date.from(Instant.now()),
+    @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: EDayOfTheWeek,
+    @Basic var startingAt: LocalTime,
+    @Basic var endingAt: LocalTime
 ) : AbstractJpaPersistable<Long>()
