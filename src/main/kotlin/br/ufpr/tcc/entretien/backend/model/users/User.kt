@@ -39,17 +39,5 @@ abstract class User(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roles: Set<Role> = emptySet(),
-    // MANAGER's
-//    var cnpj: String = "",
-//    var corporateName: String = "",
-//    var tradingName: String = "",
-//    var practiceArea: String = "",
-//    // RECRUITER's
-//    var professionalDocument: String = "",
-//    var presentation: String = "",
-////    var cnpj: String = ""
-//    @ElementCollection
-//    var specialties: Set<String> = emptySet()
-//    // TODO attendance time
+    var roles: Set<Role> = emptySet()
 )
