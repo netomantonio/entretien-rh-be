@@ -19,5 +19,4 @@ class Interview(
     @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val startingAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val endingAt: Date = Date.from(Instant.now()),
-    var estimatedDuration: Long? = null
 ) : AbstractJpaPersistable<Long>()
