@@ -2,7 +2,6 @@ package br.ufpr.tcc.entretien.backend.model
 
 import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
-import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import java.time.Instant
 import java.time.LocalTime
@@ -22,4 +21,4 @@ class Schedule(
     @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: EDayOfTheWeek,
     @Basic var startingAt: LocalTime,
     @Basic var endingAt: LocalTime
-) : AbstractJpaPersistable<Long>()
+) : AbstractJpaPersistable()

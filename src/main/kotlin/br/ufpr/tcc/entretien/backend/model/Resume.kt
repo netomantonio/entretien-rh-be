@@ -16,4 +16,4 @@ class Resume(
     var desiredJobTitle: String? = null,
     @OneToOne(mappedBy = "resume")
     var candidate: Candidate
-) : AbstractJpaPersistable<Long>()
+) : AbstractJpaPersistable()

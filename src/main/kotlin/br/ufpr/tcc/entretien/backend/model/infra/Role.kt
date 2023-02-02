@@ -7,4 +7,4 @@ import javax.persistence.*
 @Table(name = "roles")
 class Role (
     @Column(nullable = false) @Enumerated(EnumType.STRING) val name: ERole
-): AbstractJpaPersistable<Long>()
+): AbstractJpaPersistable()

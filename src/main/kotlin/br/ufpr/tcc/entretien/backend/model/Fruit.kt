@@ -9,4 +9,4 @@ import javax.persistence.*
 class Fruit(
     @Column(unique = true, name = "name") val name: String,
     @Column(name = "createdAt") var createdAt: Instant = Instant.now()
-) : AbstractJpaPersistable<Long>()
+) : AbstractJpaPersistable()

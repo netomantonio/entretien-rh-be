@@ -8,4 +8,4 @@ import javax.persistence.*
 @Table(name = "interview_status")
 class InterviewStatus(
     @Column(nullable = false) @Enumerated(EnumType.STRING) val name: EInterviewStatus
-) : AbstractJpaPersistable<Long>()
+) : AbstractJpaPersistable()

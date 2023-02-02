@@ -8,4 +8,4 @@ import javax.persistence.*
 @Table(name = "education_level")
 class EducationLevel(
     @Column(nullable = false) @Enumerated(EnumType.STRING) val name: EEducationLevel
-): AbstractJpaPersistable<Long>()
+): AbstractJpaPersistable()
