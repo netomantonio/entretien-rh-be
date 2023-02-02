@@ -1,7 +1,7 @@
 package br.ufpr.tcc.entretien.backend.repository
 
-import br.ufpr.tcc.entretien.backend.model.ERole
-import br.ufpr.tcc.entretien.backend.model.Role
+import br.ufpr.tcc.entretien.backend.model.enums.ERole
+import br.ufpr.tcc.entretien.backend.model.infra.Role
 import org.springframework.data.repository.CrudRepository
 import java.util.Optional
 

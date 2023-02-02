@@ -25,7 +25,6 @@ class FruitService(
 
     init {
         logger.log(Level.FINE, "$TAG: init")
-        println("[LOG] $TAG: init")
     }
 
     @Throws(RuntimeException::class)

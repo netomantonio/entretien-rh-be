@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.model.User
+import br.ufpr.tcc.entretien.backend.model.users.User
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class AuthService {
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: UserRepository<User>
 
     @Autowired
     lateinit var roleRepository: RoleRepository

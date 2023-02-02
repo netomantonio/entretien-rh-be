@@ -1,12 +1,12 @@
 package br.ufpr.tcc.entretien.backend.repository
 
-import br.ufpr.tcc.entretien.backend.model.User
+import br.ufpr.tcc.entretien.backend.model.users.User
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface UserRepository : CrudRepository<User, Long> {
+interface UserRepository<T: User> : CrudRepository<T, Long> {
     fun findByUsername(username: String): Optional<User>
 
     fun existsByUsername(username: String): Boolean

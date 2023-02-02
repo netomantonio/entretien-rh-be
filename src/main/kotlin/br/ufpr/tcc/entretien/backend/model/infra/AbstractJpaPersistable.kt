@@ -1,13 +1,12 @@
-package br.ufpr.tcc.entretien.backend.model
+package br.ufpr.tcc.entretien.backend.model.infra
 
 import org.springframework.data.util.ProxyUtils
-import java.io.Serializable
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-abstract class AbstractJpaPersistable<T : Serializable> {
+abstract class AbstractJpaPersistable {
 
     companion object {
         private val serialVersionUID = -5554308939380869754L
@@ -15,20 +14,24 @@ abstract class AbstractJpaPersistable<T : Serializable> {
 
     @Id
     @GeneratedValue
-    private lateinit var id: T
+    private var id: Long = 0
 
-    fun getId(): T {
+    fun getId(): Long {
         return id
+    }
+
+    fun setId(id: Long) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {
         other ?: return false
 
+        // TODO: check if cover different subclasses
         if (this === other) return true
-
         if (javaClass != ProxyUtils.getUserClass(other)) return false
 
-        other as AbstractJpaPersistable<*>
+        other as AbstractJpaPersistable
 
         return if (null == this.getId()) false else this.getId() == other.getId()
     }

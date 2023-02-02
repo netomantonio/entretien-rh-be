@@ -1,4 +1,4 @@
-package br.ufpr.tcc.entretien.backend.model
+package br.ufpr.tcc.entretien.backend.model.enums
 
 enum class ERole {
     ROLE_CANDIDATE,

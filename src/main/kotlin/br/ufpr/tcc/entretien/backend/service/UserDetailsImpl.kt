@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.model.User
+import br.ufpr.tcc.entretien.backend.model.users.User
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

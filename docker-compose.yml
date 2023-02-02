@@ -26,23 +26,3 @@ services:
       OPENVIDU_SECRET: ${OPENVIDU_SECRET}
     ports:
       - 4443:4443
-
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:20.0.1
-#    container_name: keycloak-container
-#    restart: always
-#    command:
-#      - start-dev
-#    environment:
-#      DB_VENDOR: POSTGRES
-#      DB_ADDR: postgres-container
-#      DB_DATABASE: db
-#      #      DB_SCHEMA: public
-#      DB_USER: user
-#      DB_PASSWORD: password
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#    ports:
-#      - 8282:8080
-#    depends_on:
-#      - db
