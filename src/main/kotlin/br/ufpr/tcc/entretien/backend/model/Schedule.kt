@@ -3,6 +3,7 @@ package br.ufpr.tcc.entretien.backend.model
 import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
+import com.fasterxml.jackson.annotation.JsonBackReference
 import java.time.Instant
 import java.time.LocalTime
 import java.util.*
@@ -15,6 +16,7 @@ import javax.persistence.*
 class Schedule(
     @ManyToOne
     @JoinColumn(name = "fk_recruiter")
+    @JsonBackReference
     val recruiter: Recruiter,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) var updatedAt: Date = Date.from(Instant.now()),
