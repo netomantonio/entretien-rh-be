@@ -33,6 +33,9 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
     override fun existsByEmail(email: String) =
         recruiterRepository.existsByEmail(email)
 
+    fun existsById(id: Long) =
+        recruiterRepository.existsById(id)
+
     override fun register(recruiter: Recruiter) = recruiterRepository.save(recruiter)
 
     override fun getRole(): Role = roleRepository.findByName(ERole.ROLE_RECRUITER)
@@ -66,38 +69,13 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
         return recruiter
     }
 
-    // TODO: Schedule builder(?); Setter/Getter;
-
-    fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest){
-        // TODO: check recruiterId
-        var recruiter = this.getRecruiterById(recruiterScheduleRequest.recruiterId)
-
-        if(recruiter.schedule == null){
-            recruiter.schedule = mutableSetOf()
-        }
-
-        val schedule = this.buildSchedule(recruiter, recruiterScheduleRequest.dayOfTheWeek, recruiterScheduleRequest.startingAt, recruiterScheduleRequest.endingAt)
-
-        recruiter.schedule!!.add(schedule)
-
-        this.recruiterRepository.save(recruiter)
-    }
-
-    // TODO:
-    fun buildSchedule(
-        recruiter: Recruiter,
-        dayOfTheWeek: EDayOfTheWeek,
-        startingAt: LocalTime,
-        endingAt: LocalTime
-    ): Schedule {
-        return Schedule(recruiter = recruiter, dayOfTheWeek = dayOfTheWeek, startingAt = startingAt, endingAt = endingAt)
-    }
-
     fun getRecruiterById(id: Long): Recruiter = recruiterRepository.findById(id)
         .orElseThrow {
             RuntimeException(
                 "Error: User not found."
             )
         }
+
+    fun getAllRecruiters(): Iterable<Recruiter> = recruiterRepository.findAll()
 
 }
