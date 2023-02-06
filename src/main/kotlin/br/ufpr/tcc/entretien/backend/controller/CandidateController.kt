@@ -2,6 +2,7 @@ package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
+import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.service.CandidateService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -64,6 +65,19 @@ class CandidateController {
             println("[ERROR] ------------------------------------------")
             println(ex.message)
             ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')")
+    fun getAllCandidates(): ResponseEntity<*> {
+        return try {
+            val candidates = candidateService.getAllCandidates()
+            ResponseEntity.ok<Iterable<Candidate>>(candidates)
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Something went wrong.")
         }
     }
 

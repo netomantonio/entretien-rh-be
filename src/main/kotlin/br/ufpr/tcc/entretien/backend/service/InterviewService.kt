@@ -31,21 +31,25 @@ class InterviewService {
     lateinit var interviewStatusRepository: InterviewStatusRepository
 
 
-    fun createInterview(interviewRequest: InterviewRequest) {
+    fun createInterview(interviewRequest: InterviewRequest, managerId: Long) {
 
         val candidate: Candidate = this.getCandidateById(interviewRequest.candidateId)
-        val manager: Manager = this.getManagerById(interviewRequest.managerId)
+        val manager: Manager = this.getManagerById(managerId)
 
         var interview = Interview()
         interview.interviewStatus = this.getInterviewStatus("Schedule")
         interview.candidate = candidate
         interview.manager = manager
 
-        if(interviewRequest.managerObservation.isNotEmpty()){
+        if (interviewRequest.managerObservation.isNotEmpty()) {
             interview.managerObservation = interviewRequest.managerObservation
         }
 
         interviewRepository.save(interview)
+    }
+
+    fun getAll(): Iterable<Interview> {
+        return interviewRepository.findAll()
     }
 
     fun getManagerById(id: Long): Manager = managerRepository.findById(id)
