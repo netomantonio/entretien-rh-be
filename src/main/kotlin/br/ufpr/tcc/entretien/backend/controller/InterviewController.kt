@@ -18,7 +18,7 @@ class InterviewController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("")
-    fun registerInterview(@Valid @RequestBody interviewRequest: InterviewRequest): ResponseEntity<*> {
+    fun createNewInterview(@Valid @RequestBody interviewRequest: InterviewRequest): ResponseEntity<*> {
         return try {
             interviewService.createInterview(interviewRequest)
             ResponseEntity.ok<Any>("Interview registered successfully!")

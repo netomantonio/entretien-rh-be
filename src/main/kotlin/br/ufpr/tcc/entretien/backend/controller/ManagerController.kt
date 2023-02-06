@@ -37,7 +37,7 @@ class ManagerController {
 
         return try {
             managerService.register(recruiter)
-            ResponseEntity.ok<Any>("User registered successfully!")
+            ResponseEntity.ok<Any>("Manager registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
             println(ex.message)

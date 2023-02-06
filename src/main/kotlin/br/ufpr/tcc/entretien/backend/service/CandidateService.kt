@@ -126,5 +126,12 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
             )
         }
 
+    // TODO: Review this method
+    fun getAllCandidates(): Iterable<Candidate> {
+
+        var users = candidateRepository.findAll()
+
+        return users.filterIsInstance<Candidate>()
+    }
 
 }
