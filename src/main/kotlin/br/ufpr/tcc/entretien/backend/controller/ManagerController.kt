@@ -4,12 +4,10 @@ import br.ufpr.tcc.entretien.backend.datasource.request.ManagerSignupRequest
 import br.ufpr.tcc.entretien.backend.service.ManagerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
+@CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
 @RequestMapping("/api/manager")
 class ManagerController {
