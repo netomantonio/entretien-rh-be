@@ -19,7 +19,7 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       jdbc:
         lob:
           non_contextual_creation: true
