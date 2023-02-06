@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
@@ -33,9 +36,6 @@ class SecurityConfig {
 
     @Autowired
     private lateinit var unauthorizedHandler: AuthEntryPointJwt
-
-//    @Autowired
-//    private lateinit var authService: AuthService
 
     @Bean
     fun authenticationJwtTokenFilter(): AuthTokenFilter {
@@ -76,27 +76,28 @@ class SecurityConfig {
 //            .anyRequest().authenticated()
         http
             .authenticationProvider(authenticationProvider())
-//        http.formLogin().disable()
-//        http.httpBasic().disable()
         http
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
         http
 //            .httpBasic().authenticationEntryPoint(authenticationEntryPoint).and().
-            .cors().and()
             .csrf().disable()
+
+        http.cors()
 
         return http.build()
     }
 
-//    @PostConstruct
-//    fun addFirstUser() {
-//        val user = User(
-//                username = "admin",
-//                email = "email@gmai.com",
-//                password = passwordEncoder()!!.encode("password"),
-//                roles = setOf(Role(ERole.ROLE_ADMIN)))
-//        if(!authService.userAlreadyExists(user)){
-//            authService.registerUser(user)
-//        }
-//    }
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource? {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = arrayListOf("http://localhost:4200")
+        configuration.allowedMethods = arrayListOf("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")
+        configuration.allowCredentials = true
+        configuration.allowedHeaders = arrayListOf("Authorization", "Requestor-Type")
+        configuration.exposedHeaders = arrayListOf("X-Get-Header")
+        configuration.maxAge = 3600L
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
+    }
 }
