@@ -46,6 +46,18 @@ class UserController {
         }
     }
 
+    @GetMapping("")
+    fun getAllUsers(): ResponseEntity<*> {
+        return try {
+            val users = userService.getAll()
+            ResponseEntity.ok<Any>(users)
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
     //    @PreAuthorize("hasRole('ADMIN')")
 //    @GetMapping
 //    fun findAll() =

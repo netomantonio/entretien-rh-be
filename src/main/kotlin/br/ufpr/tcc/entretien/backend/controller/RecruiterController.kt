@@ -65,6 +65,7 @@ class RecruiterController {
         "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER') and #recruiterScheduleRequest.recruiterId == principal.id"
     )
     @PostMapping("/schedules")
+    // TODO: incorporate Principal Object as controller function param
     fun addAvailableSchedule(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest): ResponseEntity<*> {
         if (!recruiterService.existsById(recruiterScheduleRequest.recruiterId)) {
             return ResponseEntity
@@ -85,9 +86,7 @@ class RecruiterController {
         }
     }
 
-    @PreAuthorize(
-        "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER') and #id == principal.id"
-    )
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')")
     @GetMapping("/schedules/{id}")
     fun getAllAvailableScheduleByRecruiterId(@PathVariable id: Long): ResponseEntity<*> {
         if (!recruiterService.existsById(id)) {
@@ -105,9 +104,7 @@ class RecruiterController {
         }
     }
 
-    @PreAuthorize(
-        "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')"
-    )
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')")
     @DeleteMapping("/schedules/{id}")
     fun removeAvailableScheduleById(@PathVariable id: Long, authentication: Authentication): ResponseEntity<*> {
 
@@ -152,5 +149,19 @@ class RecruiterController {
         return ResponseEntity
             .ok()
             .body<Any>("Schedules removed.")
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/schedules")
+    fun getAllAvailableSchedules(): ResponseEntity<*> {
+        return try {
+            ResponseEntity
+                .ok()
+                .body<Any>(scheduleService.getAllAvailableSchedules())
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Error?")
+        }
     }
 }
