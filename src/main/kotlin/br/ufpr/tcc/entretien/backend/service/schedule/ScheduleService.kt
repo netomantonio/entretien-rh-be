@@ -105,4 +105,9 @@ class ScheduleService {
     fun getAllSchedulesByRecruiterId(recruiterId: Long): Iterable<Schedule> =
         scheduleRepository.getAllByRecruiterId(recruiterId).get()
 
+    fun getAllAvailableSchedules(): Iterable<Schedule> {
+        val schedules = scheduleRepository.findAll()
+        return schedules.distinctBy { Pair(it.startingAt, it.endingAt) }
+    }
+
 }
