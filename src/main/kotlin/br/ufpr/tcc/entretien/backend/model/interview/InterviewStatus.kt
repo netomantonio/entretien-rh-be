@@ -1,6 +1,5 @@
-package br.ufpr.tcc.entretien.backend.model
+package br.ufpr.tcc.entretien.backend.model.interview
 
-import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import javax.persistence.*
 
