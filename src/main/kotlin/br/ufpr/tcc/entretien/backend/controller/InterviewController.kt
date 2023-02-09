@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
@@ -41,6 +42,24 @@ class InterviewController {
         return try {
             val interviews = interviewService.getAll()
             ResponseEntity.ok<Any>(interviews)
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ex.printStackTrace()
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @PostMapping("/commit")
+    fun commitInterview(@Valid @RequestBody commitInterviewRequest: CommitInterviewRequest, authentication: Authentication): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        val date = commitInterviewRequest.date
+        val scheduleId = commitInterviewRequest.scheduleId
+        return try {
+            interviewService.commitInterview(scheduleId, date, candidateId)
+            ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
             println(ex.message)

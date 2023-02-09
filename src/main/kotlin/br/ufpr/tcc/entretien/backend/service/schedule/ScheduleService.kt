@@ -41,9 +41,9 @@ class ScheduleService {
     }
 
     @Throws(ScheduleException::class)
-    fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest) {
+    fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest, recruiterId: Long) {
 
-        var recruiter = recruiterService.getRecruiterById(recruiterScheduleRequest.recruiterId)
+        var recruiter = recruiterService.getRecruiterById(recruiterId)
 
         val newSchedule = this.buildSchedule(
             recruiter,

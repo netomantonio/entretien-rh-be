@@ -62,18 +62,20 @@ class RecruiterController {
     fun getRecruiterById(@PathVariable id: Long): Recruiter = recruiterService.getRecruiterById(id)
 
     @PreAuthorize(
-        "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER') and #recruiterScheduleRequest.recruiterId == principal.id"
+        "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')"
     )
     @PostMapping("/schedules")
     // TODO: incorporate Principal Object as controller function param
-    fun addAvailableSchedule(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest): ResponseEntity<*> {
-        if (!recruiterService.existsById(recruiterScheduleRequest.recruiterId)) {
+    fun addAvailableSchedule(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest, authentication: Authentication ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val recruiterId = userDetails.getId()
+        if (!recruiterService.existsById(recruiterId)) {
             return ResponseEntity
                 .badRequest()
                 .body<Any>(("Error: Invalid id for Recruiter"))
         }
         return try {
-            scheduleService.addScheduleEntry(recruiterScheduleRequest)
+            scheduleService.addScheduleEntry(recruiterScheduleRequest, recruiterId)
             ResponseEntity.ok<Any>("Schedule added successfully!")
         } catch (ex: ScheduleException) {
             println("[ERROR] ------------------------------------------")
