@@ -18,6 +18,7 @@ class Schedule(
     @JoinColumn(name = "fk_recruiter")
     @JsonBackReference
     val recruiter: Recruiter,
+    var available: Boolean = true,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) var updatedAt: Date = Date.from(Instant.now()),
     @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: EDayOfTheWeek,

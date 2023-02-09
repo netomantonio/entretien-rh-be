@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.model.users
 
 import br.ufpr.tcc.entretien.backend.model.infra.Role
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.Instant
 import java.util.Date
 import javax.persistence.*
@@ -31,7 +32,7 @@ abstract class User(
     var phone: String? = null,
     // TODO: (val gender: ENUM)
     var email: String = "",
-    var password: String = "",
+    @JsonIgnore var password: String = "",
     @Column(nullable = false) var cpf: String = "",
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(

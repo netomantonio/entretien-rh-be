@@ -1,7 +1,7 @@
 package br.ufpr.tcc.entretien.backend.repository
 
-import br.ufpr.tcc.entretien.backend.model.InterviewStatus
-import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
+import br.ufpr.tcc.entretien.backend.model.interview.InterviewStatus
+import br.ufpr.tcc.entretien.backend.model.interview.EInterviewStatus
 import org.springframework.data.repository.CrudRepository
 import java.util.Optional
 
