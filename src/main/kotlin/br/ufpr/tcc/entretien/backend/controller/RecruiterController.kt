@@ -4,6 +4,7 @@ import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
+import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.RecruiterService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import br.ufpr.tcc.entretien.backend.service.schedule.ScheduleException
@@ -26,6 +27,10 @@ class RecruiterController {
 
     @Autowired
     lateinit var scheduleService: ScheduleService
+
+    @Autowired
+    lateinit var interviewService: InterviewService
+
 
     @PostMapping
     fun registerRecruiter(@Valid @RequestBody recruiterSignupRequest: RecruiterSignupRequest): ResponseEntity<*> {
@@ -61,11 +66,8 @@ class RecruiterController {
     @GetMapping("/{id}")
     fun getRecruiterById(@PathVariable id: Long): Recruiter = recruiterService.getRecruiterById(id)
 
-    @PreAuthorize(
-        "hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')"
-    )
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
     @PostMapping("/schedules")
-    // TODO: incorporate Principal Object as controller function param
     fun addAvailableSchedule(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest, authentication: Authentication ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val recruiterId = userDetails.getId()
@@ -114,7 +116,9 @@ class RecruiterController {
 
         val recruiterId = userDetails.getId()
 
-        if (!scheduleService.assertScheduleOwnership(id, recruiterId)) {
+        println("isAdmin: " + userDetails.isAdmin())
+
+        if ((!scheduleService.assertScheduleOwnership(id, recruiterId))) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body<Any>(("Logged user can only remove it´s own schedules."))
@@ -166,4 +170,24 @@ class RecruiterController {
             ResponseEntity.internalServerError().body("Error?")
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @GetMapping("/interviews")
+    fun getAllScheduleInterviews(authentication: Authentication): ResponseEntity<*> {
+
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+
+        val recruiterId = userDetails.getId()
+
+        return try {
+            ResponseEntity
+                .ok()
+                .body<Any>(interviewService.getScheduleInterviewsByRecruiter(recruiterId))
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ResponseEntity.internalServerError().body("Error?")
+        }
+    }
+
 }

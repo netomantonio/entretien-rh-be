@@ -131,12 +131,12 @@ class InterviewService {
         }
     }
 
-    fun isAvailableForCandidate(candidateId: Long) : Boolean {
+    fun isAvailableForCandidate(candidateId: Long): Boolean {
         return interviewRepository.existsByCandidateId(candidateId)
     }
 
     fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
-        if(!interviewRepository.existsByCandidateId(candidateId)){
+        if (!interviewRepository.existsByCandidateId(candidateId)) {
             // TODO: throw error (interview not available)
         }
 
@@ -158,4 +158,7 @@ class InterviewService {
         interviewRepository.save(interview)
     }
 
+    fun getScheduleInterviewsByRecruiter(recruiterId: Long): Iterable<Interview> {
+        return interviewRepository.findByRecruiterId(recruiterId).get()
+    }
 }
