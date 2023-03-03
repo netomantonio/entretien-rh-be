@@ -92,4 +92,9 @@ class UserDetailsImpl : UserDetails {
         val user = o as UserDetailsImpl
         return Objects.equals(id, user.id)
     }
+
+    fun isAdmin(): Boolean {
+        println(authorities.toString())
+        return false
+    }
 }

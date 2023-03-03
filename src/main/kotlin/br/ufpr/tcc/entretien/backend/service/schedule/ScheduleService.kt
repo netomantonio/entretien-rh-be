@@ -107,7 +107,7 @@ class ScheduleService {
 
     fun getAllAvailableSchedules(): Iterable<Schedule> {
         val schedules = scheduleRepository.findAll()
-        return schedules.distinctBy { Pair(it.startingAt, it.endingAt) }
+        return schedules.distinctBy { Pair(it.startingAt, it.endingAt) }.filter { it.available }
     }
 
 }
