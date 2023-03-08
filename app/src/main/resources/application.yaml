@@ -1,0 +1,29 @@
+entretien:
+  app:
+    jwtSecret: secret
+    jwtExpirationMs: 86400000
+server:
+    port: 5000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?timezone=America/Sao_Paulo
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  sql:
+    init:
+      mode: always
+      platform: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        lob:
+          non_contextual_creation: true
+
+OPENVIDU:
+  url: http://localhost:4443/
+  secret: entretien-rh
