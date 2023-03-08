@@ -44,7 +44,7 @@ services:
     working_dir: /app
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/${POSTGRES_DB}?timezone=America/Sao_Paulo
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:6543/${POSTGRES_DB}?timezone=America/Sao_Paulo
       SPRING.DATASOURCE.PASSWORD: ${POSTGRES_PASSWORD}
       SPRING.DATASOURCE.USERNAME: ${POSTGRES_USER}
     ports:

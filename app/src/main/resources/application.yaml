@@ -6,7 +6,7 @@ server:
     port: 5000
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?timezone=America/Sao_Paulo
+    url: jdbc:postgresql://localhost:6543/${POSTGRES_DB}?timezone=America/Sao_Paulo
     driverClassName: org.postgresql.Driver
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
