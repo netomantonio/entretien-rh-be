@@ -9,4 +9,6 @@
    2. DB_USERNAME
    3. OPENVIDU_SECRET
 3. Export environments variables from system with code:
-   1. `export set POSTGRES_USER=user POSTGRES_PASSWORD=password OPENVIDU_SECRET=entretien-rh`
+   1. `export set POSTGRES_USER=user POSTGRES_PASSWORD=password OPENVIDU_SECRET=entretien-rh POSTGRES_DB=db`
+4. Add environments variables from run configurations IDE with code:
+   1. `POSTGRES_USER=user;POSTGRES_PASSWORD=password;OPENVIDU_SECRET=entretien-rh;POSTGRES_DB=db`
