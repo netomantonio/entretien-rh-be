@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+
+  db:
+    container_name: postgres-container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+    ports:
+      - 6543:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8181:8080
+    depends_on:
+      - db
+
+  openvidu:
+    image: openvidu/openvidu-server-kms:latest
+    restart: always
+    environment:
+      OPENVIDU_SECRET: entretien-rh
+      TZ: America/Sao_Paulo
+    ports:
+      - 4443:4443
