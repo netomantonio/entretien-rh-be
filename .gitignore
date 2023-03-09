@@ -1,9 +1,10 @@
-HELP.md
-.gradle
+../.gradle
 build/
+app/.gradle
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!.idea/runConfigurations/
 
 ### STS ###
 .apt_generated
@@ -18,13 +19,25 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+/app/.idea/
+/.idea/.gitignore
+/.idea/.name
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/jarRepositories.xml
+/.idea/kotlinc.xml
+/.idea/misc.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+/.idea/runConfigurations/
+/.idea/codeStyles/
+/.idea/
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,3 +48,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/.env
