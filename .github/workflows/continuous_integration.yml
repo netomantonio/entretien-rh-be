@@ -3,7 +3,7 @@ name: Continuous Integrations whit Actions
 on:
   push:
     branches:
-      - main
+      - build-aws
 
 permissions:
   contents: read
