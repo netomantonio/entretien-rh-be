@@ -3,7 +3,7 @@ entretien:
     jwtSecret: secret
     jwtExpirationMs: 86400000
 server:
-    port: 5000
+    port: 5050
 spring:
   datasource:
     url: jdbc:postgresql://localhost:6543/${POSTGRES_DB}?timezone=America/Sao_Paulo
