@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - build-aws
+    pull-request:
+      - build-aws
 
 permissions:
   contents: read
