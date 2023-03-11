@@ -47,10 +47,11 @@ services:
       SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/${POSTGRES_DB}?timezone=America/Sao_Paulo
       SPRING.DATASOURCE.PASSWORD: ${POSTGRES_PASSWORD}
       SPRING.DATASOURCE.USERNAME: ${POSTGRES_USER}
+      SERVER.PORT: 5050
     ports:
-      - "5000:5000"
+      - "5050:5050"
     expose:
-      - 5000
+      - 5050
     command: bash -c "./gradlew bootRun -Dorg.gradle.daemon=false"
     depends_on:
       - db
