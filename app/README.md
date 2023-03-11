@@ -1,9 +1,9 @@
 # ENTRETIEN-RH
-
+[![Docker Hub Repo](https://img.shields.io/docker/pulls/netomantonio/entretien-backend-app.svg)](https://hub.docker.com/repository/docker/netomantonio/entretien-backend-app)
 ## Instructions
 
 1. Check dependencies:
-    1. Docker/Docker Compose
+   1. Docker/Docker Compose
 2. Check environment variables(Intellij):
    1. DB_PASSWORD
    2. DB_USERNAME
