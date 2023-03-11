@@ -42,7 +42,7 @@ jobs:
 
       - name: Push to Docker Hub Container registry
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${{ github.run_id }}
-          
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:1.0.${{ github.run_id }}
+          timestamp=$(date +'%y.%m.%dT%H:%M')
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${timestamp}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${timestamp}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest
