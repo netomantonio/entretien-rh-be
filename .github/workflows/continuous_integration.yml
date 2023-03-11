@@ -1,0 +1,45 @@
+name: Continuous Integrations whit Actions
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.10.0
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Build Application Jar
+        working-directory: ./app
+        run: ./gradlew clean build
+
+      - name: Docker Compose Build
+        working-directory: ./
+        run: docker compose --env-file=app/src/main/resources/.env build
+
+      - name: Push to Docker Hub Container registry
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${{ github.run_id }}
+          
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${{ github.run_id }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest
