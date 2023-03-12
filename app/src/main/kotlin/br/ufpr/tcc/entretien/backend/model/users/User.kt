@@ -21,24 +21,24 @@ abstract class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "users_id_seq")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
-    var id: Long = 0,
-    var firstName: String? = null,
-    var lastName: String? = null,
-    var username: String = "",
-    @Temporal(TemporalType.DATE) val birthDay: Date? = null,
-    @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
-    var activated: Boolean = false,
-    var phone: String? = null,
+    open var id: Long = 0,
+    open var firstName: String? = null,
+    open var lastName: String? = null,
+    open var username: String = "",
+    @Temporal(TemporalType.DATE) open val birthDay: Date? = null,
+    @Temporal(TemporalType.TIMESTAMP) open val createdAt: Date = Date.from(Instant.now()),
+    @Temporal(TemporalType.TIMESTAMP) open val updatedAt: Date = Date.from(Instant.now()),
+    open var activated: Boolean = false,
+    open var phone: String? = null,
     // TODO: (val gender: ENUM)
-    var email: String = "",
-    @JsonIgnore var password: String = "",
-    @Column(nullable = false) var cpf: String = "",
+    open var email: String = "",
+    @JsonIgnore open var password: String = "",
+    @Column(nullable = false) open var cpf: String = "",
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roles: Set<Role> = emptySet()
+    open var roles: Set<Role> = emptySet()
 )
