@@ -33,6 +33,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.openvidu:openvidu-java-client:2.24.0")
 
+    // OPENAPI - REST DOCUMENTATION
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.6.0")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.0")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.0")
+
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
