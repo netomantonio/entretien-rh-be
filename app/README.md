@@ -12,3 +12,5 @@
    1. `export set POSTGRES_USER=user POSTGRES_PASSWORD=password OPENVIDU_SECRET=entretien-rh POSTGRES_DB=db`
 4. Add environments variables from run configurations IDE with code:
    1. `POSTGRES_USER=user;POSTGRES_PASSWORD=password;OPENVIDU_SECRET=entretien-rh;POSTGRES_DB=db`
+5. REST API DOCUMENTATION
+   1. [[ DEV ](`http://ec2-44-202-205-236.compute-1.amazonaws.com/swagger-ui/index.html#/`)] Swagger OpenAPI 3.0 | 

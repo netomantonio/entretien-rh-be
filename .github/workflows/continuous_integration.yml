@@ -3,13 +3,11 @@ name: Continuous Integrations whit Actions
 on:
   push:
     branches:
-      - "build-aws"
-  pull_request:
-    branches:
-      - "build-aws"
+      - "develop"
 
 permissions:
-  contents: read
+  id-token: write # obrigatório para usar autenticação OIDC
+  contents: read # obrigatório para clonar o código do repositório
 
 jobs:
   build:
@@ -19,11 +17,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          role-duration-seconds: 900 # o TTL da sessão, em segundos.
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       - name: Login to DockerHub
         uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Setup Java JDK
         uses: actions/setup-java@v3.10.0
@@ -40,9 +49,38 @@ jobs:
         working-directory: ./
         run: docker compose --env-file=app/src/main/resources/.env build
 
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          timestamp=$(date +'%y%m%d-%H%M')
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.ECR_IMAGE_REPO_URL }}:${timestamp}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.ECR_IMAGE_REPO_URL }}:latest
+          
+          docker push ${{ secrets.ECR_IMAGE_REPO_URL }}:${timestamp}
+          docker push ${{ secrets.ECR_IMAGE_REPO_URL }}:latest
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ secrets.CONTAINER_NAME }}
+          image: ${{ secrets.ECR_IMAGE_REPO_URL }}:latest
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ secrets.SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER_NAME }}
+          wait-for-service-stability: true
+
       - name: Push to Docker Hub Container registry
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${{ github.run_id }}
-          
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${{ github.run_id }}
+          timestamp=$(date +'%y%m%d-%H%M')
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${timestamp}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:${timestamp}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/entretien-backend-app:latest

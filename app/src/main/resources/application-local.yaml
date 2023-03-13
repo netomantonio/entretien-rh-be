@@ -6,10 +6,10 @@ server:
     port: 5000
 spring:
   datasource:
-    url: jdbc:postgresql://db-entretien.c7vy4anjujjj.us-east-1.rds.amazonaws.com:5432/db_entretien?timezone=America/Sao_Paulo
+    url: jdbc:postgresql://localhost:6543/${POSTGRES_DB}?timezone=America/Sao_Paulo
     driverClassName: org.postgresql.Driver
-    username: entretien_be
-    password: password
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   sql:
     init:
       mode: always
