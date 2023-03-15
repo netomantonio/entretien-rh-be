@@ -46,28 +46,28 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:${timestamp}
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL}}:${timestamp}
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL}}:latest
           
-          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:${timestamp}
-          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL}}:${timestamp}
+          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL}}:latest
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.HOM_TASK_DEFINITION_NAME'] }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ env.HOM_TASK_DEFINITION_NAME}} --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ env.HOM_CONTAINER_NAME'] }}
-          image: ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+          container-name: ${{ env.HOM_CONTAINER_NAME}}
+          image: ${{ env.HOM_ECR_IMAGE_REPO_URL}}:latest
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.HOM_SERVICE_NAME'] }}
-          cluster: ${{ env.HOM_CLUSTER_NAME'] }}
+          service: ${{ env.HOM_SERVICE_NAME}}
+          cluster: ${{ env.HOM_CLUSTER_NAME}}
           wait-for-service-stability: true
