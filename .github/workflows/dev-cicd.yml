@@ -81,7 +81,7 @@ jobs:
       - name: Push to Docker Hub Container registry
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
-          docker tag netomantonio/entretien-backend-app:latest netomantonio/entretien-backend-app:${timestamp}
+          docker tag netomantonio/entretien-backend-app:latest netomantonio/entretien-backend-app:$(date +'%y%m%d-%H%M')
           docker push netomantonio/entretien-backend-app:${timestamp}
           docker push netomantonio/entretien-backend-app:latest
           echo "Imagem publicada no Docker Hub com sucesso"
