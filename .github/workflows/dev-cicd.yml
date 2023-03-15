@@ -80,6 +80,7 @@ jobs:
 
       - name: Push to Docker Hub Container registry
         run: |
+          echo ${{ env.DOCKERHUB_USERNAME }}
           if [[ env.PROJECT_ENVIRONMENT_AWS == "DEV"]]; then
             timestamp=$(date +'%y%m%d-%H%M')
             docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:${timestamp}
