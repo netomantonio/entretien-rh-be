@@ -48,7 +48,7 @@ jobs:
           echo ${{ env.DOCKERHUB_USERNAME }}
           
           timestamp=$(date +'%y%m%d-%H%M')
-          docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:${timestamp}
+          docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:timestamp
           docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:latest
           
           docker push ${{ env.DEV_ECR_IMAGE_REPO_URL}}:${timestamp}
