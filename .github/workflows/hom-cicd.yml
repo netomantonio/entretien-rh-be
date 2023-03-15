@@ -1,0 +1,73 @@
+name: CI/CD whit Actions for Homolog Environment
+
+on:
+  push:
+    branches:
+      - "homolog"
+
+permissions:
+  id-token: write # obrigatório para usar autenticação OIDC
+  contents: read # obrigatório para clonar o código do repositório
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_GITHUB_ACTIONS_ROLE }}
+          role-duration-seconds: 900 # o TTL da sessão, em segundos.
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.10.0
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Build Application Jar
+        working-directory: ./app
+        run: ./gradlew clean build
+
+      - name: Docker Compose Build
+        working-directory: ./
+        run: docker compose --env-file=app/src/main/resources/.env.homol build
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          timestamp=$(date +'%y%m%d-%H%M')
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:${timestamp}
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+          
+          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:${timestamp}
+          docker push ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.HOM_TASK_DEFINITION_NAME'] }} --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ env.HOM_CONTAINER_NAME'] }}
+          image: ${{ env.HOM_ECR_IMAGE_REPO_URL'] }}:latest
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.HOM_SERVICE_NAME'] }}
+          cluster: ${{ env.HOM_CLUSTER_NAME'] }}
+          wait-for-service-stability: true
