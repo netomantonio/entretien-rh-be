@@ -46,7 +46,7 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
           echo ${{ env.DOCKERHUB_USERNAME }}
-          docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:$(date +'%y%m%d-%H%M')
+          docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:$(date +'%y%m%d%H%M')
           docker tag netomantonio/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL}}:latest
           
           docker push ${{ env.DEV_ECR_IMAGE_REPO_URL}}:${timestamp}
@@ -81,7 +81,7 @@ jobs:
       - name: Push to Docker Hub Container registry
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
-          docker tag netomantonio/entretien-backend-app:latest netomantonio/entretien-backend-app:$(date +'%y%m%d-%H%M')
+          docker tag netomantonio/entretien-backend-app:latest netomantonio/entretien-backend-app:$(date +'%y%m%d%H%M')
           docker push netomantonio/entretien-backend-app:${timestamp}
           docker push netomantonio/entretien-backend-app:latest
           echo "Imagem publicada no Docker Hub com sucesso"
