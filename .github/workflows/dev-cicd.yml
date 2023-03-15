@@ -1,11 +1,9 @@
-name: CI/CD whit Actions
+name: CI/CD whit Actions for Develop Environmnet
 
 on:
   push:
     branches:
       - "develop"
-      - "homol"
-      - "main"
 
 permissions:
   id-token: write # obrigatório para usar autenticação OIDC
@@ -18,20 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Verificando Ambiente de CI/CD
-        run: |
-          PROJECT_ENVIRONMENT_AWS=${GITHUB_REF##*/}
-          if [[ "$PROJECT_ENVIRONMENT_AWS" == "develop" ]]; then
-            echo "Este é o ambiente de desenvolvimento"
-            echo "PROJECT_ENVIRONMENT_AWS=DEV" >> $GITHUB_ENV
-          elif [[ "$PROJECT_ENVIRONMENT_AWS" == "homol" ]]; then
-            echo "Este é o ambiente de homologação"
-            echo "PROJECT_ENVIRONMENT_AWS=HOM" >> $GITHUB_ENV
-          elif [[ "$PROJECT_ENVIRONMENT_AWS" == "main" ]]; then
-            echo "Este é o ambiente de produção"
-            echo "PROJECT_ENVIRONMENT_AWS=PROD" >> $GITHUB_ENV
-          fi
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -57,35 +41,35 @@ jobs:
 
       - name: Docker Compose Build
         working-directory: ./
-        run: docker compose --env-file=app/src/main/resources/.${{ env.PROJECT_ENVIRONMENT_AWS }} build
+        run: docker compose --env-file=app/src/main/resources/.env.develop build
 
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_ECR_IMAGE_REPO_URL'] }}:${timestamp}
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_ECR_IMAGE_REPO_URL'] }}:latest
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL'] }}:${timestamp}
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/entretien-backend-app:latest ${{ env.DEV_ECR_IMAGE_REPO_URL'] }}:latest
           
-          docker push ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_ECR_IMAGE_REPO_URL'] }}:${timestamp}
-          docker push ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_ECR_IMAGE_REPO_URL'] }}:latest
+          docker push ${{ env.DEV_ECR_IMAGE_REPO_URL'] }}:${timestamp}
+          docker push ${{ env.DEV_ECR_IMAGE_REPO_URL'] }}:latest
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_TASK_DEFINITION_NAME'] }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ env.DEV_TASK_DEFINITION_NAME'] }} --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_CONTAINER_NAME'] }}
-          image: ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_ECR_IMAGE_REPO_URL'] }}:latest
+          container-name: ${{ env.DEV_CONTAINER_NAME'] }}
+          image: ${{ env.DEV_ECR_IMAGE_REPO_URL'] }}:latest
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_SERVICE_NAME'] }}
-          cluster: ${{ env[env.PROJECT_ENVIRONMENT_AWS + '_CLUSTER_NAME'] }}
+          service: ${{ env.DEV_SERVICE_NAME'] }}
+          cluster: ${{ env.DEV_CLUSTER_NAME'] }}
           wait-for-service-stability: true
 
       - name: Login to DockerHub
