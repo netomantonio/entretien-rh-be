@@ -1,15 +1,15 @@
 entretien:
   app:
     jwtSecret: secret
-    jwtExpirationMs: 86400000
+    jwtExpirationMs: ${ JWT_EXPIRATION_MS }
 server:
-    port: 5000
+  port: ${ APPLICATION_SERVER_PORT }
 spring:
   datasource:
-    url: jdbc:postgresql://db-entretien.c7vy4anjujjj.us-east-1.rds.amazonaws.com:5432/db_entretien?timezone=America/Sao_Paulo
+    url: jdbc:postgresql://${POSTGRES_URL}:${POSTGRES_PORT}/${POSTGRES_DB}?timezone=America/Sao_Paulo
     driverClassName: org.postgresql.Driver
-    username: entretien_be
-    password: password
+    username: ${ POSTGRES_USER }
+    password: ${ POSTGRES_PASSWORD }
   sql:
     init:
       mode: always
@@ -25,5 +25,5 @@ spring:
           non_contextual_creation: true
 
 OPENVIDU:
-  url: http://localhost:4443/
-  secret: entretien-rh
+  url: ${ OPENVID_URL }
+  secret: ${ OPENVIDU_SECRET }

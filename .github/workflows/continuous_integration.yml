@@ -3,7 +3,7 @@ name: Continuous Integrations whit Actions
 on:
   push:
     branches:
-      - "develop"
+      - "story/build-aws"
 
 permissions:
   id-token: write # obrigatório para usar autenticação OIDC
@@ -69,6 +69,25 @@ jobs:
           task-definition: task-definition.json
           container-name: ${{ secrets.CONTAINER_NAME }}
           image: ${{ secrets.ECR_IMAGE_REPO_URL }}:latest
+          environment: |
+            - name: APPLICATION_SERVER_PORT
+              value: ${{ secrets.APPLICATION_SERVER_PORT }}
+            - name: JWT_EXPIRATION_MS
+              value: ${{ secrets.JWT_EXPIRATION_MS }}
+            - name: POSTGRES_URL
+              value: ${{ secrets.POSTGRES_URL }}
+            - name: POSTGRES_PORT
+              value: ${{ secrets.POSTGRES_PORT }}
+            - name: POSTGRES_DB
+              value: ${{ secrets.POSTGRES_DB }}
+            - name: POSTGRES_USER
+              value: ${{ secrets.POSTGRES_USER }}
+            - name: POSTGRES_PASSWORD
+              value: ${{ secrets.POSTGRES_PASSWORD }}
+            - name: OPENVID_URL
+              value: ${{ secrets.OPENVID_URL }}
+            - name: OPENVIDU_SECRET
+              value: ${{ secrets.OPENVIDU_SECRET }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -77,6 +96,12 @@ jobs:
           service: ${{ secrets.SERVICE_NAME }}
           cluster: ${{ secrets.CLUSTER_NAME }}
           wait-for-service-stability: true
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push to Docker Hub Container registry
         run: |
