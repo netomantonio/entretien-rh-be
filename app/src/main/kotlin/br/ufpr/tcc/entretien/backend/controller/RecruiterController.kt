@@ -68,7 +68,10 @@ class RecruiterController {
 
     @PreAuthorize("hasRole('ROLE_RECRUITER')")
     @PostMapping("/schedules")
-    fun addAvailableSchedule(@Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest, authentication: Authentication ): ResponseEntity<*> {
+    fun addAvailableSchedule(
+        @Valid @RequestBody recruiterScheduleRequest: RecruiterScheduleRequest,
+        authentication: Authentication
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val recruiterId = userDetails.getId()
         if (!recruiterService.existsById(recruiterId)) {

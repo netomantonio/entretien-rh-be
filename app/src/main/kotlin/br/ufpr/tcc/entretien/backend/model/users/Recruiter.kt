@@ -18,5 +18,5 @@ class Recruiter(
     // TODO:
     @OneToMany(cascade=[CascadeType.ALL], mappedBy = "recruiter")
     @JsonManagedReference
-    var schedule: MutableSet<Schedule>? = null
+    var schedule: MutableList<Schedule>? = null
 ) : User()
