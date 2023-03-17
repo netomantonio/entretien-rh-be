@@ -3,7 +3,7 @@ name: Continuous Integrations whit Actions
 on:
   push:
     branches:
-      - "story/build-aws"
+      - "main"
 
 permissions:
   id-token: write # obrigatório para usar autenticação OIDC
