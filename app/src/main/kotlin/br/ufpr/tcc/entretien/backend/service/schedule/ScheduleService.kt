@@ -44,23 +44,32 @@ class ScheduleService {
     fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest, recruiterId: Long) {
 
         var recruiter = recruiterService.getRecruiterById(recruiterId)
+        var schedules: MutableList<Schedule> = mutableListOf()
 
-        val newSchedule = this.buildSchedule(
-            recruiter,
-            recruiterScheduleRequest.dayOfTheWeek,
-            recruiterScheduleRequest.startingAt,
-            recruiterScheduleRequest.endingAt
-        )
-
+        for (agenda in recruiterScheduleRequest.agenda) {
+            for (timeSpan in agenda.timesOfTheDay) {
+                var newSchedule: Schedule? = null
+                newSchedule = Schedule(
+                    recruiter = recruiter,
+                    dayOfTheWeek = agenda.dayOfTheWeek,
+                    startingAt = timeSpan.startingAt,
+                    endingAt = timeSpan.endingAt
+                )
+                schedules.add(newSchedule)
+            }
+        }
         if (recruiter.schedule == null) {
-            recruiter.schedule = mutableSetOf()
+            recruiter.schedule = mutableListOf()
         } else {
-            if (this.isOverlappingRecruiterSchedule(newSchedule, recruiter)) {
-                throw ScheduleException(ScheduleExceptionType.OVERLAPPING_SCHEDULE, "Overlapping schedules.")
+            for (schedules in schedules) {
+                if (this.isOverlappingRecruiterSchedule(schedules, recruiter)) {
+                    // TODO: allow to persist every other entry not overlapping
+                    throw ScheduleException(ScheduleExceptionType.OVERLAPPING_SCHEDULE, "Overlapping schedules.")
+                }
             }
         }
 
-        recruiter.schedule!!.add(newSchedule)
+        recruiter.schedule!!.addAll(schedules)
 
         this.recruiterRepository.save(recruiter)
     }
