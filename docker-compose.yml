@@ -21,7 +21,7 @@ services:
       SPRING.DATASOURCE.URL: jdbc:postgresql://${secrets.POSTGRES_URL}:${POSTGRES_PORT}/${POSTGRES_DB}?timezone=America/Sao_Paulo
       SPRING.DATASOURCE.PASSWORD: ${POSTGRES_PASSWORD}
       SPRING.DATASOURCE.USERNAME: ${POSTGRES_USER}
-      SERVER.PORT: ${secrets.APPLICATION_SERVER_PORT}
+      SERVER.PORT: $${secrets.APPLICATION_SERVER_PORT}
     ports:
       - $${secrets.APPLICATION_SERVER_PORT}:$${secrets.APPLICATION_SERVER_PORT}
     expose:
