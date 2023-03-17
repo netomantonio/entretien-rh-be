@@ -25,7 +25,7 @@ services:
     ports:
       - ${secrets.APPLICATION_SERVER_PORT}:${secrets.APPLICATION_SERVER_PORT}
     expose:
-      - ${secrets.APPLICATION_SERVER_PORT}
+      - $${secrets.APPLICATION_SERVER_PORT}
     command: bash -c "./gradlew bootRun -Dorg.gradle.daemon=false"
 
 
