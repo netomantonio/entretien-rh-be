@@ -1,42 +1,16 @@
+x-github:
+  secrets:
+    POSTGRES_URL:
+    POSTGRES_PORT:
+    POSTGRES_PASSWORD:
+    POSTGRES_DB:
+    POSTGRES_USER:
+    OPENVIDU_SECRET:
+    APPLICATION_SERVER_PORT:
+
 version: '3.8'
 
 services:
-  db:
-    container_name: postgres-container
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      TZ: America/Sao_Paulo
-      PGTZ: America/Sao_Paulo
-    ports:
-      - "6543:5432"
-    networks:
-      - backend-network
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8181:8080"
-    depends_on:
-      - db
-    networks:
-      - backend-network
-
-  openvidu:
-    image: openvidu/openvidu-server-kms:latest
-    restart: always
-    environment:
-      OPENVIDU_SECRET: ${OPENVIDU_SECRET}
-      TZ: America/Sao_Paulo
-    ports:
-      - "4443:4443"
-    networks:
-      - backend-network
-
   entretien-backend-app:
     image: netomantonio/entretien-backend-app
     restart: always
@@ -44,21 +18,15 @@ services:
     working_dir: /app
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/${POSTGRES_DB}?timezone=America/Sao_Paulo
-      SPRING.DATASOURCE.PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING.DATASOURCE.USERNAME: ${POSTGRES_USER}
-      SERVER.PORT: 5050
+      SPRING.DATASOURCE.URL: jdbc:postgresql://$${secrets.POSTGRES_URL}:$${POSTGRES_PORT}/$${POSTGRES_DB}?timezone=America/Sao_Paulo
+      SPRING.DATASOURCE.PASSWORD: $${POSTGRES_PASSWORD}
+      SPRING.DATASOURCE.USERNAME: $${POSTGRES_USER}
+      SERVER.PORT: 80
     ports:
-      - "5050:5050"
+      - "80:80"
     expose:
-      - 5050
+      - $${secrets.APPLICATION_SERVER_PORT}
     command: bash -c "./gradlew bootRun -Dorg.gradle.daemon=false"
-    depends_on:
-      - db
-      - openvidu
-    networks:
-      - backend-network
 
-networks:
-  backend-network:
-    driver: bridge
+
+
