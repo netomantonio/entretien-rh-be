@@ -5,7 +5,16 @@ import java.time.LocalTime
 import javax.validation.constraints.NotBlank
 
 class RecruiterScheduleRequest(
-    @NotBlank var dayOfTheWeek: EDayOfTheWeek,
-    var startingAt: LocalTime,
-    var endingAt: LocalTime
-)
+    var agenda: MutableSet<Agenda>,
+) {
+    class Agenda(
+        @NotBlank
+        var dayOfTheWeek: EDayOfTheWeek,
+        var timesOfTheDay: MutableSet<TimeSpan>
+    )
+
+    class TimeSpan(
+        var startingAt: LocalTime,
+        var endingAt: LocalTime
+    )
+}
