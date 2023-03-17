@@ -15,7 +15,6 @@ class Recruiter(
     var presentation: String? = null,
     var cnpj: String? = null,
     var specialities: String? = null,
-    // TODO:
     @OneToMany(cascade=[CascadeType.ALL], mappedBy = "recruiter")
     @JsonManagedReference
     var schedule: MutableList<Schedule>? = null
