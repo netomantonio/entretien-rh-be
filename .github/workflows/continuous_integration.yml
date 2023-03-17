@@ -3,7 +3,7 @@ name: Continuous Integrations whit Actions
 on:
   push:
     branches:
-      - "story/build-aws"
+      - "main"
 
 permissions:
   id-token: write # obrigatório para usar autenticação OIDC
@@ -18,17 +18,13 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
-          role-duration-seconds: 900 # o TTL da sessão, em segundos.
+#          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+#          role-duration-seconds: 900 # o TTL da sessão, em segundos.
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2.1.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -47,8 +43,7 @@ jobs:
 
       - name: Docker Compose Build
         working-directory: ./
-        run: docker compose --env-file=app/src/main/resources/.env build
-
+        run: docker compose build
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
@@ -69,25 +64,6 @@ jobs:
           task-definition: task-definition.json
           container-name: ${{ secrets.CONTAINER_NAME }}
           image: ${{ secrets.ECR_IMAGE_REPO_URL }}:latest
-          environment: |
-            - name: APPLICATION_SERVER_PORT
-              value: ${{ secrets.APPLICATION_SERVER_PORT }}
-            - name: JWT_EXPIRATION_MS
-              value: ${{ secrets.JWT_EXPIRATION_MS }}
-            - name: POSTGRES_URL
-              value: ${{ secrets.POSTGRES_URL }}
-            - name: POSTGRES_PORT
-              value: ${{ secrets.POSTGRES_PORT }}
-            - name: POSTGRES_DB
-              value: ${{ secrets.POSTGRES_DB }}
-            - name: POSTGRES_USER
-              value: ${{ secrets.POSTGRES_USER }}
-            - name: POSTGRES_PASSWORD
-              value: ${{ secrets.POSTGRES_PASSWORD }}
-            - name: OPENVID_URL
-              value: ${{ secrets.OPENVID_URL }}
-            - name: OPENVIDU_SECRET
-              value: ${{ secrets.OPENVIDU_SECRET }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
