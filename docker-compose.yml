@@ -23,7 +23,7 @@ services:
       SPRING.DATASOURCE.USERNAME: ${POSTGRES_USER}
       SERVER.PORT: ${secrets.APPLICATION_SERVER_PORT}
     ports:
-      - ${secrets.APPLICATION_SERVER_PORT}:${secrets.APPLICATION_SERVER_PORT}
+      - $${secrets.APPLICATION_SERVER_PORT}:$${secrets.APPLICATION_SERVER_PORT}
     expose:
       - $${secrets.APPLICATION_SERVER_PORT}
     command: bash -c "./gradlew bootRun -Dorg.gradle.daemon=false"
