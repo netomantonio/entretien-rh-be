@@ -43,8 +43,7 @@ jobs:
 
       - name: Docker Compose Build
         working-directory: ./
-        run: docker compose build -e APPLICATION_SERVER_PORT=${{ secrets.APPLICATION_SERVER_PORT }} -e JWT_EXPIRATION_MS=${{ secrets.JWT_EXPIRATION_MS }} -e POSTGRES_URL=${{ secrets.POSTGRES_URL }} -e POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} -e OPENVID_URL=${{ secrets.OPENVID_URL }} -e OPENVIDU_SECRET=${{ secrets.OPENVIDU_SECRET }}
-
+        run: docker compose build
       - name: Build, tag, and push docker image to Amazon ECR
         run: |
           timestamp=$(date +'%y%m%d-%H%M')
