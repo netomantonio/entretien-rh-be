@@ -36,6 +36,11 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         candidateRepository.existsByEmail(email)
 
     private fun getEducationLevel(educationLevel: String): EducationLevel {
+        //TODO:("Essa função é desnecessária, além de ser altamente custosa principalmente quando
+        // o education level for Doutorado. a unica coisa que precisamos fazer é criar uma função no enum
+        // que retorna o valor que queremos, por exemplo Ensino Fundamental (valor do request) = ENSINO_FUNDAMENTAL (Valor do enum) = 1 (Valor no banco de dados)
+        // Mastambémos alinhar cósigos e o proprio frontend envia apenas o código, e usamos o enum dentro do backend para validar, visto que são opções específicas e poucas,
+        // podemos evitar chamadas desncessárias ao banco de dados.
         if (educationLevel == null) {
             throw (RuntimeException("Error: invalid input."))
         } else {
@@ -126,7 +131,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
             )
         }
 
-    // TODO: Review this method
+    // TODO: Review this method :
     fun getAllCandidates(): Iterable<Candidate> {
 
         var users = candidateRepository.findAll()

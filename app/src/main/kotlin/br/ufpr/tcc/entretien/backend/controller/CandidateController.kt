@@ -20,6 +20,9 @@ class CandidateController {
 
     @PostMapping("")
     fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
+        //TODO:("Vamos remover esses dois IF, deixcar ele para a responsabilidade do register ou @Annotation, vale
+        // lembrar que o bean validation provavelmente já tem alguma annotation para isso, quase certeza, mas se não tiver
+        // é facil de fazer, bem simples.")
         if (candidateService.existsByUsername(candidateSignupRequest.username)) {
             return ResponseEntity
                 .badRequest()
