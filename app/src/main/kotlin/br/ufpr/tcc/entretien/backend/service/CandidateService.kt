@@ -7,7 +7,7 @@ import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
-import br.ufpr.tcc.entretien.backend.repository.EducationLevelRepository
+import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
@@ -25,6 +25,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     lateinit var roleRepository: RoleRepository
 
     @Autowired
+    lateinit var interviewRepository: InterviewRepository
+
+    @Autowired
     lateinit var encoder: PasswordEncoder
 
     override fun existsByUsername(username: String) =
@@ -33,47 +36,18 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     override fun existsByEmail(email: String) =
         candidateRepository.existsByEmail(email)
 
-    private fun getEducationLevel(educationLevel: String): EducationLevel {
-        if (educationLevel == null) {
-            throw (RuntimeException("Error: invalid input."))
-        } else {
-            when (educationLevel) {
-                "Ensino Fundamental" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.ENSINO_FUNDAMENTAL)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
+    override fun register(candidate: Candidate) = candidateRepository.save(candidate)
 
-                "Ensino Medio" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.ENSINO_MEDIO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Graduação" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.GRADUACAO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Ensino Medio" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.POS_GRADUACAO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Mestrado" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.MESTRADO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                "Doutorado" -> {
-                    return educationLevelRepository.findByName(EEducationLevel.DOUTORADO)
-                        .orElseThrow { RuntimeException("Error: Education level is not found.") }
-                }
-
-                else -> throw RuntimeException("User was not created")
-            }
+    fun createNewCandidate(candidate: Candidate) {
+        val newCandidate = this.register(candidate)
+        val optionalInterview = interviewRepository.findByCandidateCpfWithPendingRegistration(candidate.cpf)
+        if (optionalInterview.isPresent) {
+            val interview = optionalInterview.get()
+            interview.candidate = newCandidate
+            interview.interviewStatus = EInterviewStatus.TO_BE_SCHEDULE
+            interviewRepository.save(interview)
         }
     }
-
-    override fun register(candidate: Candidate) = candidateRepository.save(candidate)
 
     fun buildResume(
         presentation: String,
