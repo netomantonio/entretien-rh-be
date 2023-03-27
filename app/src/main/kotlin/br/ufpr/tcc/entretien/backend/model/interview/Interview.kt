@@ -20,7 +20,8 @@ class Interview(
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     var startingAt: LocalDateTime? = null,
-    val endingAt: LocalDateTime? = null,
+    var endingAt: LocalDateTime? = null,
+    var cpf: String? = "",
     @ManyToOne
     @JoinColumn(name = "fk_recruiter")
     var recruiter: Recruiter? = null

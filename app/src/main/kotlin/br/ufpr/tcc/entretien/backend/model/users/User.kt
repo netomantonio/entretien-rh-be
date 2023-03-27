@@ -31,9 +31,9 @@ abstract class User(
     open var activated: Boolean = false,
     open var phone: String? = null,
     // TODO: (val gender: ENUM)
-    open var email: String = "",
+    @Column(unique = true) open var email: String = "",
     @JsonIgnore open var password: String = "",
-    @Column(nullable = false) open var cpf: String = "",
+    @Column(nullable = false, unique = true) open var cpf: String = "",
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "user_roles",
