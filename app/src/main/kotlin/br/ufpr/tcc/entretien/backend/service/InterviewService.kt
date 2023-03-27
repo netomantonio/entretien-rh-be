@@ -36,12 +36,22 @@ class InterviewService {
 
     fun createInterview(interviewRequest: InterviewRequest, managerId: Long) {
 
-        val candidate: Candidate = this.getCandidateById(interviewRequest.candidateId)
         val manager: Manager = this.getManagerById(managerId)
 
+        var candidate: Candidate? = try {
+            this.candidateRepository.findByCpf(interviewRequest.candidateCpf).get()
+        } catch (e: NoSuchElementException) {
+            null
+        }
+
         var interview = Interview()
-        interview.interviewStatus = this.getInterviewStatus("Schedule")
-        interview.candidate = candidate
+        interview.interviewStatus = EInterviewStatus.TO_BE_SCHEDULE
+        if (candidate != null) {
+            interview.candidate = candidate
+        } else {
+            interview.cpf = interviewRequest.candidateCpf
+            interview.interviewStatus = EInterviewStatus.WAITING_CANDIDATE_REGISTRATION
+        }
         interview.manager = manager
 
         if (interviewRequest.managerObservation.isNotEmpty()) {
@@ -96,7 +106,6 @@ class InterviewService {
         var interview = interviewRepository.findByCandidateId(candidateId).get()
         var recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
         interview.startingAt = interviewStartingAt
-//        interview.endingAt = schedule.endingAt
         interview.recruiter = recruiter
         interview.interviewStatus = EInterviewStatus.SCHEDULE
 
