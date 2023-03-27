@@ -7,7 +7,9 @@ import java.util.Optional
 
 @Repository
 interface UserRepository<T : User> : CrudRepository<T, Long> {
-    fun findByUsername(username: String): Optional<User>
+    fun findByUsername(username: String): Optional<T>
+
+    fun findByCpf(cpf: String): Optional<T>
 
     fun existsByUsername(username: String): Boolean
 
