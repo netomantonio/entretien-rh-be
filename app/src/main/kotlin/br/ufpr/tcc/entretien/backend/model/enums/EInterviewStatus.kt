@@ -1,4 +1,4 @@
-package br.ufpr.tcc.entretien.backend.model.interview
+package br.ufpr.tcc.entretien.backend.model.enums
 
 enum class EInterviewStatus {
     WAITING_CANDIDATE,

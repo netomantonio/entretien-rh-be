@@ -2,14 +2,12 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
-import br.ufpr.tcc.entretien.backend.model.interview.EInterviewStatus
+import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
-import br.ufpr.tcc.entretien.backend.model.interview.InterviewStatus
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
-import br.ufpr.tcc.entretien.backend.repository.InterviewStatusRepository
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,9 +29,6 @@ class InterviewService {
 
     @Autowired
     lateinit var interviewRepository: InterviewRepository
-
-    @Autowired
-    lateinit var interviewStatusRepository: InterviewStatusRepository
 
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
@@ -81,56 +76,6 @@ class InterviewService {
             )
         }
 
-    private fun getInterviewStatus(interviewStatus: String): InterviewStatus {
-        if (interviewStatus == null) {
-            throw (RuntimeException("Error: invalid input."))
-        } else {
-            when (interviewStatus) {
-                "Waiting candidate" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.WAITING_CANDIDATE)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Schedule" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.SCHEDULE)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Absent candidate" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.ABSENT_CANDIDATE)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Absent recruiter" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.ABSENT_RECRUITER)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Concluded" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.CONCLUDED)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Did not occur" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.DID_NOT_OCCUR)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "In progress" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.IN_PROGRESS)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                "Other" -> {
-                    return interviewStatusRepository.findByName(EInterviewStatus.OTHER)
-                        .orElseThrow { RuntimeException("Error: Interview Status is not found.") }
-                }
-
-                else -> throw RuntimeException("Interview status was not found")
-            }
-        }
-    }
-
     fun isAvailableForCandidate(candidateId: Long): Boolean {
         return interviewRepository.existsByCandidateId(candidateId)
     }
@@ -153,7 +98,7 @@ class InterviewService {
         interview.startingAt = interviewStartingAt
 //        interview.endingAt = schedule.endingAt
         interview.recruiter = recruiter
-        interview.interviewStatus = getInterviewStatus("Schedule")
+        interview.interviewStatus = EInterviewStatus.SCHEDULE
 
         interviewRepository.save(interview)
     }

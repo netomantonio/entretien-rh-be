@@ -3,6 +3,7 @@ package br.ufpr.tcc.entretien.backend.service
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.model.*
 import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
+import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
@@ -16,9 +17,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
-
-    @Autowired
-    lateinit var educationLevelRepository: EducationLevelRepository
 
     @Autowired
     lateinit var candidateRepository: UserRepository<Candidate>
@@ -85,7 +83,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         desiredJobTitle: String,
         candidate: Candidate
     ): Resume {
-        val educationLevel = this.getEducationLevel(educationLevel)
+        val educationLevel = EEducationLevel.valueOf(educationLevel)
         return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle, candidate)
     }
 
