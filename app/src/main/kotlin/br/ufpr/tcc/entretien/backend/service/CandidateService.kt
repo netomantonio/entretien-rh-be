@@ -3,7 +3,7 @@ package br.ufpr.tcc.entretien.backend.service
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.model.*
 import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
-import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
@@ -44,7 +44,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         if (optionalInterview.isPresent) {
             val interview = optionalInterview.get()
             interview.candidate = newCandidate
-            interview.interviewStatus = EInterviewStatus.TO_BE_SCHEDULE
+            interview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
             interviewRepository.save(interview)
         }
     }

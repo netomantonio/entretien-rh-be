@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model.interview
 
-import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
@@ -16,7 +16,7 @@ class Interview(
     var mainObservation: String? = "",
     var managerObservation: String? = "",
     var candidateObservation: String? = "",
-    @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: EInterviewStatus = EInterviewStatus.WAITING_CANDIDATE,
+    @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     var startingAt: LocalDateTime? = null,

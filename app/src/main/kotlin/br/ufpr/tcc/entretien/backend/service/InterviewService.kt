@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
-import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
@@ -45,12 +45,12 @@ class InterviewService {
         }
 
         var interview = Interview()
-        interview.interviewStatus = EInterviewStatus.TO_BE_SCHEDULE
+        interview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
         if (candidate != null) {
             interview.candidate = candidate
         } else {
             interview.cpf = interviewRequest.candidateCpf
-            interview.interviewStatus = EInterviewStatus.WAITING_CANDIDATE_REGISTRATION
+            interview.interviewStatus = InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION
         }
         interview.manager = manager
 
@@ -107,7 +107,7 @@ class InterviewService {
         var recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
         interview.startingAt = interviewStartingAt
         interview.recruiter = recruiter
-        interview.interviewStatus = EInterviewStatus.SCHEDULE
+        interview.interviewStatus = InterviewStatusTypes.SCHEDULE
 
         interviewRepository.save(interview)
     }

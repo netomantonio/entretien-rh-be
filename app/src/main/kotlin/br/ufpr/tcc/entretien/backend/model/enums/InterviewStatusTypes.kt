@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model.enums
 
-enum class EInterviewStatus {
+enum class InterviewStatusTypes {
     WAITING_CANDIDATE,
     WAITING_CANDIDATE_REGISTRATION,
     TO_BE_SCHEDULE,
