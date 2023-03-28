@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.model.*
-import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
+import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
 import br.ufpr.tcc.entretien.backend.model.enums.EInterviewStatus
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
@@ -57,7 +57,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         desiredJobTitle: String,
         candidate: Candidate
     ): Resume {
-        val educationLevel = EEducationLevel.valueOf(educationLevel)
+        val educationLevel = EducationLevelTypes.valueOf(educationLevel)
         return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle, candidate)
     }
 

@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model
 
-import br.ufpr.tcc.entretien.backend.model.enums.EEducationLevel
+import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import javax.persistence.*
@@ -9,7 +9,7 @@ import javax.persistence.*
 class Resume(
     var presentation: String? = null,
     @Column(nullable = false) @Enumerated(EnumType.STRING)
-    var educationLevel: EEducationLevel? = null,
+    var educationLevel: EducationLevelTypes? = null,
     @ElementCollection
     var professionalHistory: MutableSet<String>? = null,
     @ElementCollection
