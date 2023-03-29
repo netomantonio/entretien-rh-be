@@ -34,7 +34,7 @@ class CandidateController {
         val candidate = candidateService.build(candidateSignupRequest)
 
         return try {
-            candidateService.register(candidate)
+            candidateService.createNewCandidate(candidate)
             ResponseEntity.ok<Any>("User registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
