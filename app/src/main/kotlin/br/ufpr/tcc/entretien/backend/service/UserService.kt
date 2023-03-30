@@ -113,7 +113,7 @@ class UserService : IUserService<Admin, SignupRequest> {
         return admin
     }
 
-    override fun register(user: Admin): User = userRepository.save(user)
+    override fun register(admin: Admin): Admin = userRepository.save(admin)
 
     fun getAll(): Iterable<User> {
         return userRepository.findAll()

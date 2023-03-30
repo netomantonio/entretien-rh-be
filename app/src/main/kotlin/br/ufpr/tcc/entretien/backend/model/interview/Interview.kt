@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model.interview
 
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
@@ -15,11 +16,12 @@ class Interview(
     var mainObservation: String? = "",
     var managerObservation: String? = "",
     var candidateObservation: String? = "",
-    @ManyToOne var interviewStatus: InterviewStatus = InterviewStatus(EInterviewStatus.WAITING_CANDIDATE),
+    @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
     var startingAt: LocalDateTime? = null,
-    val endingAt: LocalDateTime? = null,
+    var endingAt: LocalDateTime? = null,
+    var cpf: String? = "",
     @ManyToOne
     @JoinColumn(name = "fk_recruiter")
     var recruiter: Recruiter? = null
