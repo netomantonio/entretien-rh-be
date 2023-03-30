@@ -1,15 +1,15 @@
 entretien:
   app:
     jwtSecret: secret
-    jwtExpirationMs: ${ JWT_EXPIRATION_MS }
+    jwtExpirationMs: ${JWT_EXPIRATION_MS:86400000}
 server:
-  port: ${ APPLICATION_SERVER_PORT }
+  port: ${APPLICATION_SERVER_PORT:5000}
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_URL}:${POSTGRES_PORT}/${POSTGRES_DB}?timezone=America/Sao_Paulo
+    url: jdbc:postgresql://${POSTGRES_URL:localhost}:${POSTGRES_PORT:6543}/${POSTGRES_DB:db}?timezone=America/Sao_Paulo
     driverClassName: org.postgresql.Driver
-    username: ${ POSTGRES_USER }
-    password: ${ POSTGRES_PASSWORD }
+    username: ${POSTGRES_USER:user}
+    password: ${POSTGRES_PASSWORD:password}
   sql:
     init:
       mode: always
@@ -25,5 +25,5 @@ spring:
           non_contextual_creation: true
 
 OPENVIDU:
-  url: ${ OPENVID_URL }
-  secret: ${ OPENVIDU_SECRET }
+  url: ${OPENVID_UR:localhost:4443}
+  secret: ${OPENVIDU_SECRET:entretien-rh}
