@@ -115,4 +115,8 @@ class InterviewService {
     fun getScheduleInterviewsByRecruiter(recruiterId: Long): Iterable<Interview> {
         return interviewRepository.findByRecruiterId(recruiterId).get()
     }
+
+    fun getAllByManager(managerId: Long): Iterable<Interview> {
+        return interviewRepository.findByManagerId(managerId).get()
+    }
 }

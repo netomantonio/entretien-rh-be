@@ -50,6 +50,24 @@ class InterviewController {
         }
     }
 
+
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @GetMapping("/manager")
+    fun getAllInterviewsByManager(authentication: Authentication): ResponseEntity<*> {
+
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+
+        return try {
+            val interviews = interviewService.getAllByManager(userDetails.getId())
+            ResponseEntity.ok<Any>(interviews)
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ex.printStackTrace()
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @PostMapping("/commit")
     fun commitInterview(@Valid @RequestBody commitInterviewRequest: CommitInterviewRequest, authentication: Authentication): ResponseEntity<*> {

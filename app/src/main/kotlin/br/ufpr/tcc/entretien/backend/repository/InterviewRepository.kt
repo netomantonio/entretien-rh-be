@@ -20,4 +20,6 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     fun findByCandidateId(candidateId: Long): Optional<Interview>
 
     fun findByRecruiterId(recruiterId: Long): Optional<Iterable<Interview>>
+
+    fun findByManagerId(managerId: Long): Optional<Iterable<Interview>>
 }
