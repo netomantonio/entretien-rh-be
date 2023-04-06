@@ -24,11 +24,11 @@ class Interview(
     var cpf: String? = "",
     @ManyToOne
     @JoinColumn(name = "fk_recruiter")
-    var recruiter: Recruiter? = null
-) : AbstractJpaPersistable() {
+    var recruiter: Recruiter? = null,
     @ManyToOne
     @JoinColumn(name = "fk_candidate")
-    lateinit var candidate: Candidate
+    var candidate: Candidate? = null
+) : AbstractJpaPersistable() {
 
     @ManyToOne
     @JoinColumn(name = "fk_manager")
