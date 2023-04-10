@@ -11,6 +11,8 @@ import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -34,12 +36,12 @@ class InterviewService {
     lateinit var scheduleRepository: ScheduleRepository
 
 
-    fun createInterview(interviewRequest: InterviewRequest, managerId: Long) {
+    fun createInterview(candidateCpf: String, managerObservation: String, managerId: Long) {
 
         val manager: Manager = this.getManagerById(managerId)
 
         var candidate: Candidate? = try {
-            this.candidateRepository.findByCpf(interviewRequest.candidateCpf).get()
+            this.candidateRepository.findByCpf(candidateCpf).get()
         } catch (e: NoSuchElementException) {
             null
         }
@@ -49,16 +51,21 @@ class InterviewService {
         if (candidate != null) {
             interview.candidate = candidate
         } else {
-            interview.cpf = interviewRequest.candidateCpf
+            interview.cpf = candidateCpf
             interview.interviewStatus = InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION
         }
         interview.manager = manager
 
-        if (interviewRequest.managerObservation.isNotEmpty()) {
-            interview.managerObservation = interviewRequest.managerObservation
+        if (managerObservation.isNotEmpty()) {
+            interview.managerObservation = managerObservation
         }
 
         interviewRepository.save(interview)
+    }
+
+    // TODO: simple get
+    fun getInterview(id: Long): ResponseEntity<Interview>{
+        return ResponseOption)
     }
 
     fun getAll(): Iterable<Interview> {
@@ -118,5 +125,9 @@ class InterviewService {
 
     fun getAllByManager(managerId: Long): Iterable<Interview> {
         return interviewRepository.findByManagerId(managerId).get()
+    }
+
+    fun editInterview(interview: Interview): ResponseEntity<Interview> {
+        return ResponseEntity(interviewRepository.save(interview), HttpStatus.OK)
     }
 }

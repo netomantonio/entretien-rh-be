@@ -2,6 +2,7 @@ package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
+import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.util.Optional
 import javax.validation.Valid
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -27,9 +29,39 @@ class InterviewController {
     ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
 
+        val candidateCpf: String = interviewRequest.candidateCpf
+
+        val managerObservation: String = interviewRequest.managerObservation
+
         val managerId = userDetails.getId()
         return try {
-            interviewService.createInterview(interviewRequest, managerId)
+            interviewService.createInterview(candidateCpf, managerObservation, managerId)
+            ResponseEntity.ok<Any>("Interview registered successfully!")
+        } catch (ex: Exception) {
+            println("[ERROR] ------------------------------------------")
+            println(ex.message)
+            ex.printStackTrace()
+            ResponseEntity.internalServerError().body("Persistence error.")
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PutMapping("/{id}")
+    fun editInterview(
+        @Valid @RequestBody interview: Interview,
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val managerId = userDetails.getId()
+
+        // TODO: create service get method
+        val interview: Optional<Interview> = interviewService.getI
+
+        return try {
+            // TODO: create service edit method
+            interviewService.editInterview(id, interview)
             ResponseEntity.ok<Any>("Interview registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
