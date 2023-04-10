@@ -21,7 +21,10 @@ class InterviewController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("")
-    fun createNewInterview(@Valid @RequestBody interviewRequest: InterviewRequest, authentication: Authentication): ResponseEntity<*> {
+    fun createNewInterview(
+        @Valid @RequestBody interviewRequest: InterviewRequest,
+        authentication: Authentication
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
 
         val managerId = userDetails.getId()
@@ -70,7 +73,10 @@ class InterviewController {
 
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @PostMapping("/commit")
-    fun commitInterview(@Valid @RequestBody commitInterviewRequest: CommitInterviewRequest, authentication: Authentication): ResponseEntity<*> {
+    fun commitInterview(
+        @Valid @RequestBody commitInterviewRequest: CommitInterviewRequest,
+        authentication: Authentication
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val candidateId = userDetails.getId()
         val date = commitInterviewRequest.date
