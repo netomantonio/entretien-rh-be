@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model
 
-import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
+import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import com.fasterxml.jackson.annotation.JsonBackReference
@@ -21,7 +21,7 @@ class Schedule(
     var available: Boolean = true,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) var updatedAt: Date = Date.from(Instant.now()),
-    @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: EDayOfTheWeek,
+    @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: DaysOfTheWeek,
     @Basic var startingAt: LocalTime,
     @Basic var endingAt: LocalTime
 ) : AbstractJpaPersistable()
