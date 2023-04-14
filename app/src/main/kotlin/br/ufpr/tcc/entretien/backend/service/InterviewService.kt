@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.Optional
 
 @Service
 class InterviewService {
@@ -60,13 +61,12 @@ class InterviewService {
             interview.managerObservation = managerObservation
         }
 
-        interviewRepository.save(interview)
+        this.registerInterview(interview)
     }
 
-    // TODO: simple get
-    fun getInterview(id: Long): ResponseEntity<Interview>{
-        return ResponseOption)
-    }
+    fun registerInterview(interview: Interview) = interviewRepository.save(interview)
+
+    fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
     fun getAll(): Iterable<Interview> {
         return interviewRepository.findAll()
@@ -95,6 +95,10 @@ class InterviewService {
 
     fun isAvailableForCandidate(candidateId: Long): Boolean {
         return interviewRepository.existsByCandidateId(candidateId)
+    }
+
+    fun isInterviewRelated(id: Long, interview: Interview): Boolean {
+        return (interview.manager.id == id || interview.candidate?.id == id || interview.recruiter?.id == id)
     }
 
     fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
@@ -127,7 +131,13 @@ class InterviewService {
         return interviewRepository.findByManagerId(managerId).get()
     }
 
-    fun editInterview(interview: Interview): ResponseEntity<Interview> {
-        return ResponseEntity(interviewRepository.save(interview), HttpStatus.OK)
+    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview)
+
+    fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
+        if(managerObservation?.isNotEmpty() == true)
+            interview.managerObservation = managerObservation
+        if(candidateCpf?.isNotEmpty() == true)
+            interview.cpf = candidateCpf
+        return interviewRepository.save(interview)
     }
 }

@@ -6,6 +6,7 @@ import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -47,7 +48,7 @@ class InterviewController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
-    fun editInterview(
+    fun updateInterview(
         @Valid @RequestBody interview: Interview,
         @PathVariable id: Long,
         authentication: Authentication
@@ -55,19 +56,75 @@ class InterviewController {
 
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val managerId = userDetails.getId()
-
-        // TODO: create service get method
-        val interview: Optional<Interview> = interviewService.getI
+        val optInterview: Optional<Interview> = interviewService.getInterview(id)
 
         return try {
-            // TODO: create service edit method
-            interviewService.editInterview(id, interview)
-            ResponseEntity.ok<Any>("Interview registered successfully!")
+            val dbInterview = optInterview.get()
+            if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
+            if (dbInterview.getId() != interview.getId()) return ResponseEntity<Any>(HttpStatus.FORBIDDEN)
+            ResponseEntity<Any>(interviewService.updateInterview(interview), HttpStatus.OK)
+        } catch (e: NoSuchElementException) {
+            ResponseEntity<Any>(HttpStatus.NOT_FOUND)
+        } catch (e: Exception) {
+            ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PutMapping("/adjust/{id}")
+    fun adjustInterview(
+        @Valid @RequestBody interviewRequest: InterviewRequest,
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val managerId = userDetails.getId()
+        val optInterview: Optional<Interview> = interviewService.getInterview(id)
+
+        return try {
+            val dbInterview = optInterview.get()
+            if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
+            if (dbInterview.getId() != id) return ResponseEntity<Any>(HttpStatus.FORBIDDEN)
+            if (interviewRequest.candidateCpf.isEmpty() && interviewRequest.managerObservation.isEmpty()) return ResponseEntity<Any>(
+                "Dados para atualização não podem estar vazios!",
+                HttpStatus.BAD_REQUEST
+            )
+            if(interviewRequest.candidateCpf.isNotEmpty() && dbInterview.candidate != null) return ResponseEntity<Any>(
+                "Não é possível alterar o CPF quando já existe um candidato associado!",
+                HttpStatus.FORBIDDEN
+            )
+            ResponseEntity<Any>(
+                interviewService.adjustInterview(
+                    dbInterview,
+                    interviewRequest.candidateCpf,
+                    interviewRequest.managerObservation
+                ), HttpStatus.OK
+            )
+        } catch (e: NoSuchElementException) {
+            ResponseEntity<Any>(HttpStatus.NOT_FOUND)
+        } catch (e: Exception) {
+            ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}")
+    fun getInterview(
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val userId = userDetails.getId()
+        val optInterview: Optional<Interview> = interviewService.getInterview(id)
+        return try {
+            val interview = optInterview.get()
+            if (interviewService.isInterviewRelated(userId, interview))
+                ResponseEntity<Any>(interview, HttpStatus.OK)
+            else
+                ResponseEntity<Any>(HttpStatus.FORBIDDEN)
         } catch (ex: Exception) {
-            println("[ERROR] ------------------------------------------")
-            println(ex.message)
-            ex.printStackTrace()
-            ResponseEntity.internalServerError().body("Persistence error.")
+            ResponseEntity<Any>(ex.message, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 
