@@ -22,12 +22,8 @@ class Interview(
     var startingAt: LocalDateTime? = null,
     var endingAt: LocalDateTime? = null,
     var cpf: String? = "",
-    @ManyToOne
-    @JoinColumn(name = "fk_recruiter")
-    var recruiter: Recruiter? = null,
-    @ManyToOne
-    @JoinColumn(name = "fk_candidate")
-    var candidate: Candidate? = null
+    @ManyToOne @JoinColumn(name = "fk_recruiter") var recruiter: Recruiter? = null,
+    @ManyToOne @JoinColumn(name = "fk_candidate") var candidate: Candidate? = null
 ) : AbstractJpaPersistable() {
 
     @ManyToOne

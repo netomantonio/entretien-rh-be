@@ -11,9 +11,12 @@ import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.Optional
 
 @Service
 class InterviewService {
@@ -34,12 +37,12 @@ class InterviewService {
     lateinit var scheduleRepository: ScheduleRepository
 
 
-    fun createInterview(interviewRequest: InterviewRequest, managerId: Long) {
+    fun createInterview(candidateCpf: String, managerObservation: String, managerId: Long) {
 
         val manager: Manager = this.getManagerById(managerId)
 
         var candidate: Candidate? = try {
-            this.candidateRepository.findByCpf(interviewRequest.candidateCpf).get()
+            this.candidateRepository.findByCpf(candidateCpf).get()
         } catch (e: NoSuchElementException) {
             null
         }
@@ -49,17 +52,21 @@ class InterviewService {
         if (candidate != null) {
             interview.candidate = candidate
         } else {
-            interview.cpf = interviewRequest.candidateCpf
+            interview.cpf = candidateCpf
             interview.interviewStatus = InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION
         }
         interview.manager = manager
 
-        if (interviewRequest.managerObservation.isNotEmpty()) {
-            interview.managerObservation = interviewRequest.managerObservation
+        if (managerObservation.isNotEmpty()) {
+            interview.managerObservation = managerObservation
         }
 
-        interviewRepository.save(interview)
+        this.registerInterview(interview)
     }
+
+    fun registerInterview(interview: Interview) = interviewRepository.save(interview)
+
+    fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
     fun getAll(): Iterable<Interview> {
         return interviewRepository.findAll()
@@ -90,6 +97,10 @@ class InterviewService {
         return interviewRepository.existsByCandidateId(candidateId)
     }
 
+    fun isInterviewRelated(id: Long, interview: Interview): Boolean {
+        return (interview.manager.id == id || interview.candidate?.id == id || interview.recruiter?.id == id)
+    }
+
     fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
         if (!interviewRepository.existsByCandidateId(candidateId)) {
             // TODO: throw error (interview not available)
@@ -118,5 +129,15 @@ class InterviewService {
 
     fun getAllByManager(managerId: Long): Iterable<Interview> {
         return interviewRepository.findByManagerId(managerId).get()
+    }
+
+    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview)
+
+    fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
+        if(managerObservation?.isNotEmpty() == true)
+            interview.managerObservation = managerObservation
+        if(candidateCpf?.isNotEmpty() == true)
+            interview.cpf = candidateCpf
+        return interviewRepository.save(interview)
     }
 }
