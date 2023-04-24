@@ -101,6 +101,11 @@ class InterviewService {
         return (interview.manager.id == id || interview.candidate?.id == id || interview.recruiter?.id == id)
     }
 
+    fun canDelete(interview: Interview): Boolean {
+        return (interview.interviewStatus == InterviewStatusTypes.TO_BE_SCHEDULE
+                || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
+    }
+
     fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
         if (!interviewRepository.existsByCandidateId(candidateId)) {
             // TODO: throw error (interview not available)
@@ -139,5 +144,9 @@ class InterviewService {
         if(candidateCpf?.isNotEmpty() == true)
             interview.cpf = candidateCpf
         return interviewRepository.save(interview)
+    }
+
+    fun deleteInterview(interview: Interview) {
+        interviewRepository.delete(interview)
     }
 }

@@ -180,4 +180,26 @@ class InterviewController {
             ResponseEntity.internalServerError().body("Persistence error.")
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @DeleteMapping("/{id}")
+    fun deleteInterview(
+        @Valid @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val managerId = userDetails.getId()
+        val optInterview: Optional<Interview> = interviewService.getInterview(id)
+        return try {
+            val dbInterview = optInterview.get()
+            if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
+            if (!interviewService.canDelete(dbInterview)) return ResponseEntity<Any>("The interview can no longer be deleted!", HttpStatus.FORBIDDEN)
+            ResponseEntity<Any>(
+                interviewService.deleteInterview(dbInterview), HttpStatus.OK)
+        } catch (e: NoSuchElementException) {
+            ResponseEntity<Any>(HttpStatus.NOT_FOUND)
+        } catch (e: Exception) {
+            ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
 }
