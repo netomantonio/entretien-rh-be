@@ -2,6 +2,8 @@ package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.ScheduleResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.toResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import br.ufpr.tcc.entretien.backend.service.InterviewService
@@ -102,13 +104,18 @@ class RecruiterController {
                 .body<Any>(("Error: Invalid id for Recruiter"))
         }
         return try {
-            var schedules: Iterable<Schedule> = scheduleService.getAllSchedulesByRecruiterId(id)
-            ResponseEntity.ok<Any>(schedules)
+            val schedules: Iterable<Schedule> = scheduleService.getAllSchedulesByRecruiterId(id)
+            val schedulesResponse = toMappingResponse(schedules)
+            ResponseEntity.ok<Any>(schedulesResponse)
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
             println(ex.message)
             ResponseEntity.internalServerError().body("Error?")
         }
+    }
+
+    private fun toMappingResponse(schedules: Iterable<Schedule>): List<ScheduleResponse>? {
+        return schedules.map { schedule -> schedule.toResponse() }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')")
