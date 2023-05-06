@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.datasource.request
 
-import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
+import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import java.time.LocalTime
 import javax.validation.constraints.NotBlank
 
@@ -9,7 +9,7 @@ class RecruiterScheduleRequest(
 ) {
     class Agenda(
         @NotBlank
-        var dayOfTheWeek: EDayOfTheWeek,
+        var dayOfTheWeek: DaysOfTheWeek,
         var timesOfTheDay: MutableSet<TimeSpan>
     )
 

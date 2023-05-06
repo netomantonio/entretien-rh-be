@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.model.enums
 
-enum class EDayOfTheWeek(val value: Int) {
+enum class DaysOfTheWeek(val value: Int) {
     SUNDAY(0),
     MONDAY(1),
     TUESDAY(2),

@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.service.schedule
 
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
-import br.ufpr.tcc.entretien.backend.model.enums.EDayOfTheWeek
+import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
@@ -28,7 +28,7 @@ class ScheduleService {
 
     fun buildSchedule(
         recruiter: Recruiter,
-        dayOfTheWeek: EDayOfTheWeek,
+        dayOfTheWeek: DaysOfTheWeek,
         startingAt: LocalTime,
         endingAt: LocalTime
     ): Schedule {
@@ -87,9 +87,12 @@ class ScheduleService {
         val schedules = scheduleRepository.getAllByRecruiterId(recruiter.id).get()
 
         schedules.forEach {
-            println(isOverlapping(newSchedule, it))
-            if (isOverlapping(newSchedule, it))
-                return true
+            if (it.dayOfTheWeek == newSchedule.dayOfTheWeek) {
+                val isOverlapping = isOverlapping(newSchedule, it)
+                println(isOverlapping)
+                if (isOverlapping)
+                    return true
+            }
         }
 
         return false
