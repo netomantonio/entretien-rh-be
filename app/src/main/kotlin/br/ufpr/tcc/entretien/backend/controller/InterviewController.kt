@@ -168,10 +168,10 @@ class InterviewController {
     ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val candidateId = userDetails.getId()
-        val date = commitInterviewRequest.date
-        val scheduleId = commitInterviewRequest.scheduleId
+        val date = commitInterviewRequest.dateTime
+        val interviewId = commitInterviewRequest.interviewId
         return try {
-            interviewService.commitInterview(scheduleId, date, candidateId)
+            interviewService.commitInterview(interviewId, date, candidateId)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")

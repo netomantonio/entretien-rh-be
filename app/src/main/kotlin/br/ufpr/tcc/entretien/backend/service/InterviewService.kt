@@ -106,7 +106,7 @@ class InterviewService {
                 || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
     }
 
-    fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
+    fun commitInterview(interviewId: Int, date: LocalDateTime, candidateId: Long) {
         if (!interviewRepository.existsByCandidateId(candidateId)) {
             // TODO: throw error (interview not available)
         }
