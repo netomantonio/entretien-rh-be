@@ -5,6 +5,10 @@ entretien:
 server:
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
+  mvc:
+    interceptor:
+      enabled: true
+      exclude: /health
   datasource:
     url: jdbc:postgresql://${POSTGRES_URL:localhost}:${POSTGRES_PORT:6543}/${POSTGRES_DB:db}?timezone=America/Sao_Paulo
     driverClassName: org.postgresql.Driver
