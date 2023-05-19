@@ -90,7 +90,7 @@ class InterviewController {
                 "Dados para atualização não podem estar vazios!",
                 HttpStatus.BAD_REQUEST
             )
-            if(interviewRequest.candidateCpf.isNotEmpty() && dbInterview.candidate != null) return ResponseEntity<Any>(
+            if (interviewRequest.candidateCpf.isNotEmpty() && dbInterview.candidate != null) return ResponseEntity<Any>(
                 "Não é possível alterar o CPF quando já existe um candidato associado!",
                 HttpStatus.FORBIDDEN
             )
@@ -167,11 +167,12 @@ class InterviewController {
         authentication: Authentication
     ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-        val candidateId = userDetails.getId()
         val date = commitInterviewRequest.date
+        val candidateId = userDetails.getId()
+        val interviewId = commitInterviewRequest.interviewId
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
-            interviewService.commitInterview(scheduleId, date, candidateId)
+            interviewService.commitInterview(scheduleId, interviewId, date, candidateId)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
@@ -193,9 +194,13 @@ class InterviewController {
         return try {
             val dbInterview = optInterview.get()
             if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
-            if (!interviewService.canDelete(dbInterview)) return ResponseEntity<Any>("The interview can no longer be deleted!", HttpStatus.FORBIDDEN)
+            if (!interviewService.canDelete(dbInterview)) return ResponseEntity<Any>(
+                "The interview can no longer be deleted!",
+                HttpStatus.FORBIDDEN
+            )
             ResponseEntity<Any>(
-                interviewService.deleteInterview(dbInterview), HttpStatus.OK)
+                interviewService.deleteInterview(dbInterview), HttpStatus.OK
+            )
         } catch (e: NoSuchElementException) {
             ResponseEntity<Any>(HttpStatus.NOT_FOUND)
         } catch (e: Exception) {
