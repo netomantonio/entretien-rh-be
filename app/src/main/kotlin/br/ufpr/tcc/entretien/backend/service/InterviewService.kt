@@ -1,6 +1,5 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -11,8 +10,6 @@ import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -37,7 +34,7 @@ class InterviewService {
     lateinit var scheduleRepository: ScheduleRepository
 
 
-    fun createInterview(candidateCpf: String, managerObservation: String, managerId: Long) {
+    fun createInterview(candidateCpf: String, managerObservation: String, managerId: Long): Interview {
 
         val manager: Manager = this.getManagerById(managerId)
 
@@ -61,10 +58,10 @@ class InterviewService {
             interview.managerObservation = managerObservation
         }
 
-        this.registerInterview(interview)
+        return registerInterview(interview)
     }
 
-    fun registerInterview(interview: Interview) = interviewRepository.save(interview)
+    fun registerInterview(interview: Interview) : Interview = interviewRepository.save(interview)
 
     fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 

@@ -52,15 +52,11 @@ class AuthController {
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, request: HttpServletRequest):Any {
 
         try {
-            val correlationId = request.getAttribute("correlationId") as String
-
-
-
             val authentication: Authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
             )
 
-            logger.info(LOG_TAG,"Authentication Successfull", mapOf("correlationId" to correlationId))
+            logger.info(LOG_TAG,"Authentication Successfull", mapOf("username" to loginRequest.username))
 
             SecurityContextHolder.getContext().authentication = authentication
             val jwt = jwtUtils.generateJwtToken(authentication)
