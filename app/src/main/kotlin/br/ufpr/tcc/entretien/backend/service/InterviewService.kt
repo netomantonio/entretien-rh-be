@@ -131,6 +131,13 @@ class InterviewService {
         return interviewRepository.findByRecruiterId(recruiterId).get()
     }
 
+    fun getFullScheduleInterviewsByPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
+        return interviewRepository.findByPeriod(
+            Timestamp.valueOf(to.atStartOfDay()),
+            Timestamp.valueOf(from.atStartOfDay())
+        ).get()
+    }
+
     fun getAllByManager(managerId: Long): Iterable<Interview> {
         return interviewRepository.findByManagerId(managerId).get()
     }
