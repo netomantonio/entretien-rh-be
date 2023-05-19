@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.LoginRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.JwtResponse
 import br.ufpr.tcc.entretien.backend.model.users.User
@@ -17,7 +18,9 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import java.lang.Exception
 import java.util.stream.Collectors
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 
@@ -25,6 +28,11 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/auth")
 class AuthController {
+    companion object {
+        private const val LOG_TAG = "entretien-backend-auth-controller"
+        private val logger = LOGGER.getLogger(AuthController::class.java)
+    }
+
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
 
@@ -41,31 +49,42 @@ class AuthController {
     lateinit var jwtUtils: JwtUtils
 
     @PostMapping("/signin")
-    fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
+    fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, request: HttpServletRequest):Any {
 
-        val authentication: Authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
-        )
+        try {
+            val correlationId = request.getAttribute("correlationId") as String
 
-        SecurityContextHolder.getContext().authentication = authentication
-        val jwt = jwtUtils.generateJwtToken(authentication)
 
-        val userDetails = authentication.principal as UserDetailsImpl
-        val roles: List<String> = userDetails.authorities.stream()
-            .map { item: GrantedAuthority -> item.authority }
-            .collect(Collectors.toList())
 
-        var response = JwtResponse(
-            jwt,
-            userDetails.getId(),
-            userDetails.username,
-            userDetails.getEmail(),
-            roles
-        )
+            val authentication: Authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password)
+            )
 
-        return ResponseEntity.ok<Any>(
-            response
-        )
+            logger.info(LOG_TAG,"Authentication Successfull", mapOf("correlationId" to correlationId))
+
+            SecurityContextHolder.getContext().authentication = authentication
+            val jwt = jwtUtils.generateJwtToken(authentication)
+
+            val userDetails = authentication.principal as UserDetailsImpl
+            val roles: List<String> = userDetails.authorities.stream()
+                .map { item: GrantedAuthority -> item.authority }
+                .collect(Collectors.toList())
+
+            val response = JwtResponse(
+                jwt,
+                userDetails.getId(),
+                userDetails.username,
+                userDetails.getEmail(),
+                roles
+            )
+
+            return ResponseEntity.ok<Any>(
+                response
+            )
+        } catch (ex: Exception) {
+            logger.error(LOG_TAG, ex.message, ex.stackTrace)
+            throw Exception(ex)
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
