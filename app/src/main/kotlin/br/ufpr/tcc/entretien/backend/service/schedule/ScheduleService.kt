@@ -6,9 +6,12 @@ import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
+import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.RecruiterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
+import java.time.LocalDate
 import java.time.LocalTime
 import kotlin.jvm.Throws
 
@@ -25,6 +28,9 @@ class ScheduleService {
 
     @Autowired
     lateinit var recruiterService: RecruiterService
+
+    @Autowired
+    lateinit var interviewService: InterviewService
 
     fun buildSchedule(
         recruiter: Recruiter,
@@ -122,4 +128,19 @@ class ScheduleService {
         return schedules.distinctBy { Pair(it.startingAt, it.endingAt) }.filter { it.available }
     }
 
+    fun getAllAvailableSchedulesWithinPeriod(from: LocalDate, to: LocalDate): Iterable<Schedule> {
+        val toTimeString = Timestamp.valueOf(to.atStartOfDay())
+        val fromTimeString = Timestamp.valueOf(from.atStartOfDay())
+        val schedules = scheduleRepository.getAvailableWithinPeriod(
+            toTimeString,
+            fromTimeString)
+        if(schedules.none())
+            return emptyList()
+
+        return schedules
+    }
+
+    fun getAllSchedules(): Iterable<Schedule> {
+        return scheduleRepository.findAll()
+    }
 }

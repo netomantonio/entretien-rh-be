@@ -183,10 +183,9 @@ class RecruiterController {
 
     @PreAuthorize("hasRole('ROLE_RECRUITER')")
     @GetMapping("/interviews")
-    fun getAllScheduleInterviews(authentication: Authentication): ResponseEntity<*> {
+    fun getAllRecruiterScheduledInterviews(authentication: Authentication): ResponseEntity<*> {
 
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-
         val recruiterId = userDetails.getId()
 
         return try {
@@ -199,5 +198,4 @@ class RecruiterController {
             ResponseEntity.internalServerError().body("Error?")
         }
     }
-
 }

@@ -11,6 +11,7 @@ import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Optional
@@ -103,23 +104,21 @@ class InterviewService {
                 || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
     }
 
-    fun commitInterview(scheduleId: Long, date: LocalDate, candidateId: Long) {
-        if (!interviewRepository.existsByCandidateId(candidateId)) {
-            // TODO: throw error (interview not available)
+    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate, candidateId: Long) {
+//        if (!interviewRepository.existsByCandidateId(candidateId)) {
+//            // TODO: throw error (interview not available)
+//        }
+
+        var interview: Interview = interviewRepository.findById(interviewId).get()
+        if (interview.candidate == null) {
+            throw Exception("Não autorizado.")
         }
-
         var schedule: Schedule = scheduleRepository.findById(scheduleId).get()
-        schedule.available = false
-        scheduleRepository.save(schedule)
-
-        var interviewStartingAt = LocalDateTime.of(date, schedule.startingAt)
-        interviewStartingAt.plusHours(schedule.startingAt.hour.toLong())
-        interviewStartingAt.plusMinutes(schedule.startingAt.minute.toLong())
-
-        var interview = interviewRepository.findByCandidateId(candidateId).get()
         var recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
-        interview.startingAt = interviewStartingAt
+
+        interview.schedule = schedule
         interview.recruiter = recruiter
+        interview.startingAt = LocalDateTime.of(date, schedule.startingAt)
         interview.interviewStatus = InterviewStatusTypes.SCHEDULE
 
         interviewRepository.save(interview)
@@ -129,6 +128,13 @@ class InterviewService {
         return interviewRepository.findByRecruiterId(recruiterId).get()
     }
 
+    fun getFullScheduleInterviewsByPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
+        return interviewRepository.findByPeriod(
+            Timestamp.valueOf(to.atStartOfDay()),
+            Timestamp.valueOf(from.atStartOfDay())
+        ).get()
+    }
+
     fun getAllByManager(managerId: Long): Iterable<Interview> {
         return interviewRepository.findByManagerId(managerId).get()
     }
@@ -136,9 +142,9 @@ class InterviewService {
     fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview)
 
     fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
-        if(managerObservation?.isNotEmpty() == true)
+        if (managerObservation?.isNotEmpty() == true)
             interview.managerObservation = managerObservation
-        if(candidateCpf?.isNotEmpty() == true)
+        if (candidateCpf?.isNotEmpty() == true)
             interview.cpf = candidateCpf
         return interviewRepository.save(interview)
     }
