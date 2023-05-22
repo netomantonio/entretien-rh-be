@@ -5,6 +5,8 @@ import br.ufpr.tcc.entretien.backend.common.error.BusinessErrorCode
 import br.ufpr.tcc.entretien.backend.common.error.FieldViolation
 import br.ufpr.tcc.entretien.backend.common.exception.interview.ContentNotFoundException
 import br.ufpr.tcc.entretien.backend.common.exception.interview.UnavailableTimeException
+import br.ufpr.tcc.entretien.backend.common.exception.jwt.InvalidTokenException
+import br.ufpr.tcc.entretien.backend.common.exception.jwt.TokenGeneratorException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -53,7 +55,10 @@ class ExceptionHandlerAdvice : ResponseEntityExceptionHandler() {
     fun handleUnavailableTimeException(
         ex: UnavailableTimeException
     ) : ResponseEntity<ApiError> {
-        val apiError = ApiError(BusinessErrorCode.UNAVAILABLE_TIME.code, "This time is no longer available")
+        val apiError = ApiError(
+            status = BusinessErrorCode.UNAVAILABLE_TIME.code,
+            message = BusinessErrorCode.UNAVAILABLE_TIME.description
+        )
         return ResponseEntity(apiError, HttpStatus.CONFLICT)
     }
     @ExceptionHandler(ConstraintViolationException::class)
@@ -66,6 +71,37 @@ class ExceptionHandlerAdvice : ResponseEntityExceptionHandler() {
         }
         val apiError = ApiError(message = "Invalid request parameters", fieldViolations = fieldViolations)
         return ResponseEntity(apiError, HttpStatus.BAD_REQUEST)
+    }
+    @ExceptionHandler(InvalidTokenException::class)
+    fun handleInvalidTokenException(
+        ex: InvalidTokenException,
+        request: WebRequest
+    ) : ResponseEntity<ApiError> {
+        val fieldViolation = FieldViolation(
+            field = "token",
+            description = BusinessErrorCode.INVALID_TOKEN.description
+        )
+        val apiError = ApiError(
+            status = BusinessErrorCode.INVALID_TOKEN.code,
+            message = "Please try with a valid token",
+            fieldViolations = listOf(fieldViolation)
+
+        )
+        return ResponseEntity(apiError, HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler(TokenGeneratorException::class)
+    fun handleTokenGeneratorException(
+        ex: TokenGeneratorException,
+        request: WebRequest
+    ) : ResponseEntity<ApiError> {
+        val fieldViolation = FieldViolation(
+            field = "token",
+            description = ex.message.toString()
+        )
+        val apiError = ApiError(message = "Invalid Credentials. Please try again with the correct credentials.")
+
+        return ResponseEntity(apiError, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     override fun handleMethodArgumentNotValid(

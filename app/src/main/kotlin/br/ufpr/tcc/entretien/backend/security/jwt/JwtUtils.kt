@@ -1,15 +1,14 @@
 package br.ufpr.tcc.entretien.backend.security.jwt
 
+import br.ufpr.tcc.entretien.backend.common.exception.jwt.InvalidTokenException
 import br.ufpr.tcc.entretien.backend.common.exception.jwt.TokenGeneratorException
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
-import br.ufpr.tcc.entretien.backend.controller.AuthController
-import java.util.Date;
-
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
-import org.springframework.security.core.Authentication;
 import io.jsonwebtoken.*
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class JwtUtils {
@@ -17,6 +16,7 @@ class JwtUtils {
         private const val LOG_TAG = "entretien-backend-jwt-utils"
         private val logger = LOGGER.getLogger(JwtUtils::class.java)
     }
+
     @Value("\${entretien.app.jwtSecret}")
     lateinit var jwtSecret: String
 
@@ -42,31 +42,30 @@ class JwtUtils {
 
     fun getUserNameFromJwtToken(token: String): String {
         val username = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body.subject
-        println("[LOG] username: $username")
+        logger.info(LOG_TAG, "successfully generated jwt token")
         return username
+
     }
 
     fun validateJwtToken(authToken: String?): Boolean {
-        println("[LOG] validateJwtToken()")
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
+            logger.info(LOG_TAG, "Token Is Valid")
             return true
-        } catch (e: SignatureException) {
-            println("[LOG] Invalid JWT signature: {}" + e.message)
-//            logger.error("Invalid JWT signature: {}", e.getMessage())
-        } catch (e: MalformedJwtException) {
-            println("[LOG] Invalid JWT token: {}" + e.message)
-//            logger.error("Invalid JWT token: {}", e.getMessage())
-        } catch (e: ExpiredJwtException) {
-            println("[LOG] JWT token is expired: {}" + e.message)
-//            logger.error("JWT token is expired: {}", e.getMessage())
-        } catch (e: UnsupportedJwtException) {
-            println("[LOG] JWT token is unsupported: {}" + e.message)
-//            logger.error("JWT token is unsupported: {}", e.getMessage())
-        } catch (e: IllegalArgumentException) {
-            println("[LOG] JWT claims string is empty: {}" + e.message)
-//            logger.error("JWT claims string is empty: {}", e.message)
+        } catch (ex: Exception) {
+            when(ex) {
+                is ExpiredJwtException,
+                is UnsupportedJwtException,
+                is MalformedJwtException,
+                is SignatureException,
+                is IllegalArgumentException -> {
+                    logger.error(LOG_TAG, "unprocessed token", ex.stackTrace, mapOf("token" to authToken.toString()))
+                    throw InvalidTokenException()
+                }
+                else -> {
+                    throw Exception(ex)
+                }
+            }
         }
-        return false
     }
 }
