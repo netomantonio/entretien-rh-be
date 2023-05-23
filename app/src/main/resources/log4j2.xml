@@ -2,13 +2,7 @@
 <Configuration status="WARN" packages="net.logstash.log4j2">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <JsonLayout eventEol="true">
-                <KeyValuePair key="timestamp" value="$${date:dd-MMM-yyyy HH:mm:ss.SSS}"/>
-                <KeyValuePair key="thread" value="$${thread}"/>
-                <KeyValuePair key="level" value="$${level}"/>
-                <KeyValuePair key="logger" value="$${logger}"/>
-                <KeyValuePair key="message" value="$${message}"/>
-            </JsonLayout>
+            <PatternLayout pattern="{%n 'timestamp': '%d{dd-MMM-yyyy HH:mm:ss.SSS}',%n 'thread': '%thread',%n 'level': '%level',%n 'logger': '%logger',%n 'message': '%msg' %n } %n"/>
         </Console>
     </Appenders>
     <Loggers>
