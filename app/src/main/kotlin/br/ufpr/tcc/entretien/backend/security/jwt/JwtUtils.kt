@@ -52,20 +52,22 @@ class JwtUtils {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
             logger.info(LOG_TAG, "Token Is Valid")
             return true
-        } catch (ex: Exception) {
-            when(ex) {
-                is ExpiredJwtException,
-                is UnsupportedJwtException,
-                is MalformedJwtException,
-                is SignatureException,
-                is IllegalArgumentException -> {
-                    logger.error(LOG_TAG, "unprocessed token", ex.stackTrace, mapOf("token" to authToken.toString()))
-                    throw InvalidTokenException()
-                }
-                else -> {
-                    throw Exception(ex)
-                }
-            }
+        } catch (e: SignatureException) {
+            println("[LOG] Invalid JWT signature: {}" + e.message)
+//            logger.error("Invalid JWT signature: {}", e.getMessage())
+        } catch (e: MalformedJwtException) {
+            println("[LOG] Invalid JWT token: {}" + e.message)
+//            logger.error("Invalid JWT token: {}", e.getMessage())
+        } catch (e: ExpiredJwtException) {
+            println("[LOG] JWT token is expired: {}" + e.message)
+//            logger.error("JWT token is expired: {}", e.getMessage())
+        } catch (e: UnsupportedJwtException) {
+            println("[LOG] JWT token is unsupported: {}" + e.message)
+//            logger.error("JWT token is unsupported: {}", e.getMessage())
+        } catch (e: IllegalArgumentException) {
+            println("[LOG] JWT claims string is empty: {}" + e.message)
+//            logger.error("JWT claims string is empty: {}", e.message)
         }
+        return false
     }
 }
