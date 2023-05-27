@@ -1,11 +1,14 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.*
 import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
+import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
@@ -105,5 +108,13 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
 
         return users.filterIsInstance<Candidate>()
     }
+    fun getAllInterviews(candidateId: Long): InterviewsByCandidateResponse {
+        val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
+        return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
+    }
 
+}
+
+private fun Interview.toResponse(): InterviewByCandidateResponse {
+    return InterviewByCandidateResponse(id = this.getId().toString(), companyName = this.manager.companyName, status = this.interviewStatus.name)
 }
