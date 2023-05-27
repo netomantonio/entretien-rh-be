@@ -35,4 +35,6 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         value = "select i.* from public.interview i where i.starting_at <= :from and i.starting_at >= :to"
     )
     fun findAnyByPeriod(@Param("from") from: Timestamp, @Param("to") to: Timestamp): Optional<Iterable<Interview>>
+
+    fun findAllByCandidateId(id: Long): Optional<List<Interview>>
 }
