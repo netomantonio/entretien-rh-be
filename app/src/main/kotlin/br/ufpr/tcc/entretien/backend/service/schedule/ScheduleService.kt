@@ -1,12 +1,12 @@
 package br.ufpr.tcc.entretien.backend.service.schedule
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import br.ufpr.tcc.entretien.backend.repository.ScheduleRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
-import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.RecruiterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -15,10 +15,13 @@ import java.time.LocalDate
 import java.time.LocalTime
 import kotlin.jvm.Throws
 
-//import kotlin.jvm.Throws
-
 @Service
 class ScheduleService {
+
+    companion object {
+        val logger = LOGGER.getLogger(ScheduleService::class.java)
+        private const val LOG_TAG = "entretien-rh-backend-schedule-service"
+    }
 
     @Autowired
     lateinit var recruiterRepository: UserRepository<Recruiter>
@@ -29,8 +32,6 @@ class ScheduleService {
     @Autowired
     lateinit var recruiterService: RecruiterService
 
-    @Autowired
-    lateinit var interviewService: InterviewService
 
     fun buildSchedule(
         recruiter: Recruiter,
@@ -48,29 +49,40 @@ class ScheduleService {
 
     @Throws(ScheduleException::class)
     fun addScheduleEntry(recruiterScheduleRequest: RecruiterScheduleRequest, recruiterId: Long) {
+        logger.info(LOG_TAG, "add schedule entry init process", mapOf("RecruiterScheduleRequest" to recruiterScheduleRequest.agenda.toString() ))
+        val dayOfTheWeek = recruiterScheduleRequest.agenda.dayOfTheWeek
+        val periods = mapOf(
+            dayOfTheWeek to
+                    recruiterScheduleRequest.agenda.timesOfTheDay.map {
+                        dividePeriod(
+                            it.startingAt,
+                            it.endingAt
+                        )
+                    })
 
-        var recruiter = recruiterService.getRecruiterById(recruiterId)
-        var schedules: MutableList<Schedule> = mutableListOf()
+        val recruiter = recruiterService.getRecruiterById(recruiterId)
+        logger.info(LOG_TAG, "get recruiter successfully for id: `${recruiterId}`", mapOf("recruiter" to recruiter.firstName.toString()))
+        val schedules: MutableList<Schedule> = mutableListOf()
 
-        for (agenda in recruiterScheduleRequest.agenda) {
-            for (timeSpan in agenda.timesOfTheDay) {
-                var newSchedule: Schedule? = null
-                newSchedule = Schedule(
-                    recruiter = recruiter,
-                    dayOfTheWeek = agenda.dayOfTheWeek,
-                    startingAt = timeSpan.startingAt,
-                    endingAt = timeSpan.endingAt
-                )
-                schedules.add(newSchedule)
-            }
+
+        for (timeSpan in periods[dayOfTheWeek]!![0]) {
+            var newSchedule: Schedule?
+            newSchedule = Schedule(
+                recruiter = recruiter,
+                dayOfTheWeek = dayOfTheWeek,
+                startingAt = timeSpan.first,
+                endingAt = timeSpan.second
+            )
+            schedules.add(newSchedule)
+            logger.info(LOG_TAG, "new schedules added successfully")
         }
         if (recruiter.schedule == null) {
             recruiter.schedule = mutableListOf()
         } else {
-            for (schedules in schedules) {
-                if (this.isOverlappingRecruiterSchedule(schedules, recruiter)) {
+            for (schedule in schedules) {
+                if (this.isOverlappingRecruiterSchedule(schedule, recruiter)) {
                     // TODO: allow to persist every other entry not overlapping
-                    throw ScheduleException(ScheduleExceptionType.OVERLAPPING_SCHEDULE, "Overlapping schedules.")
+                    throw ScheduleException(ScheduleExceptionType.OVERLAPPING_SCHEDULE, "Overlapping schedule.")
                 }
             }
         }
@@ -78,6 +90,8 @@ class ScheduleService {
         recruiter.schedule!!.addAll(schedules)
 
         this.recruiterRepository.save(recruiter)
+
+        logger.info(LOG_TAG, "all periods have been successfully saved to the recruiter")
     }
 
     fun assertScheduleOwnership(scheduleId: Long, recruiterId: Long): Boolean {
@@ -109,7 +123,7 @@ class ScheduleService {
     }
 
     fun isOverlapping(firstSchedule: Schedule, secondSchedule: Schedule): Boolean {
-        var overlaps: Boolean = if (firstSchedule.startingAt.isBefore(secondSchedule.startingAt)) {
+        val overlaps: Boolean = if (firstSchedule.startingAt.isBefore(secondSchedule.startingAt)) {
             firstSchedule.startingAt.isAfter(secondSchedule.endingAt) ||
                     firstSchedule.endingAt.isAfter(secondSchedule.startingAt)
         } else {
@@ -133,8 +147,9 @@ class ScheduleService {
         val fromTimeString = Timestamp.valueOf(from.atStartOfDay())
         val schedules = scheduleRepository.getAvailableWithinPeriod(
             toTimeString,
-            fromTimeString)
-        if(schedules.none())
+            fromTimeString
+        )
+        if (schedules.none())
             return emptyList()
 
         return schedules
@@ -143,4 +158,21 @@ class ScheduleService {
     fun getAllSchedules(): Iterable<Schedule> {
         return scheduleRepository.findAll()
     }
+
+    fun dividePeriod(periodoInicial: LocalTime, periodoFinal: LocalTime): List<Pair<LocalTime, LocalTime>> {
+        val periodos = mutableListOf<Pair<LocalTime, LocalTime>>()
+
+        var horaAtual = periodoInicial
+        while (horaAtual.isBefore(periodoFinal) || horaAtual == periodoFinal.minusHours(1)) {
+            val proximaHora = horaAtual.plusHours(1)
+            val periodo = Pair(horaAtual, proximaHora)
+            periodos.add(periodo)
+            horaAtual = proximaHora
+        }
+
+        logger.info(LOG_TAG, "period `${periodoInicial} - ${periodoFinal}` divided into `${periodos.size}` hour intervals")
+
+        return periodos
+    }
+
 }

@@ -3,10 +3,10 @@ package br.ufpr.tcc.entretien.backend.service
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
-import br.ufpr.tcc.entretien.backend.model.*
+import br.ufpr.tcc.entretien.backend.model.Resume
+import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
-import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
@@ -17,6 +17,8 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
@@ -39,7 +41,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     override fun existsByEmail(email: String) =
         candidateRepository.existsByEmail(email)
 
-    override fun register(candidate: Candidate) = candidateRepository.save(candidate)
+    override fun register(user: Candidate) = candidateRepository.save(user)
 
     fun createNewCandidate(candidate: Candidate) {
         val newCandidate = this.register(candidate)
@@ -60,8 +62,8 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         desiredJobTitle: String,
         candidate: Candidate
     ): Resume {
-        val educationLevel = EducationLevelTypes.valueOf(educationLevel)
-        return Resume(presentation, educationLevel, professionalHistory, languages, desiredJobTitle, candidate)
+        val educationLevelType = EducationLevelTypes.valueOf(educationLevel)
+        return Resume(presentation, educationLevelType, professionalHistory, languages, desiredJobTitle, candidate)
     }
 
     override fun getRole(): Role = roleRepository.findByName(ERole.ROLE_CANDIDATE)
@@ -71,25 +73,25 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
             )
         }
 
-    override fun build(candidateSignupRequest: CandidateSignupRequest): Candidate {
+    override fun build(signupRequest: CandidateSignupRequest): Candidate {
         val roles: MutableSet<Role> = HashSet()
         val candidateRole: Role = this.getRole()
         roles.add(candidateRole)
 
-        var candidade = Candidate()
-        candidade.cep = candidateSignupRequest.cep
-        candidade.pcd = candidateSignupRequest.pcd
-        candidade.socialNetworkig = candidateSignupRequest.socialNetworking
-        candidade.username = candidateSignupRequest.username
-        candidade.password = encoder.encode(candidateSignupRequest.password)
+        val candidade = Candidate()
+        candidade.cep = signupRequest.cep
+        candidade.pcd = signupRequest.pcd
+        candidade.socialNetworkig = signupRequest.socialNetworking
+        candidade.username = signupRequest.username
+        candidade.password = encoder.encode(signupRequest.password)
         candidade.activated = true
         candidade.roles = roles
-        candidade.firstName = candidateSignupRequest.firstName
-        candidade.lastName = candidateSignupRequest.lastName
+        candidade.firstName = signupRequest.firstName
+        candidade.lastName = signupRequest.lastName
 //      TODO: candidade.birthDay = candidateSignupRequest.birthDay
-        candidade.cpf = candidateSignupRequest.cpf
-        candidade.email = candidateSignupRequest.email
-        candidade.phone = candidateSignupRequest.phone
+        candidade.cpf = signupRequest.cpf
+        candidade.email = signupRequest.email
+        candidade.phone = signupRequest.phone
 
         return candidade
     }
@@ -104,10 +106,11 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     // TODO: Review this method
     fun getAllCandidates(): Iterable<Candidate> {
 
-        var users = candidateRepository.findAll()
+        val users = candidateRepository.findAll()
 
         return users.filterIsInstance<Candidate>()
     }
+
     fun getAllInterviews(candidateId: Long): InterviewsByCandidateResponse {
         val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
         return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
@@ -116,5 +119,16 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
 }
 
 private fun Interview.toResponse(): InterviewByCandidateResponse {
-    return InterviewByCandidateResponse(id = this.getId().toString(), companyName = this.manager.companyName, status = this.interviewStatus.name)
+    return InterviewByCandidateResponse(
+        id = this.getId().toString(),
+        companyName = this.manager.companyName,
+        status = this.interviewStatus.name,
+        appointmentDate = this.startingAt?.formatter()
+    )
+}
+private fun LocalDateTime?.formatter(): String? {
+    if (this == null) return null
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    return this.format(formatter)
+
 }
