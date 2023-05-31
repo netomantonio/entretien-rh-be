@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.security.jwt
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.service.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -13,21 +14,29 @@ import javax.servlet.http.HttpServletResponse
 
 
 class AuthTokenFilter : OncePerRequestFilter() {
+
+    companion object {
+        private val log = LOGGER.getLogger(AuthTokenFilter::class.java)
+        private const val LOG_TAG = "entretien-backend-auth-token-filter"
+    }
+
     @Autowired
     lateinit var jwtUtils: JwtUtils
 
     @Autowired
     lateinit var userDetailsService: UserDetailsServiceImpl
 
-//    private val logger: Logger = LoggerFactory.getLogger(AuthTokenFilter::class.java)
-
     private fun parseJwt(request: HttpServletRequest): String? {
-        println("[LOG] parseJwt()")
         val headerAuth = request.getHeader("Authorization")
-        return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            println("[LOG] headerAuth.substring(7, headerAuth.length)" + headerAuth.substring(7, headerAuth.length))
+        return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ") && !headerAuth.contains("null")) {
+            log.info(LOG_TAG,"Parse Successful", mapOf("headerAuth" to headerAuth.substring(7, 14) + "**********"))
             headerAuth.substring(7, headerAuth.length)
-        } else null
+        } else if (headerAuth.contains("null")) {
+            log.info(LOG_TAG,"Parse Successful", mapOf("headerAuth" to headerAuth.substring(7, headerAuth.length)))
+            headerAuth.substring(7, headerAuth.length)
+        } else {
+            null
+        }
     }
 
     override fun doFilterInternal(
@@ -35,27 +44,30 @@ class AuthTokenFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        println("[LOG] doFilterInternal()")
         try {
             val jwt = parseJwt(request)
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                println("[LOG] jwt != null && jwtUtils.validateJwtToken(jwt)")
                 val username: String = jwtUtils.getUserNameFromJwtToken(jwt)
 
                 val userDetails = userDetailsService.loadUserByUsername(username)
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails?.authorities
                 )
-                println("[LOG] username: " + username)
-                println("[LOG] userDetails.authorities: " + userDetails?.authorities.toString())
-                println("[LOG] authentication.isAuthenticated: " + authentication.isAuthenticated)
-
+                log.info(
+                    LOG_TAG,
+                    "Get Token Successful",
+                    mapOf(
+                        "username" to username,
+                        "authorities" to userDetails?.authorities.toString(),
+                        "isAuthenticated" to authentication.isAuthenticated.toString()
+                    )
+                )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {
-            println("[LOG] Cannot set user authentication: {}" + e.message)
-//            logger.error("Cannot set user authentication: {}", e)
+            log.error(LOG_TAG, "Cannot set user authentication", e.stackTrace)
+            throw Exception(e)
         }
         filterChain.doFilter(request, response)
     }
