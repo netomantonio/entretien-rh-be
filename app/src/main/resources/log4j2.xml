@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+<Configuration status="WARN" packages="net.logstash.log4j2">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="{%n 'timestamp': '%d{dd-MMM-yyyy HH:mm:ss.SSS}',%n 'thread': '%thread',%n 'level': '%level',%n 'logger': '%logger',%n 'message': '%msg' %n } %n"/>
