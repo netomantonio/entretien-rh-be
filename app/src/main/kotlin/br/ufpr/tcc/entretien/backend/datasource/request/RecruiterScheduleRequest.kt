@@ -5,7 +5,7 @@ import java.time.LocalTime
 import javax.validation.constraints.NotBlank
 
 class RecruiterScheduleRequest(
-    var agenda: MutableSet<Agenda>,
+    var agenda: Agenda,
 ) {
     class Agenda(
         @NotBlank

@@ -1,13 +1,14 @@
 package br.ufpr.tcc.entretien.backend.common.logger
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-import org.apache.logging.log4j.message.MapMessage
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.security.config.web.servlet.SecurityMarker
+
 
 class LOGGER(private val logger: Logger) {
     companion object {
         fun getLogger(clazz: Class<*>): LOGGER {
-            val logger = LogManager.getLogger(clazz)
+            val logger = LoggerFactory.getLogger(clazz)
             return LOGGER(logger)
         }
     }
@@ -19,12 +20,11 @@ class LOGGER(private val logger: Logger) {
                 logMessage[key] = value
             }
         }
-        logger.info("$message: {}", additionalValues, logger.level, logMessage, logTag)
+        if (additionalValues.isNullOrEmpty()) logger.info(message)
+        else logger.info("$message: {}", logMessage)
     }
 
     fun error(logTag: String, message: String?, stackTrace: Array<StackTraceElement>, additionalValues: Map<String, String>? = null) {
-        logger.info(message, logger.level, logTag, stackTrace, additionalValues)
+        logger.info(message, logTag, stackTrace, additionalValues)
     }
 }
-
-class MutableMapMessage<K : MapMessage<K, V>?, V> : MapMessage<K,V>()

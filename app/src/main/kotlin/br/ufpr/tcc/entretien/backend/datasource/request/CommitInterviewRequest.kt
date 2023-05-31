@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 class CommitInterviewRequest(
     val scheduleId: Long,
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    val interviewId: Long,
+    @JsonFormat(pattern = "yyyy-MM-dd")
     val date: LocalDate
 )
