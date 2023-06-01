@@ -18,7 +18,7 @@ interface ScheduleRepository : CrudRepository<Schedule, Long> {
 
     @Query(
         nativeQuery = true,
-        value = "select * from public.schedule s left join (select * from public.interview i where i.interview_status = 'SCHEDULE' and i.starting_at >= '2020-01-01 00:00:00.000' and i.starting_at <= '2024-01-01 00:00:00.000') i on i.fk_schedule = s.id where i.id is null;"
+        value = "select s.* from public.schedule as s left join(select * from public.interview i where i.interview_status = 'SCHEDULE' and i.starting_at >= :from and i.starting_at < :to) as i on i.fk_schedule = s.id where i.id is null;"
     )
     fun getAvailableWithinPeriod(@Param("from") from: Timestamp, @Param("to") to: Timestamp): Iterable<Schedule>
 
