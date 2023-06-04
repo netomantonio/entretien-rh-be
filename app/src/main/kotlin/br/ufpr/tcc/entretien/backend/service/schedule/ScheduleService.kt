@@ -146,8 +146,8 @@ class ScheduleService {
         val toTimeString = Timestamp.valueOf(to.atStartOfDay())
         val fromTimeString = Timestamp.valueOf(from.atStartOfDay())
         val schedules = scheduleRepository.getAvailableWithinPeriod(
-            toTimeString,
-            fromTimeString
+            fromTimeString,
+            toTimeString
         )
         if (schedules.none())
             return emptyList()
