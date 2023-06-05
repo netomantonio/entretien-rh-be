@@ -81,7 +81,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         val candidade = Candidate()
         candidade.cep = signupRequest.cep
         candidade.pcd = signupRequest.pcd
-        candidade.socialNetworkig = signupRequest.socialNetworking
+        candidade.socialNetworking = signupRequest.socialNetworking
         candidade.username = signupRequest.username
         candidade.password = encoder.encode(signupRequest.password)
         candidade.activated = true
