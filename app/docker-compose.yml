@@ -27,7 +27,7 @@ services:
     image: openvidu/openvidu-server-kms:latest
     restart: always
     environment:
-      OPENVIDU_SECRET: entretien-rh
+      OPENVIDU_SECRET: ${NOME_VARIAVEL:entretien-rh}
       TZ: America/Sao_Paulo
     ports:
       - 4443:4443

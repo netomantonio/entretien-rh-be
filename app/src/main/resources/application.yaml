@@ -22,11 +22,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: update
-      jdbc:
-        lob:
-          non_contextual_creation: true
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
 OPENVIDU:
   url: ${OPENVID_UR:localhost:4443}
