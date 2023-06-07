@@ -99,7 +99,7 @@ class ExceptionHandlerAdvice : ResponseEntityExceptionHandler() {
             field = "token",
             description = ex.message.toString()
         )
-        val apiError = ApiError(message = "Invalid Credentials. Please try again with the correct credentials.")
+        val apiError = ApiError(message = "Invalid Credentials. Please try again with the correct credentials.", fieldViolations = listOf(fieldViolation))
 
         return ResponseEntity(apiError, HttpStatus.UNPROCESSABLE_ENTITY)
     }
