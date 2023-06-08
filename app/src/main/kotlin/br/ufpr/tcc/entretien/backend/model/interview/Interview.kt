@@ -3,6 +3,7 @@ package br.ufpr.tcc.entretien.backend.model.interview
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
+import br.ufpr.tcc.entretien.backend.model.openvidu.VideoCallAccess
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
@@ -10,6 +11,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
+
 
 @Entity
 class Interview(
@@ -25,7 +27,10 @@ class Interview(
     var cpf: String? = "",
     @ManyToOne @JoinColumn(name = "fk_recruiter") var recruiter: Recruiter? = null,
     @ManyToOne @JoinColumn(name = "fk_candidate") var candidate: Candidate? = null,
-    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null
+    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null,
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "fk_videocall_access")
+    var videoCallAccess: VideoCallAccess? = null
 ) : AbstractJpaPersistable() {
 
     @ManyToOne

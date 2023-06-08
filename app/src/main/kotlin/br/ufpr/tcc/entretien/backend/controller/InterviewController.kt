@@ -1,10 +1,12 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
+import br.ufpr.tcc.entretien.backend.service.openvidu.CreateRoomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,6 +23,9 @@ class InterviewController {
 
     @Autowired
     lateinit var interviewService: InterviewService
+
+    @Autowired
+    lateinit var createRoomService: CreateRoomService
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("")
@@ -170,9 +175,12 @@ class InterviewController {
         val date = commitInterviewRequest.date
         val candidateId = userDetails.getId()
         val interviewId = commitInterviewRequest.interviewId
+
+        if (interviewService.getInterview(interviewId).get().candidate!!.id != candidateId) throw UserIsNotAuthorizedException()
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
-            interviewService.commitInterview(scheduleId, interviewId, date, candidateId)
+            val interview = interviewService.commitInterview(scheduleId, interviewId, date)
+            createRoomService.execute(interview)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")

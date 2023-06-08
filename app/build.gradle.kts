@@ -25,9 +25,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
-//    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.vladmihalcea:hibernate-types-52:2.21.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-devtools")
@@ -35,7 +36,7 @@ dependencies {
     // LOGS
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     // OPENVIDU
-    implementation("io.openvidu:openvidu-java-client:2.24.0")
+    implementation("io.openvidu:openvidu-java-client:2.26.0")
 
     // OPENAPI - REST DOCUMENTATION
     implementation("org.springdoc:springdoc-openapi-data-rest:1.7.0")

@@ -39,13 +39,13 @@ class InterviewService {
 
         val manager: Manager = this.getManagerById(managerId)
 
-        var candidate: Candidate? = try {
+        val candidate: Candidate? = try {
             this.candidateRepository.findByCpf(candidateCpf).get()
         } catch (e: NoSuchElementException) {
             null
         }
 
-        var interview = Interview()
+        val interview = Interview()
         interview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
         if (candidate != null) {
             interview.candidate = candidate
@@ -62,7 +62,7 @@ class InterviewService {
         return registerInterview(interview)
     }
 
-    fun registerInterview(interview: Interview) : Interview = interviewRepository.save(interview)
+    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview)
 
     fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
@@ -104,30 +104,27 @@ class InterviewService {
                 || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
     }
 
-    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate, candidateId: Long) {
-//        if (!interviewRepository.existsByCandidateId(candidateId)) {
-//            // TODO: throw error (interview not available)
-//        }
-
-        var interview: Interview = interviewRepository.findById(interviewId).get()
+    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate): Interview {
+        val interview: Interview = interviewRepository.findById(interviewId).get()
         if (interview.candidate == null) {
             throw Exception("Não autorizado.")
         }
-        var schedule: Schedule = scheduleRepository.findById(scheduleId).get()
-        var recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
+        val schedule: Schedule = scheduleRepository.findById(scheduleId).get()
+        val recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
 
         interview.schedule = schedule
         interview.recruiter = recruiter
         interview.startingAt = LocalDateTime.of(date, schedule.startingAt)
         interview.interviewStatus = InterviewStatusTypes.SCHEDULE
 
-        interviewRepository.save(interview)
+        return interviewRepository.save(interview)
     }
 
     fun getScheduleInterviewsByRecruiter(recruiterId: Long): Iterable<Interview> {
         return interviewRepository.findByRecruiterId(recruiterId).get()
     }
 
+    //TODO("Validar o uso desse método faz o mesmo que o método da schedule service faz? 'ScheduleService.getAllAvailableSchedulesWithinPeriod'")
     fun getFullScheduleInterviewsByPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
         return interviewRepository.findByPeriod(
             Timestamp.valueOf(to.atStartOfDay()),

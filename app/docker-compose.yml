@@ -24,7 +24,7 @@ services:
       - db
 
   openvidu:
-    image: openvidu/openvidu-server-kms:latest
+    image: openvidu/openvidu-server-kms:2.19.0
     restart: always
     environment:
       OPENVIDU_SECRET: ${NOME_VARIAVEL:entretien-rh}
