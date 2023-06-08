@@ -32,23 +32,24 @@ class CreateRoomService(
         interview: Interview
     ) {
         try {
-            val roomCodeAccess = UUID.randomUUID().toString()
+            val roomCustomId = UUID.randomUUID().toString()
             logger.info(
                 LOG_TAG,
                 "started the creation of the call room for the interview",
                 mapOf(
                     "interview" to interview.getId().toString(),
-                    "room" to roomCodeAccess,
+                    "room" to roomCustomId,
                     "candidate" to interview.candidate!!.id.toString(),
                     "recruiter" to interview.recruiter!!.id.toString()
                 )
             )
-            val (publisherToken, moderatorToken) = configureVideoCall(roomCodeAccess, interview)
+            val (publisherToken, moderatorToken) = configureVideoCall(roomCustomId, interview)
 
             val openviduAccess = VideoCallAccess(
                 candidateVideoCallToken = publisherToken,
                 recruiterVideoCallToken = moderatorToken,
-                roomName = roomCodeAccess
+                roomName = ("Interview Candidate ${interview.candidate!!.firstName} with Recruiter ${interview.recruiter!!.firstName}"),
+                roomId = roomCustomId
             )
 
             interview.videoCallAccess = openviduAccess

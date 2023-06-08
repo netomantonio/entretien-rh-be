@@ -11,7 +11,8 @@ import javax.persistence.TemporalType
 data class VideoCallAccess(
     var candidateVideoCallToken: String,
     var recruiterVideoCallToken: String,
-    var roomName: String,
+    val roomName: String,
+    var roomId: String,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
     @Temporal(TemporalType.TIMESTAMP) var updatedAt: Date = Date.from(Instant.now()),
 ) : AbstractJpaPersistable()
