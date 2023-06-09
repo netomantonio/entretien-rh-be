@@ -30,5 +30,5 @@ spring:
           lob:
             non_contextual_creation: true
 OPENVIDU:
-  url: ${OPENVID_URL:http://localhost:4443}
+  url: ${OPENVID_URL:https://localhost:4443}
   secret: ${OPENVIDU_SECRET:entretien-rh}
