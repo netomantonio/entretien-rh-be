@@ -114,7 +114,7 @@ class CreateRoomService(
         return ConnectionProperties.Builder()
             .type(type)
             .role(role)
-            .data("role:${type.name},userId:${id}")
+            .data("role:${role.name},userId:${id}")
             .build()
     }
 }
