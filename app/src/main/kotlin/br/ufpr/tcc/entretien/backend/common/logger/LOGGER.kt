@@ -2,7 +2,6 @@ package br.ufpr.tcc.entretien.backend.common.logger
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.security.config.web.servlet.SecurityMarker
 
 
 class LOGGER(private val logger: Logger) {
@@ -20,6 +19,7 @@ class LOGGER(private val logger: Logger) {
                 logMessage[key] = value
             }
         }
+        logMessage["LOG_TAG"] = logTag
         if (additionalValues.isNullOrEmpty()) logger.info(message)
         else logger.info("$message: {}", logMessage)
     }
