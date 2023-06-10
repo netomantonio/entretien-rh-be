@@ -25,9 +25,9 @@ abstract class User(
     open var firstName: String? = null,
     open var lastName: String? = null,
     open var username: String = "",
-    @Temporal(TemporalType.DATE) open val birthDay: Date? = null,
+    @Temporal(TemporalType.DATE) open var birthDay: Date? = null,
     @Temporal(TemporalType.TIMESTAMP) open val createdAt: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) open val updatedAt: Date = Date.from(Instant.now()),
+    @Temporal(TemporalType.TIMESTAMP) open var updatedAt: Date = Date.from(Instant.now()),
     open var activated: Boolean = false,
     open var phone: String? = null,
     // TODO: (val gender: ENUM)

@@ -8,7 +8,7 @@ import javax.persistence.*
  */
 @Entity
 class Candidate(
-    var socialNetworkig: String? = null,
+    var socialNetworking: String? = null,
     var pcd: Boolean = false,
     var cep: String? = null,
     @OneToOne(cascade=[CascadeType.ALL])
