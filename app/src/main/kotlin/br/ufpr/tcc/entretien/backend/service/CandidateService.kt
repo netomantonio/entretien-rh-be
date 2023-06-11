@@ -116,6 +116,10 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
     }
 
+    fun update(candidate: Candidate): Candidate {
+        return candidateRepository.save(candidate)
+    }
+
 }
 
 private fun Interview.toResponse(): InterviewByCandidateResponse {
