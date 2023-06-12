@@ -3,6 +3,8 @@ entretien:
     jwtSecret: secret
     jwtExpirationMs: ${JWT_EXPIRATION_MS:86400000}
 server:
+  ssl:
+    enabled: false
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
   mvc:
