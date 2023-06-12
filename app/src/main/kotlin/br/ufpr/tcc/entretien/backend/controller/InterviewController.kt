@@ -6,14 +6,13 @@ import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
-import br.ufpr.tcc.entretien.backend.service.openvidu.CreateRoomService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.util.Optional
+import java.util.*
 import javax.validation.Valid
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -23,9 +22,6 @@ class InterviewController {
 
     @Autowired
     lateinit var interviewService: InterviewService
-
-    @Autowired
-    lateinit var createRoomService: CreateRoomService
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("")
@@ -179,8 +175,7 @@ class InterviewController {
         if (interviewService.getInterview(interviewId).get().candidate!!.id != candidateId) throw UserIsNotAuthorizedException()
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
-            val interview = interviewService.commitInterview(scheduleId, interviewId, date)
-            createRoomService.execute(interview)
+            interviewService.commitInterview(scheduleId, interviewId, date)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")

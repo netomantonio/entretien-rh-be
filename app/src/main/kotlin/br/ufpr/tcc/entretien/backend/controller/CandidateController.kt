@@ -3,7 +3,6 @@ package br.ufpr.tcc.entretien.backend.controller
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
-import br.ufpr.tcc.entretien.backend.datasource.response.InterviewConnectionPropertiesResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.service.CandidateService
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.lang.IllegalArgumentException
 import javax.validation.Valid
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -109,18 +107,5 @@ class CandidateController {
             logger.error(LOG_TAG, ex.message, ex.stackTrace)
             throw IllegalArgumentException()
         }
-    }
-
-    @GetMapping("/interviews/{id}/connection-properties")
-    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
-    fun getConnectionProperties(
-        authentication: Authentication,
-        @Valid @PathVariable id: Long
-    ): ResponseEntity<InterviewConnectionPropertiesResponse> {
-        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-        val candidateId = userDetails.getId()
-        logger.info(LOG_TAG, "received request from user", mapOf("user-id" to candidateId.toString()))
-        val response = candidateService.getInterviewConnectionProperties(id, candidateId)
-        return ResponseEntity.ok(response)
     }
 }

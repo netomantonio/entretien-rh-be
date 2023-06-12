@@ -2,7 +2,6 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
-import br.ufpr.tcc.entretien.backend.datasource.response.InterviewConnectionPropertiesResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.Resume
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
@@ -115,16 +114,6 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     fun getAllInterviews(candidateId: Long): InterviewsByCandidateResponse {
         val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
         return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
-    }
-
-    fun getInterviewConnectionProperties(interviewId: Long, candidateId: Long): InterviewConnectionPropertiesResponse {
-        val interviewConnectionProperies =
-            interviewRepository.findAll().first { it.getId() == interviewId && it.candidate!!.id == candidateId }
-        return  InterviewConnectionPropertiesResponse(
-            candidateInterviewVideoCallTokenAccess = interviewConnectionProperies.videoCallAccess!!.candidateVideoCallToken,
-            candidateInterviewVideoCallRoomId = interviewConnectionProperies.videoCallAccess!!.roomId,
-            candidateInterviewVideoCallRoomName = interviewConnectionProperies.videoCallAccess!!.roomName
-        )
     }
 
 }

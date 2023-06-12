@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -18,6 +19,11 @@ import java.util.Optional
 
 @Service
 class InterviewService {
+
+    companion object {
+        private const val LOG_TAG = "entretien-backend-interview-service"
+        private val logger = LOGGER.getLogger(InterviewService::class.java)
+    }
 
     @Autowired
     lateinit var candidateRepository: UserRepository<Candidate>
@@ -104,7 +110,7 @@ class InterviewService {
                 || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
     }
 
-    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate): Interview {
+    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate) {
         val interview: Interview = interviewRepository.findById(interviewId).get()
         if (interview.candidate == null) {
             throw Exception("Não autorizado.")
@@ -117,7 +123,7 @@ class InterviewService {
         interview.startingAt = LocalDateTime.of(date, schedule.startingAt)
         interview.interviewStatus = InterviewStatusTypes.SCHEDULE
 
-        return interviewRepository.save(interview)
+        interviewRepository.save(interview)
     }
 
     fun getScheduleInterviewsByRecruiter(recruiterId: Long): Iterable<Interview> {
@@ -136,7 +142,9 @@ class InterviewService {
         return interviewRepository.findByManagerId(managerId).get()
     }
 
-    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview)
+    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
+        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
 
     fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
         if (managerObservation?.isNotEmpty() == true)
