@@ -56,7 +56,7 @@ class OpenviduController {
         try {
             val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
             val interview =
-                interviewService.getInterview(interviewId!!.toLong()).filter { it.candidate?.id == userDetails.getId() }
+                interviewService.getInterview(interviewId!!.toLong()).filter { it.candidate?.id == userDetails.getId() || it.recruiter?.id == userDetails.getId() }
                     .orElseThrow()
             logger.info(
                 LOG_TAG,
