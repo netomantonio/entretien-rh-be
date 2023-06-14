@@ -3,9 +3,7 @@ package br.ufpr.tcc.entretien.backend.service
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
-import br.ufpr.tcc.entretien.backend.model.Resume
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
-import br.ufpr.tcc.entretien.backend.model.enums.EducationLevelTypes
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -52,18 +50,6 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
             interview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
             interviewRepository.save(interview)
         }
-    }
-
-    fun buildResume(
-        presentation: String,
-        educationLevel: String,
-        professionalHistory: MutableSet<String>,
-        languages: MutableSet<String>,
-        desiredJobTitle: String,
-        candidate: Candidate
-    ): Resume {
-        val educationLevelType = EducationLevelTypes.valueOf(educationLevel)
-        return Resume(presentation, educationLevelType, professionalHistory, languages, desiredJobTitle, candidate)
     }
 
     override fun getRole(): Role = roleRepository.findByName(ERole.ROLE_CANDIDATE)
