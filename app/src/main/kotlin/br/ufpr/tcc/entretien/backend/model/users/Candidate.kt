@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.model.users
 
-import br.ufpr.tcc.entretien.backend.model.Resume
+import br.ufpr.tcc.entretien.backend.model.resume.Resume
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
 
 /**
@@ -11,7 +12,7 @@ class Candidate(
     var socialNetworking: String? = null,
     var pcd: Boolean = false,
     var cep: String? = null,
-    @OneToOne(cascade=[CascadeType.ALL])
-    @JoinColumn(name = "fk_resume")
+    @OneToOne(mappedBy = "candidate")
+    @JsonManagedReference
     var resume: Resume? = null,
 ) : User()
