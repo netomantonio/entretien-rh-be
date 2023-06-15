@@ -33,11 +33,11 @@ class InterviewController {
 
         val candidateCpf: String = interviewRequest.candidateCpf
 
-        val managerObservation: String = interviewRequest.managerObservation
+        val recruiterObservation: String = interviewRequest.recruiterObservation
 
         val managerId = userDetails.getId()
         return try {
-            interviewService.createInterview(candidateCpf, managerObservation, managerId)
+            interviewService.createInterview(candidateCpf, recruiterObservation, managerId)
             ResponseEntity.ok<Any>("Interview registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
@@ -87,7 +87,7 @@ class InterviewController {
             val dbInterview = optInterview.get()
             if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
             if (dbInterview.getId() != id) return ResponseEntity<Any>(HttpStatus.FORBIDDEN)
-            if (interviewRequest.candidateCpf.isEmpty() && interviewRequest.managerObservation.isEmpty()) return ResponseEntity<Any>(
+            if (interviewRequest.candidateCpf.isEmpty() && interviewRequest.recruiterObservation.isEmpty()) return ResponseEntity<Any>(
                 "Dados para atualização não podem estar vazios!",
                 HttpStatus.BAD_REQUEST
             )
@@ -99,7 +99,7 @@ class InterviewController {
                 interviewService.adjustInterview(
                     dbInterview,
                     interviewRequest.candidateCpf,
-                    interviewRequest.managerObservation
+                    interviewRequest.recruiterObservation
                 ), HttpStatus.OK
             )
         } catch (e: NoSuchElementException) {
