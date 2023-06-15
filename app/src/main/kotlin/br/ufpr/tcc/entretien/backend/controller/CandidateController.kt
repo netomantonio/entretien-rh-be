@@ -25,7 +25,6 @@ class CandidateController {
         private val logger = LOGGER.getLogger(AuthController::class.java)
     }
 
-
     @Autowired
     lateinit var candidateService: CandidateService
 
@@ -67,7 +66,7 @@ class CandidateController {
 
     @PostMapping("/resume")
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
-    fun saveMyResume(
+    fun saveMyNewResume(
         @Valid @RequestBody candidateResumeRequest: CandidateResumeRequest,
         authentication: Authentication
     ): ResponseEntity<Any> {
@@ -75,6 +74,19 @@ class CandidateController {
         val candidateId = userDetails.getId()
         val candidate = candidateService.getCandidateById(candidateId)
         val resume = resumeService.buildResume(candidateResumeRequest, candidate)
+        return ResponseEntity.ok(resume)
+    }
+
+    @PutMapping("/resume")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun updateMyResume(
+        @Valid @RequestBody candidateResumeRequest: CandidateResumeRequest,
+        authentication: Authentication
+    ): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        val candidate = candidateService.getCandidateById(candidateId)
+        val resume = resumeService.updateResume(candidateResumeRequest, candidate)
         return ResponseEntity.ok(resume)
     }
 

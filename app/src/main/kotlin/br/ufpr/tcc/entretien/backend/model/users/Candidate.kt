@@ -11,8 +11,9 @@ import javax.persistence.*
 class Candidate(
     var socialNetworking: String? = null,
     var pcd: Boolean = false,
-    var cep: String? = null,
+    var cep: String? = null
+) : User() {
     @OneToOne(mappedBy = "candidate")
     @JsonManagedReference
-    var resume: Resume? = null,
-) : User()
+    lateinit var resume: Resume
+}

@@ -31,6 +31,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     lateinit var interviewRepository: InterviewRepository
 
     @Autowired
+    lateinit var resumeService: ResumeService
+
+    @Autowired
     lateinit var encoder: PasswordEncoder
 
     override fun existsByUsername(username: String) =
@@ -42,6 +45,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     override fun register(user: Candidate) = candidateRepository.save(user)
 
     fun createNewCandidate(candidate: Candidate) {
+        candidate.resume = resumeService.buildNewResume(candidate)
         val newCandidate = this.register(candidate)
         val optionalInterview = interviewRepository.findByCandidateCpfWithPendingRegistration(candidate.cpf)
         if (optionalInterview.isPresent) {
