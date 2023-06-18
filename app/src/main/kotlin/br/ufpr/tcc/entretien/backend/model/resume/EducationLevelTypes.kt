@@ -1,4 +1,4 @@
-package br.ufpr.tcc.entretien.backend.model.enums
+package br.ufpr.tcc.entretien.backend.model.resume
 
 enum class EducationLevelTypes {
     ENSINO_FUNDAMENTAL,
