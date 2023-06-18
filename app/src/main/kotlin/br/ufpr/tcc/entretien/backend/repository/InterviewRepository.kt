@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.Optional
 
 interface InterviewRepository : CrudRepository<Interview, Long> {
@@ -37,4 +38,6 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     fun findAnyByPeriod(@Param("from") from: Timestamp, @Param("to") to: Timestamp): Optional<Iterable<Interview>>
 
     fun findAllByCandidateId(id: Long): Optional<List<Interview>>
+    @Query("SELECT i from Interview i WHERE i.interviewStatus = 'SCHEDULE' AND i.startingAt >= :from AND i.startingAt < :to")
+    fun getWithinPeriod(@Param("from") from: LocalDateTime, to: LocalDateTime): Iterable<Interview>
 }

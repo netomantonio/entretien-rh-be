@@ -152,4 +152,15 @@ class InterviewService {
     fun deleteInterview(interview: Interview) {
         interviewRepository.delete(interview)
     }
+
+    fun getInterviewsWithinPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
+        val interviews = interviewRepository.getWithinPeriod(
+            to.atStartOfDay(),
+            from.atStartOfDay()
+        )
+        if (interviews.none())
+            return emptyList()
+
+        return interviews
+    }
 }

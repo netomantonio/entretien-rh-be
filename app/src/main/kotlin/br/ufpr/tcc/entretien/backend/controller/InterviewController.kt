@@ -6,11 +6,13 @@ import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import java.util.Optional
 import javax.validation.Valid
 
@@ -206,5 +208,17 @@ class InterviewController {
         } catch (e: Exception) {
             ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
         }
+    }
+
+    // TODO: Especificar por candidato
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/candidate/period")
+    fun getMyInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate
+    ): ResponseEntity<*>{
+        return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
     }
 }
