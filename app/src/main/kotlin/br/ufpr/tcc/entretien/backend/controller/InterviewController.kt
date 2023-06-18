@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -11,7 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.util.Optional
+import java.util.*
 import javax.validation.Valid
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -170,9 +171,11 @@ class InterviewController {
         val date = commitInterviewRequest.date
         val candidateId = userDetails.getId()
         val interviewId = commitInterviewRequest.interviewId
+
+        if (interviewService.getInterview(interviewId).get().candidate!!.id != candidateId) throw UserIsNotAuthorizedException()
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
-            interviewService.commitInterview(scheduleId, interviewId, date, candidateId)
+            interviewService.commitInterview(scheduleId, interviewId, date)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")

@@ -9,30 +9,11 @@ import java.util.*
 import java.util.stream.Collectors
 
 
-class UserDetailsImpl : UserDetails {
+data class UserDetailsImpl(
+    private var id: Long, private var username: String, private var email: String, @JsonIgnore
+    private var password: String, private var authorities: Collection<GrantedAuthority>
+) : UserDetails {
     private val serialVersionUID = 1L
-
-    private var id: Long
-
-    private var username: String
-
-    private var email: String
-
-    @JsonIgnore
-    private var password: String
-
-    private var authorities: Collection<GrantedAuthority>
-
-    constructor(
-        id: Long, username: String, email: String, password: String,
-        authorities: Collection<GrantedAuthority>
-    ) {
-        this.id = id
-        this.username = username
-        this.email = email
-        this.password = password
-        this.authorities = authorities
-    }
 
     companion object {
         fun build(user: User): UserDetailsImpl {
@@ -86,15 +67,25 @@ class UserDetailsImpl : UserDetails {
         return true
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val user = o as UserDetailsImpl
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val user = other as UserDetailsImpl
         return Objects.equals(id, user.id)
     }
 
     fun isAdmin(): Boolean {
         println(authorities.toString())
         return false
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + username.hashCode()
+        result = 31 * result + email.hashCode()
+        result = 31 * result + password.hashCode()
+        result = 31 * result + authorities.hashCode()
+        result = 31 * result + serialVersionUID.hashCode()
+        return result
     }
 }

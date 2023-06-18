@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
+
 @Entity
 class Interview(
     var score: Int? = 0,
@@ -25,7 +26,8 @@ class Interview(
     var cpf: String? = "",
     @ManyToOne @JoinColumn(name = "fk_recruiter") var recruiter: Recruiter? = null,
     @ManyToOne @JoinColumn(name = "fk_candidate") var candidate: Candidate? = null,
-    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null
+    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null,
+    var sessionId: String? = null
 ) : AbstractJpaPersistable() {
 
     @ManyToOne
