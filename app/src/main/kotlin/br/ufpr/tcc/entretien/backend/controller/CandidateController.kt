@@ -93,6 +93,17 @@ class CandidateController {
         return ResponseEntity.ok(resume)
     }
 
+    @GetMapping("/resume/last-update")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun getCandidateResumeLastUpdate(
+        authentication: Authentication
+    ): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+
+        return ResponseEntity.ok(resumeService.getCandidateResumeLastUpdate(candidateId))
+    }
+
     @GetMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECRUITER')")
     fun getAllCandidates(): ResponseEntity<*> {
