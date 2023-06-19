@@ -7,6 +7,7 @@ import br.ufpr.tcc.entretien.backend.datasource.request.UpdateCandidateDataReque
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.service.CandidateService
+import br.ufpr.tcc.entretien.backend.service.ResumeService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -27,9 +28,11 @@ class CandidateController {
         private val logger = LOGGER.getLogger(AuthController::class.java)
     }
 
-
     @Autowired
     lateinit var candidateService: CandidateService
+
+    @Autowired
+    lateinit var resumeService: ResumeService
 
     @PostMapping("")
     fun registerCandidate(@Valid @RequestBody candidateSignupRequest: CandidateSignupRequest): ResponseEntity<*> {
@@ -56,31 +59,38 @@ class CandidateController {
         }
     }
 
+    @GetMapping("/resume")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun getMyResume(authentication: Authentication): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        return ResponseEntity.ok(resumeService.getResumeByCandidateId(candidateId))
+    }
+
     @PostMapping("/resume")
-    @PreAuthorize(
-        "hasRole('ROLE_ADMIN') or hasRole('ROLE_CANDIDATE') and #candidateResumeRequest.candidateId == principal.id"
-    )
-    fun saveResume(@Valid @RequestBody candidateResumeRequest: CandidateResumeRequest): ResponseEntity<*> {
-        var candidate = candidateService.getCandidateById(candidateResumeRequest.candidateId)
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun saveMyNewResume(
+        @Valid @RequestBody candidateResumeRequest: CandidateResumeRequest,
+        authentication: Authentication
+    ): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        val candidate = candidateService.getCandidateById(candidateId)
+        val resume = resumeService.buildResume(candidateResumeRequest, candidate)
+        return ResponseEntity.ok(resume)
+    }
 
-        candidate.resume = candidateService.buildResume(
-            candidateResumeRequest.presentation,
-            candidateResumeRequest.educationLevel,
-            candidateResumeRequest.professionalHistory,
-            candidateResumeRequest.languages,
-            candidateResumeRequest.desiredJobTitle,
-            candidate
-        )
-
-
-        return try {
-            candidateService.register(candidate)
-            ResponseEntity.ok<Any>("User updated successfully!")
-        } catch (ex: Exception) {
-            println("[ERROR] ------------------------------------------")
-            println(ex.message)
-            ResponseEntity.internalServerError().body("Persistence error.")
-        }
+    @PutMapping("/resume")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun updateMyResume(
+        @Valid @RequestBody candidateResumeRequest: CandidateResumeRequest,
+        authentication: Authentication
+    ): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        val candidate = candidateService.getCandidateById(candidateId)
+        val resume = resumeService.updateResume(candidateResumeRequest, candidate)
+        return ResponseEntity.ok(resume)
     }
 
     @GetMapping("")

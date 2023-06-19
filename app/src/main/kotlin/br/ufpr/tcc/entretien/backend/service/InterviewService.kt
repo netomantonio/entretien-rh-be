@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -18,6 +19,11 @@ import java.util.Optional
 
 @Service
 class InterviewService {
+
+    companion object {
+        private const val LOG_TAG = "entretien-backend-interview-service"
+        private val logger = LOGGER.getLogger(InterviewService::class.java)
+    }
 
     @Autowired
     lateinit var candidateRepository: UserRepository<Candidate>
@@ -39,13 +45,13 @@ class InterviewService {
 
         val manager: Manager = this.getManagerById(managerId)
 
-        var candidate: Candidate? = try {
+        val candidate: Candidate? = try {
             this.candidateRepository.findByCpf(candidateCpf).get()
         } catch (e: NoSuchElementException) {
             null
         }
 
-        var interview = Interview()
+        val interview = Interview()
         interview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
         if (candidate != null) {
             interview.candidate = candidate
@@ -62,7 +68,7 @@ class InterviewService {
         return registerInterview(interview)
     }
 
-    fun registerInterview(interview: Interview) : Interview = interviewRepository.save(interview)
+    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview)
 
     fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
@@ -104,17 +110,13 @@ class InterviewService {
                 || interview.interviewStatus == InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
     }
 
-    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate, candidateId: Long) {
-//        if (!interviewRepository.existsByCandidateId(candidateId)) {
-//            // TODO: throw error (interview not available)
-//        }
-
-        var interview: Interview = interviewRepository.findById(interviewId).get()
+    fun commitInterview(scheduleId: Long, interviewId: Long, date: LocalDate) {
+        val interview: Interview = interviewRepository.findById(interviewId).get()
         if (interview.candidate == null) {
             throw Exception("Não autorizado.")
         }
-        var schedule: Schedule = scheduleRepository.findById(scheduleId).get()
-        var recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
+        val schedule: Schedule = scheduleRepository.findById(scheduleId).get()
+        val recruiter = recruiterRepository.findById(schedule.recruiter.id).get()
 
         interview.schedule = schedule
         interview.recruiter = recruiter
@@ -128,6 +130,7 @@ class InterviewService {
         return interviewRepository.findByRecruiterId(recruiterId).get()
     }
 
+    //TODO("Validar o uso desse método faz o mesmo que o método da schedule service faz? 'ScheduleService.getAllAvailableSchedulesWithinPeriod'")
     fun getFullScheduleInterviewsByPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
         return interviewRepository.findByPeriod(
             Timestamp.valueOf(to.atStartOfDay()),
@@ -139,7 +142,9 @@ class InterviewService {
         return interviewRepository.findByManagerId(managerId).get()
     }
 
-    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview)
+    fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
+        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
 
     fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
         if (managerObservation?.isNotEmpty() == true)

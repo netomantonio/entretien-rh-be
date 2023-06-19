@@ -3,6 +3,8 @@ entretien:
     jwtSecret: secret
     jwtExpirationMs: ${JWT_EXPIRATION_MS:86400000}
 server:
+  ssl:
+    enabled: false
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
   mvc:
@@ -24,10 +26,11 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
-      jdbc:
-        lob:
-          non_contextual_creation: true
-
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
 OPENVIDU:
-  url: ${OPENVID_UR:localhost:4443}
+  url: ${OPENVID_URL:http://localhost:4443}
   secret: ${OPENVIDU_SECRET:entretien-rh}
