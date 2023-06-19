@@ -235,7 +235,8 @@ class InterviewController {
 
             interview.managerObservation = commitObservationInterviewRequest.managerObservation
             interview.candidateObservation = commitObservationInterviewRequest.candidateObservation
-            interview.score = commitObservationInterviewRequest.score.toInt()
+            interview.score = commitObservationInterviewRequest.score!!.toInt()
+            interview.interviewStatus = commitObservationInterviewRequest.interviewStatus!!
 
             interviewService.updateInterview(interview)
             return ResponseEntity<Any>(HttpStatus.OK)
