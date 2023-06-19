@@ -213,15 +213,27 @@ class InterviewController {
         }
     }
 
-    // TODO: Especificar por candidato
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @GetMapping("/candidate/period")
-    fun getMyInterviewsWithinPeriod(
+    fun getCandidateInterviewsWithinPeriod(
         @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
         from: LocalDate,
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
-        to: LocalDate
+        to: LocalDate,
+        authentication: Authentication
     ): ResponseEntity<*>{
-        return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewsWithinPeriod(candidateId, from, to))
+    }
+
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/candidate/next")
+    fun getNextCandidateInterview(
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getCandidateNextInterview(candidateId))
     }
 }

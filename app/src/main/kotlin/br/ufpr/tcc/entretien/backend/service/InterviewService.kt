@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.datasource.response.CandidateNextInterviewResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -158,14 +159,21 @@ class InterviewService {
         interviewRepository.delete(interview)
     }
 
-    fun getInterviewsWithinPeriod(from: LocalDate, to: LocalDate): Iterable<Interview> {
-        val interviews = interviewRepository.getWithinPeriod(
-            to.atStartOfDay(),
-            from.atStartOfDay()
+    fun getCandidateInterviewsWithinPeriod(id: Long, from: LocalDate, to: LocalDate): Iterable<Interview> {
+        val interviews = interviewRepository.getWithinPeriodByCandidate(
+            id,
+            from.atStartOfDay(),
+            to.atStartOfDay()
         )
         if (interviews.none())
             return emptyList()
 
         return interviews
+    }
+
+    fun getCandidateNextInterview(candidateId: Long): CandidateNextInterviewResponse {
+        val today = LocalDateTime.now()
+        val nextInterview = interviewRepository.getCandidateNextInterview(candidateId, today).get()
+        return CandidateNextInterviewResponse.fromInterview(nextInterview)
     }
 }

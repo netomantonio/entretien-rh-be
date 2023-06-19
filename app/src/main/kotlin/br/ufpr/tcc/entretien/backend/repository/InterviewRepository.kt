@@ -38,6 +38,19 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     fun findAnyByPeriod(@Param("from") from: Timestamp, @Param("to") to: Timestamp): Optional<Iterable<Interview>>
 
     fun findAllByCandidateId(id: Long): Optional<List<Interview>>
-    @Query("SELECT i from Interview i WHERE i.interviewStatus = 'SCHEDULE' AND i.startingAt >= :from AND i.startingAt < :to")
-    fun getWithinPeriod(@Param("from") from: LocalDateTime, to: LocalDateTime): Iterable<Interview>
+
+    @Query(
+        "SELECT i FROM Interview i WHERE i.interviewStatus = 'SCHEDULE' AND i.candidate.id = :candidateId AND i.startingAt >= :from AND i.startingAt < :to"
+    )
+    fun getWithinPeriodByCandidate(
+        @Param("candidateId") id: Long,
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime
+    ): Iterable<Interview>
+
+    @Query(
+        nativeQuery = true,
+        value = "select i.* from public.interview i where i.fk_candidate = :candidateId and i.starting_at >= :today order by i.starting_at limit 1"
+    )
+    fun getCandidateNextInterview(@Param("candidateId") candidateId: Long, @Param("today") today: LocalDateTime): Optional<Interview>
 }
