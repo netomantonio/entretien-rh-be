@@ -41,7 +41,7 @@ class InterviewService {
     lateinit var scheduleRepository: ScheduleRepository
 
 
-    fun createInterview(candidateCpf: String, managerObservation: String, managerId: Long): Interview {
+    fun createInterview(candidateCpf: String, recruiterObservation: String, managerId: Long): Interview {
 
         val manager: Manager = this.getManagerById(managerId)
 
@@ -61,8 +61,8 @@ class InterviewService {
         }
         interview.manager = manager
 
-        if (managerObservation.isNotEmpty()) {
-            interview.managerObservation = managerObservation
+        if (recruiterObservation.isNotEmpty()) {
+            interview.recruiterObservation = recruiterObservation
         }
 
         return registerInterview(interview)

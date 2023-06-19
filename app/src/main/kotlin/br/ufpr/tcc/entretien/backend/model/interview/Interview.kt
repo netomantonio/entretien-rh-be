@@ -15,7 +15,7 @@ import javax.persistence.*
 @Entity
 class Interview(
     var score: Int? = 0,
-    var mainObservation: String? = "",
+    var recruiterObservation: String? = "",
     var managerObservation: String? = "",
     var candidateObservation: String? = "",
     @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
