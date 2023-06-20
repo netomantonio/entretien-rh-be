@@ -236,4 +236,14 @@ class InterviewController {
         val candidateId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getCandidateNextInterview(candidateId))
     }
+
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/candidate/stats")
+    fun getCandidateInterviewStats(
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewNumbers(candidateId))
+    }
 }

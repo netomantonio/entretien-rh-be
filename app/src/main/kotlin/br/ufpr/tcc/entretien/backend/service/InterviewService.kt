@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.datasource.response.CandidateInterviewNumbersResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.CandidateNextInterviewResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
@@ -175,5 +176,18 @@ class InterviewService {
         val today = LocalDateTime.now()
         val nextInterview = interviewRepository.getCandidateNextInterview(candidateId, today).get()
         return CandidateNextInterviewResponse.fromInterview(nextInterview)
+    }
+
+    fun getCandidateInterviewNumbers(candidateId: Long): CandidateInterviewNumbersResponse {
+        val toBeScheduleInterviewsQtd = interviewRepository.getCandidateToBeScheduledInterviewsQtd(candidateId)
+        val scheduleInterviewsQtd = interviewRepository.getCandidateScheduledInterviewsQtd(candidateId)
+        val totalInterviewsQtd = interviewRepository.getCandidateTotalInterviewsQtd(candidateId)
+        val candidateConcludedInterviewsQtd = interviewRepository.getCandidateConcludedInterviewsQtd(candidateId)
+        return CandidateInterviewNumbersResponse(
+            toBeScheduleInterviewsQtd,
+            scheduleInterviewsQtd,
+            totalInterviewsQtd,
+            candidateConcludedInterviewsQtd
+        )
     }
 }

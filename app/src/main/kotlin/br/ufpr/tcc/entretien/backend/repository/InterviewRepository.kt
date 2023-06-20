@@ -53,4 +53,24 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         value = "select i.* from public.interview i where i.fk_candidate = :candidateId and i.starting_at >= :today order by i.starting_at limit 1"
     )
     fun getCandidateNextInterview(@Param("candidateId") candidateId: Long, @Param("today") today: LocalDateTime): Optional<Interview>
+
+    @Query(
+        value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'SCHEDULE'"
+    )
+    fun getCandidateScheduledInterviewsQtd(@Param("candidateId") candidateId: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'TO_BE_SCHEDULE'"
+    )
+    fun getCandidateToBeScheduledInterviewsQtd(@Param("candidateId") candidateId: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.candidate.id = :candidateId"
+    )
+    fun getCandidateTotalInterviewsQtd(@Param("candidateId") candidateId: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'CONCLUDED'"
+    )
+    fun getCandidateConcludedInterviewsQtd(@Param("candidateId") candidateId: Long): Long
 }
