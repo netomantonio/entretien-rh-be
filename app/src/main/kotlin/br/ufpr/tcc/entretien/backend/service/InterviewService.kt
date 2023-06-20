@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Optional
+import java.util.*
 
 @Service
 class InterviewService {
@@ -68,7 +68,9 @@ class InterviewService {
         return registerInterview(interview)
     }
 
-    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview)
+    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
+        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
 
     fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
@@ -143,7 +145,15 @@ class InterviewService {
     }
 
     fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
-        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+        logger.info(LOG_TAG, "Interview update successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
+
+    fun findBySessionId(sessionId: String): Interview = interviewRepository.findBySessionId(sessionId).get().also {
+        logger.info(
+            LOG_TAG,
+            "interview found for the sessionId",
+            mapOf("session-id" to sessionId, "interview-id" to it.getId().toString())
+        )
     }
 
     fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
@@ -157,4 +167,14 @@ class InterviewService {
     fun deleteInterview(interview: Interview) {
         interviewRepository.delete(interview)
     }
+
+    fun setUserPresent(
+        userDetails: UserDetailsImpl,
+        interview: Interview
+    ) {
+        if (userDetails.getId() == interview.candidate!!.id) interview.candidatePresent = true
+        if (userDetails.getId() == interview.recruiter!!.id) interview.recruiterPresent = true
+        interviewRepository.save(interview)
+    }
+
 }
