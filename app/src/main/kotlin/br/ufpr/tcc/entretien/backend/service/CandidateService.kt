@@ -4,6 +4,7 @@ import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.RecruiterDashboardResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.Role
@@ -36,6 +37,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
     lateinit var resumeService: ResumeService
 
     @Autowired
+    lateinit var interviewService: InterviewService
+
+    @Autowired
     lateinit var encoder: PasswordEncoder
 
     override fun existsByUsername(username: String) =
@@ -66,7 +70,20 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         }
 
     override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardResponse {
-        TODO("Not yet implemented")
+        val nextInterview = interviewService.getCandidateNextInterview(id)
+        val lastUpdate = resumeService.getCandidateResumeLastUpdate(id)
+        val thisMonthScheduledInterviews = interviewService.getCandidateInterviewsWithinPeriod(id, from, to)
+        val interviewsHistory = interviewService.getCandidateInterviewHistory(id)
+        val interviewsStats = interviewService.getCandidateInterviewStats(id)
+
+        var recruiterDashboardResponse = RecruiterDashboardResponse()
+        recruiterDashboardResponse.nextInterview = nextInterview.startingAt!!
+        recruiterDashboardResponse.lastUpdate = lastUpdate
+        recruiterDashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }
+        recruiterDashboardResponse.interviewsHistory = interviewsHistory.map { interview -> DashboardResponse.fromInterview(interview) }
+        recruiterDashboardResponse.interviewsStats = interviewsStats
+
+        return recruiterDashboardResponse
     }
 
     override fun build(signupRequest: CandidateSignupRequest): Candidate {

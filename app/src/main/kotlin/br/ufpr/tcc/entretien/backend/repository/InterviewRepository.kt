@@ -58,6 +58,11 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     ): Optional<Interview>
 
     @Query(
+        value = "select i from Interview i where i.candidate.id = :id and i.interviewStatus = 'CONCLUDED' order by startingAt"
+    )
+    fun getCandidateConcludedInterviews(@Param("id") id: Long): Iterable<Interview>
+
+    @Query(
         value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'SCHEDULE'"
     )
     fun getCandidateScheduledInterviewsQtd(@Param("candidateId") candidateId: Long): Long
@@ -96,8 +101,6 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         value = "select i from Interview i where i.recruiter.id = :id and i.interviewStatus = 'CONCLUDED' order by startingAt"
     )
     fun getRecruiterConcludedInterviews(@Param("id") recruiterId: Long): Iterable<Interview>
-
-
 
     @Query(
         value = "select count(i) from Interview i where i.recruiter.id = :id and i.interviewStatus = 'SCHEDULE'"

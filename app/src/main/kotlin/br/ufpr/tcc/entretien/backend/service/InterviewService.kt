@@ -207,7 +207,7 @@ class InterviewService {
         return interviews
     }
 
-    fun getRecruiterInterviewHistory(id: Long): Iterable<Interview>{
+    fun getRecruiterInterviewHistory(id: Long): Iterable<Interview> {
         return interviewRepository.getRecruiterConcludedInterviews(id)
     }
 
@@ -216,6 +216,18 @@ class InterviewService {
         var toBeScheduledQtd = interviewRepository.getRecruiterToBeScheduledInterviewsQtd(id)
         var completed = interviewRepository.getRecruiterConcludedInterviewsQtd(id)
         var total = interviewRepository.getRecruiterTotalInterviewsQtd(id)
+
+        return DashboardResponse.InterviewsStats(scheduledQtd, toBeScheduledQtd, completed, total)
+    }
+
+    fun getCandidateInterviewHistory(id: Long): Iterable<Interview> =
+        interviewRepository.getCandidateConcludedInterviews(id)
+
+    fun getCandidateInterviewStats(id: Long): DashboardResponse.InterviewsStats {
+        var scheduledQtd = interviewRepository.getCandidateScheduledInterviewsQtd(id)
+        var toBeScheduledQtd = interviewRepository.getCandidateToBeScheduledInterviewsQtd(id)
+        var completed = interviewRepository.getCandidateConcludedInterviewsQtd(id)
+        var total = interviewRepository.getCandidateTotalInterviewsQtd(id)
 
         return DashboardResponse.InterviewsStats(scheduledQtd, toBeScheduledQtd, completed, total)
     }

@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.ManagerSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Manager
@@ -10,6 +11,7 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class ManagerService : IUserService<Manager, ManagerSignupRequest> {
@@ -37,6 +39,10 @@ class ManagerService : IUserService<Manager, ManagerSignupRequest> {
                 "Error: Role is not found."
             )
         }
+
+    override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardResponse {
+        TODO("Not yet implemented")
+    }
 
     override fun build(managerSignupRequest: ManagerSignupRequest): Manager {
         val roles: MutableSet<Role> = HashSet()

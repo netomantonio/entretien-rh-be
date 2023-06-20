@@ -10,12 +10,14 @@ import br.ufpr.tcc.entretien.backend.service.CandidateService
 import br.ufpr.tcc.entretien.backend.service.ResumeService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import java.time.Instant
+import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
 
@@ -180,6 +182,21 @@ class CandidateController {
             logger.error(LOG_TAG, ex.message, ex.stackTrace)
             throw IllegalArgumentException()
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/dashboard")
+    fun getAllRecruiterDashboard(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+
+        return ResponseEntity.ok(candidateService.getDashboard(candidateId, from, to))
     }
 
 }
