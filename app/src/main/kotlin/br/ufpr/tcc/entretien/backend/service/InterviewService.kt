@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.response.CandidateInterviewNumbersResponse
-import br.ufpr.tcc.entretien.backend.datasource.response.CandidateNextInterviewResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -172,10 +172,9 @@ class InterviewService {
         return interviews
     }
 
-    fun getCandidateNextInterview(candidateId: Long): CandidateNextInterviewResponse {
+    fun getCandidateNextInterview(candidateId: Long): Interview {
         val today = LocalDateTime.now()
-        val nextInterview = interviewRepository.getCandidateNextInterview(candidateId, today).get()
-        return CandidateNextInterviewResponse.fromInterview(nextInterview)
+        return interviewRepository.getCandidateNextInterview(candidateId, today).get()
     }
 
     fun getCandidateInterviewNumbers(candidateId: Long): CandidateInterviewNumbersResponse {
@@ -189,5 +188,35 @@ class InterviewService {
             totalInterviewsQtd,
             candidateConcludedInterviewsQtd
         )
+    }
+
+    fun getRecruiterNextInterview(recruiterId: Long): Interview {
+        val today = LocalDateTime.now()
+        return interviewRepository.getRecruiterNextInterview(recruiterId, today).get()
+    }
+
+    fun getRecruiterInterviewsWithinPeriod(id: Long, from: LocalDate, to: LocalDate): Iterable<Interview> {
+        val interviews = interviewRepository.getWithinPeriodByRecruiter(
+            id,
+            from.atStartOfDay(),
+            to.atStartOfDay()
+        )
+        if (interviews.none())
+            return emptyList()
+
+        return interviews
+    }
+
+    fun getRecruiterInterviewHistory(id: Long): Iterable<Interview>{
+        return interviewRepository.getRecruiterConcludedInterviews(id)
+    }
+
+    fun getRecruiterInterviewStats(id: Long): DashboardResponse.InterviewsStats {
+        var scheduledQtd = interviewRepository.getRecruiterScheduledInterviewsQtd(id)
+        var toBeScheduledQtd = interviewRepository.getRecruiterToBeScheduledInterviewsQtd(id)
+        var completed = interviewRepository.getRecruiterConcludedInterviewsQtd(id)
+        var total = interviewRepository.getRecruiterTotalInterviewsQtd(id)
+
+        return DashboardResponse.InterviewsStats(scheduledQtd, toBeScheduledQtd, completed, total)
     }
 }

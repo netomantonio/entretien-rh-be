@@ -52,7 +52,10 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         nativeQuery = true,
         value = "select i.* from public.interview i where i.fk_candidate = :candidateId and i.starting_at >= :today order by i.starting_at limit 1"
     )
-    fun getCandidateNextInterview(@Param("candidateId") candidateId: Long, @Param("today") today: LocalDateTime): Optional<Interview>
+    fun getCandidateNextInterview(
+        @Param("candidateId") candidateId: Long,
+        @Param("today") today: LocalDateTime
+    ): Optional<Interview>
 
     @Query(
         value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'SCHEDULE'"
@@ -73,4 +76,46 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         value = "select count(i) from Interview i where i.candidate.id = :candidateId and i.interviewStatus = 'CONCLUDED'"
     )
     fun getCandidateConcludedInterviewsQtd(@Param("candidateId") candidateId: Long): Long
+
+    @Query(
+        nativeQuery = true,
+        value = "select i.* from public.interview i where i.fk_recruiter = :recruiterId and i.starting_at >= :today order by i.starting_at limit 1"
+    )
+    fun getRecruiterNextInterview(@Param("recruiterId") recruiterId: Long, today: LocalDateTime?): Optional<Interview>
+
+    @Query(
+        "SELECT i FROM Interview i WHERE i.interviewStatus = 'SCHEDULE' AND i.recruiter.id = :recruiterId AND i.startingAt >= :from AND i.startingAt < :to"
+    )
+    fun getWithinPeriodByRecruiter(
+        @Param("recruiterId") id: Long,
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime
+    ): Iterable<Interview>
+
+    @Query(
+        value = "select i from Interview i where i.recruiter.id = :id and i.interviewStatus = 'CONCLUDED' order by startingAt"
+    )
+    fun getRecruiterConcludedInterviews(@Param("id") recruiterId: Long): Iterable<Interview>
+
+
+
+    @Query(
+        value = "select count(i) from Interview i where i.recruiter.id = :id and i.interviewStatus = 'SCHEDULE'"
+    )
+    fun getRecruiterScheduledInterviewsQtd(@Param("id") id: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.recruiter.id = :id and i.interviewStatus = 'TO_BE_SCHEDULE'"
+    )
+    fun getRecruiterToBeScheduledInterviewsQtd(@Param("id") id: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.recruiter.id = :id"
+    )
+    fun getRecruiterTotalInterviewsQtd(@Param("id") id: Long): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.recruiter.id = :id and i.interviewStatus = 'CONCLUDED'"
+    )
+    fun getRecruiterConcludedInterviewsQtd(@Param("id") id: Long): Long
 }

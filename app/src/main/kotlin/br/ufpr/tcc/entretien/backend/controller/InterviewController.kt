@@ -246,4 +246,28 @@ class InterviewController {
         val candidateId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewNumbers(candidateId))
     }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @GetMapping("/recruiter/next")
+    fun getNextRecruiterInterview(
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val recruiterId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getRecruiterNextInterview(recruiterId))
+    }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @GetMapping("/recruiter/period")
+    fun getRecruiterInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*>{
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val recruiterId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getRecruiterInterviewsWithinPeriod(recruiterId, from, to))
+    }
 }
