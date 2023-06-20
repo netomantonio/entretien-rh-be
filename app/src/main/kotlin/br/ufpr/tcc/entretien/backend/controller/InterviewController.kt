@@ -1,7 +1,9 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
+import br.ufpr.tcc.entretien.backend.datasource.request.CommitObservationInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
@@ -19,6 +21,11 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/interview")
 class InterviewController {
+
+    companion object {
+        private const val LOG_TAG = "entretien-backend-interview-controller"
+        private val logger = LOGGER.getLogger(AuthController::class.java)
+    }
 
     @Autowired
     lateinit var interviewService: InterviewService
@@ -208,6 +215,40 @@ class InterviewController {
             ResponseEntity<Any>(HttpStatus.NOT_FOUND)
         } catch (e: Exception) {
             ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @PatchMapping("/{id}")
+    fun commitObservationInterview(
+        @Valid @PathVariable id: Long,
+        @Valid @RequestBody commitObservationInterviewRequest: CommitObservationInterviewRequest,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        try {
+            val userDetails = authentication.principal as UserDetailsImpl
+            logger.info(LOG_TAG, "receive request for recruiter add observation in interview", mapOf(
+                "user-id" to userDetails.getId().toString()
+            ))
+            val interview = interviewService.getInterview(id).filter { it.recruiter!!.id == userDetails.getId() }
+                .orElseThrow()
+
+            interview.managerObservation = commitObservationInterviewRequest.managerObservation
+            interview.candidateObservation = commitObservationInterviewRequest.candidateObservation
+            interview.score = commitObservationInterviewRequest.score!!.toInt()
+            interview.interviewStatus = commitObservationInterviewRequest.interviewStatus!!
+
+            interviewService.updateInterview(interview)
+            return ResponseEntity<Any>(HttpStatus.OK)
+        } catch (ex: NoSuchElementException) {
+            throw NoSuchElementException()
+        } catch (ex: Exception) {
+            when(ex) {
+                is IllegalArgumentException -> {
+                    throw IllegalArgumentException("error updating interview data",ex)
+                }
+            }
+            throw Exception()
         }
     }
 }

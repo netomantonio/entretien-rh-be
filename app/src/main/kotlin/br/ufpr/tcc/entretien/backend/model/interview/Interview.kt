@@ -15,8 +15,11 @@ import javax.persistence.*
 @Entity
 class Interview(
     var score: Int? = 0,
+    @Column(columnDefinition = "TEXT")
     var recruiterObservation: String? = "",
+    @Column(columnDefinition = "TEXT")
     var managerObservation: String? = "",
+    @Column(columnDefinition = "TEXT")
     var candidateObservation: String? = "",
     @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
     @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
