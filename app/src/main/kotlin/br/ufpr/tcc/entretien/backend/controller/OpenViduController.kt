@@ -58,19 +58,16 @@ class OpenviduController {
     ): ResponseEntity<String?>? {
         try {
             val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-            val interview =
-                interviewService.getInterview(interviewId!!.toLong()).filter { it.candidate?.id == userDetails.getId() || it.recruiter?.id == userDetails.getId() }
-                    .orElseThrow()
+            interviewService.getInterview(interviewId!!.toLong())
+                .filter { it.candidate?.id == userDetails.getId() || it.recruiter?.id == userDetails.getId() }
+                .orElseThrow()
             logger.info(
                 LOG_TAG,
                 "received request for create a session for the interview by user",
                 mapOf("itnerview-id" to interviewId, "user-id" to userDetails.getId().toString())
             )
-            if (interview.sessionId?.isNotEmpty() == true) return ResponseEntity(interview.sessionId!!, HttpStatus.OK)
             val properties = SessionProperties.fromJson(params).build()
             val session = openvidu!!.createSession(properties)
-            interview.sessionId = session.sessionId
-            interviewService.updateInterview(interview)
             return ResponseEntity(session.sessionId, HttpStatus.OK)
         } catch (ex: NoSuchElementException) {
             throw UserIsNotAuthorizedException(ex)
@@ -127,9 +124,9 @@ class OpenviduController {
     ): ResponseEntity<String?>? {
         val interview = interviewService.findBySessionId(sessionId!!)
         logger.info(
-                LOG_TAG,
-        "Starting the validation of rules for ending the video call",
-        mapOf("interview-id" to interview.getId().toString())
+            LOG_TAG,
+            "Starting the validation of rules for ending the video call",
+            mapOf("interview-id" to interview.getId().toString())
         )
         return validatedFinishInterview(interview)
     }

@@ -1,6 +1,8 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
@@ -64,6 +67,8 @@ class InterviewService {
         if (recruiterObservation.isNotEmpty()) {
             interview.recruiterObservation = recruiterObservation
         }
+
+        interview.sessionId = UUID.randomUUID().toString()
 
         return registerInterview(interview)
     }
@@ -176,5 +181,30 @@ class InterviewService {
         if (userDetails.getId() == interview.recruiter!!.id) interview.recruiterPresent = true
         interviewRepository.save(interview)
     }
+
+    fun getAllInterviewsByCandidate(candidateId: Long): InterviewsByCandidateResponse {
+        val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
+        return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
+    }
+
+    fun saveAll(interviews: List<Interview>) {
+        interviewRepository.saveAll(interviews)
+    }
+
+}
+private fun Interview.toResponse(): InterviewByCandidateResponse {
+    return InterviewByCandidateResponse(
+        id = this.getId().toString(),
+        companyName = this.manager.companyName,
+        status = this.interviewStatus.name,
+        appointmentDate = this.startingAt?.formatter(),
+        sessionId = this.sessionId
+    )
+}
+
+private fun LocalDateTime?.formatter(): String? {
+    if (this == null) return null
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    return this.format(formatter)
 
 }

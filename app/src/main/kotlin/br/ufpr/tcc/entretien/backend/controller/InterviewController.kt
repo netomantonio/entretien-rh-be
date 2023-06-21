@@ -5,6 +5,7 @@ import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitObservationInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
@@ -249,6 +250,23 @@ class InterviewController {
                 }
             }
             throw Exception()
+        }
+    }
+
+    @GetMapping("/candidate")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun getAllInterviewsByCandidate(
+        authentication: Authentication
+    ): ResponseEntity<InterviewsByCandidateResponse> {
+        try {
+            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+            val candidateId = userDetails.getId()
+            logger.info(LOG_TAG, "received request from user", mapOf("user-id" to candidateId.toString()))
+            val candidateInterviews = interviewService.getAllInterviewsByCandidate(candidateId)
+            return ResponseEntity.ok(candidateInterviews)
+        } catch (ex: Exception) {
+            logger.error(LOG_TAG, ex.message, ex.stackTrace)
+            throw java.lang.IllegalArgumentException()
         }
     }
 }
