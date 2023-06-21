@@ -1,10 +1,12 @@
 package br.ufpr.tcc.entretien.backend.repository
 
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import java.sql.Timestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Optional
 
@@ -118,7 +120,34 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     fun getRecruiterTotalInterviewsQtd(@Param("id") id: Long): Long
 
     @Query(
-        value = "select count(i) from Interview i where i.recruiter.id = :id and i.interviewStatus = 'CONCLUDED'"
+        nativeQuery = true,
+        value = "select count(i) from public.interview i where i.fk_recruiter = :id and i.interview_status = :status"
     )
-    fun getRecruiterConcludedInterviewsQtd(@Param("id") id: Long): Long
+    fun getRecruiterQtdByStatus(@Param("id") id: Long, @Param("status") status: String): Long
+
+    @Query(value = "select count(i) from Interview i where i.interviewStatus = :status")
+    fun getQtdByStatus(@Param("status") status: InterviewStatusTypes): Long
+
+    @Query(value = "select count(i) from Interview i")
+    fun getTotalQtd(): Long
+
+    @Query(
+        nativeQuery = false,
+        value = "select i from Interview i where i.interviewStatus = 'SCHEDULE' and i.startingAt >= :from and i.startingAt < :to"
+    )
+    fun findAllByStatusWithinPeriod(
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime
+    ): List<Interview>
+
+    @Query(value = "SELECT i FROM Interview i WHERE i.interviewStatus = :status")
+    fun findAllByStatus(
+        @Param("status") status: InterviewStatusTypes
+    ): List<Interview>
+
+    @Query(
+        nativeQuery = true,
+        value = "select count(i) from public.interview i where i.fk_candidate = :id and i.interview_status = :status"
+    )
+    fun getCandidateQtdByStatus(id: Long, status: String): Long
 }

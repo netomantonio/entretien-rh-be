@@ -32,4 +32,7 @@ interface ScheduleRepository : CrudRepository<Schedule, Long> {
         nativeQuery = true,
         value = "select s.* from public.schedule s where s.fk_recruiter = :id order by updated_at LIMIT 1")
     fun getLastByRecruiter(@Param(value = "id") id: Long): Optional<Schedule>
+
+    @Query(value = "select count(s) from Schedule s")
+    fun getAllQtd(): Long
 }

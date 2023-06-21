@@ -186,7 +186,7 @@ class CandidateController {
 
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @GetMapping("/dashboard")
-    fun getAllRecruiterDashboard(
+    fun getRecruiterDashboard(
         @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
         from: LocalDate,
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")

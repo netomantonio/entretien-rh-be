@@ -227,36 +227,6 @@ class InterviewController {
         return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewsWithinPeriod(candidateId, from, to))
     }
 
-    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
-    @GetMapping("/candidate/next")
-    fun getNextCandidateInterview(
-        authentication: Authentication
-    ): ResponseEntity<*> {
-        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-        val candidateId = userDetails.getId()
-        return ResponseEntity.ok<Any>(interviewService.getCandidateNextInterview(candidateId))
-    }
-
-    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
-    @GetMapping("/candidate/stats")
-    fun getCandidateInterviewStats(
-        authentication: Authentication
-    ): ResponseEntity<*> {
-        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-        val candidateId = userDetails.getId()
-        return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewNumbers(candidateId))
-    }
-
-    @PreAuthorize("hasRole('ROLE_RECRUITER')")
-    @GetMapping("/recruiter/next")
-    fun getNextRecruiterInterview(
-        authentication: Authentication
-    ): ResponseEntity<*> {
-        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-        val recruiterId = userDetails.getId()
-        return ResponseEntity.ok<Any>(interviewService.getRecruiterNextInterview(recruiterId))
-    }
-
     @PreAuthorize("hasRole('ROLE_RECRUITER')")
     @GetMapping("/recruiter/period")
     fun getRecruiterInterviewsWithinPeriod(

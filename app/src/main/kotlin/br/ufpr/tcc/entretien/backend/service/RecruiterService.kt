@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
-import br.ufpr.tcc.entretien.backend.datasource.response.RecruiterDashboardResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
@@ -51,14 +51,14 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
             )
         }
 
-    override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): RecruiterDashboardResponse {
+    override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardRecruiterResponse {
         val nextInterview = interviewService.getRecruiterNextInterview(id)
         val lastScheduleUpdate = scheduleRepository.getLastByRecruiter(id).get()
         val thisMonthScheduledInterviews = interviewService.getRecruiterInterviewsWithinPeriod(id, from, to)
         val interviewsHistory = interviewService.getRecruiterInterviewHistory(id)
         val interviewsStats = interviewService.getRecruiterInterviewStats(id)
 
-        var recruiterDashboardResponse = RecruiterDashboardResponse()
+        var recruiterDashboardResponse = DashboardRecruiterResponse()
         recruiterDashboardResponse.nextInterview = nextInterview.startingAt!!
         recruiterDashboardResponse.lastUpdate = lastScheduleUpdate.updatedAt
         recruiterDashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }

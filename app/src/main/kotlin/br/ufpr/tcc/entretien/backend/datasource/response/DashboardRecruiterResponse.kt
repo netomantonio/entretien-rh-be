@@ -2,7 +2,7 @@ package br.ufpr.tcc.entretien.backend.datasource.response
 
 import java.time.LocalDateTime
 
-class RecruiterDashboardResponse: DashboardResponse(
+class DashboardRecruiterResponse: DashboardResponse(
 ) {
     lateinit var nextInterview: LocalDateTime
     lateinit var thisMonthScheduledInterviews: List<InterviewListItem>

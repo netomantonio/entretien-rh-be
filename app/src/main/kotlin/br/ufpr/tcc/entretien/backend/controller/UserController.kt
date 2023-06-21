@@ -1,10 +1,15 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
+import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import br.ufpr.tcc.entretien.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import javax.validation.Valid
 
 // TODO: review
@@ -16,7 +21,7 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     fun registerAdmin(@Valid @RequestBody signupRequest: SignupRequest): ResponseEntity<*> {
 
@@ -56,6 +61,22 @@ class UserController {
             ResponseEntity.internalServerError().body("Persistence error.")
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/dashboard")
+    fun getAdminDashboard(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<Any> {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val id = userDetails.getId()
+
+        return ResponseEntity.ok<Any>(userService.getDashboard(id, from,  to))
+    }
+
 
     //    @PreAuthorize("hasRole('ADMIN')")
 //    @GetMapping

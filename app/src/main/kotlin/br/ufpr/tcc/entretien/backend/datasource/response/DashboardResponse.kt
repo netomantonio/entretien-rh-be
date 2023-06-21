@@ -15,12 +15,12 @@ open class DashboardResponse {
         val interviewStatus: InterviewStatusTypes
     )
 
-    class InterviewsStats(
-        var scheduled: Long,
-        var toBeScheduled: Long,
-        var completed: Long,
-        var total: Long
-    )
+    open class InterviewsStats(scheduledQtd: Long, toBeScheduledQtd: Long, completed: Long, total: Long) {
+        var scheduled: Long = scheduledQtd
+        var toBeScheduled: Long = toBeScheduledQtd
+        var completed: Long = completed
+        var total: Long = total
+    }
 
     companion object {
         fun fromInterview(interview: Interview): InterviewListItem {
