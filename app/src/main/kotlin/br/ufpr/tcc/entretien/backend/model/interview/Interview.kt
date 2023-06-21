@@ -30,7 +30,9 @@ class Interview(
     @ManyToOne @JoinColumn(name = "fk_recruiter") var recruiter: Recruiter? = null,
     @ManyToOne @JoinColumn(name = "fk_candidate") var candidate: Candidate? = null,
     @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null,
-    var sessionId: String? = null
+    var sessionId: String? = null,
+    var candidatePresent: Boolean? = false,
+    var recruiterPresent: Boolean? = false
 ) : AbstractJpaPersistable() {
 
     @ManyToOne

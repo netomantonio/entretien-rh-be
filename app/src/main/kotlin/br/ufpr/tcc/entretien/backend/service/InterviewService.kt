@@ -1,6 +1,8 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
@@ -15,7 +17,8 @@ import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Optional
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Service
 class InterviewService {
@@ -65,10 +68,14 @@ class InterviewService {
             interview.recruiterObservation = recruiterObservation
         }
 
+        interview.sessionId = UUID.randomUUID().toString()
+
         return registerInterview(interview)
     }
 
-    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview)
+    fun registerInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
+        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
 
     fun getInterview(id: Long): Optional<Interview> = interviewRepository.findById(id)
 
@@ -143,7 +150,15 @@ class InterviewService {
     }
 
     fun updateInterview(interview: Interview): Interview = interviewRepository.save(interview).also {
-        logger.info(LOG_TAG, "Interview saved successfull", mapOf("interview-id" to interview.getId().toString()))
+        logger.info(LOG_TAG, "Interview update successfull", mapOf("interview-id" to interview.getId().toString()))
+    }
+
+    fun findBySessionId(sessionId: String): Interview = interviewRepository.findBySessionId(sessionId).get().also {
+        logger.info(
+            LOG_TAG,
+            "interview found for the sessionId",
+            mapOf("session-id" to sessionId, "interview-id" to it.getId().toString())
+        )
     }
 
     fun adjustInterview(interview: Interview, candidateCpf: String?, managerObservation: String?): Interview {
@@ -157,4 +172,39 @@ class InterviewService {
     fun deleteInterview(interview: Interview) {
         interviewRepository.delete(interview)
     }
+
+    fun setUserPresent(
+        userDetails: UserDetailsImpl,
+        interview: Interview
+    ) {
+        if (userDetails.getId() == interview.candidate!!.id) interview.candidatePresent = true
+        if (userDetails.getId() == interview.recruiter!!.id) interview.recruiterPresent = true
+        interviewRepository.save(interview)
+    }
+
+    fun getAllInterviewsByCandidate(candidateId: Long): InterviewsByCandidateResponse {
+        val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
+        return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
+    }
+
+    fun saveAll(interviews: List<Interview>) {
+        interviewRepository.saveAll(interviews)
+    }
+
+}
+private fun Interview.toResponse(): InterviewByCandidateResponse {
+    return InterviewByCandidateResponse(
+        id = this.getId().toString(),
+        companyName = this.manager.companyName,
+        status = this.interviewStatus.name,
+        appointmentDate = this.startingAt?.formatter(),
+        sessionId = this.sessionId
+    )
+}
+
+private fun LocalDateTime?.formatter(): String? {
+    if (this == null) return null
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    return this.format(formatter)
+
 }

@@ -101,28 +101,8 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         return users.filterIsInstance<Candidate>()
     }
 
-    fun getAllInterviews(candidateId: Long): InterviewsByCandidateResponse {
-        val interviewsModel = interviewRepository.findAllByCandidateId(candidateId).orElseGet(null)
-        return InterviewsByCandidateResponse(interviews = interviewsModel.map { it.toResponse() })
-    }
-
     fun update(candidate: Candidate): Candidate {
         return candidateRepository.save(candidate)
     }
-
-}
-
-private fun Interview.toResponse(): InterviewByCandidateResponse {
-    return InterviewByCandidateResponse(
-        id = this.getId().toString(),
-        companyName = this.manager.companyName,
-        status = this.interviewStatus.name,
-        appointmentDate = this.startingAt?.formatter()
-    )
-}
-private fun LocalDateTime?.formatter(): String? {
-    if (this == null) return null
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    return this.format(formatter)
 
 }
