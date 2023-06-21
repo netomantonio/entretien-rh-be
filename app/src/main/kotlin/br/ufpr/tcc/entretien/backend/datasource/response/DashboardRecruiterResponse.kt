@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 class DashboardRecruiterResponse: DashboardResponse(
 ) {
-    lateinit var nextInterview: LocalDateTime
+    var nextInterview: LocalDateTime? = null
     lateinit var thisMonthScheduledInterviews: List<InterviewListItem>
     lateinit var interviewsHistory: List<InterviewListItem>
     lateinit var interviewsStats: InterviewsStats

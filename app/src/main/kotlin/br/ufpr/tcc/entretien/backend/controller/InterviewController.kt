@@ -240,4 +240,15 @@ class InterviewController {
         val recruiterId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getRecruiterInterviewsWithinPeriod(recruiterId, from, to))
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/period")
+    fun getInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+    ): ResponseEntity<*>{
+        return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
+    }
 }

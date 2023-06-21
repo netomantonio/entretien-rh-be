@@ -172,9 +172,11 @@ class InterviewService {
         return interviews
     }
 
-    fun getCandidateNextInterview(candidateId: Long): Interview {
+    fun getCandidateNextInterview(candidateId: Long): Interview? {
         val today = LocalDateTime.now()
-        return interviewRepository.getCandidateNextInterview(candidateId, today).get()
+        return if(interviewRepository.getCandidateNextInterview(candidateId, today).isEmpty)
+            null
+        else interviewRepository.getCandidateNextInterview(candidateId, today).get()
     }
 
     fun getRecruiterNextInterview(recruiterId: Long): Interview {
@@ -229,7 +231,7 @@ class InterviewService {
     }
 
     fun getAllInterviewsByStatusWithinPeriod(status: InterviewStatusTypes, from: LocalDate, to: LocalDate): List<Interview> {
-        return interviewRepository.findAllByStatusWithinPeriod(from.atStartOfDay(), to.atStartOfDay())
+        return interviewRepository.findAllScheduleWithinPeriod(from.atStartOfDay(), to.atStartOfDay())
     }
 
     fun getInterviewProblemHistory(): List<Interview> {
@@ -245,4 +247,7 @@ class InterviewService {
     }
 
     fun getUnregisteredCpfQtd(): Long = interviewRepository.getQtdByStatus(InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
+    fun getInterviewsWithinPeriod(from: LocalDate, to: LocalDate): List<Interview> {
+        return interviewRepository.findAllScheduleWithinPeriod(from.atStartOfDay(), to.atStartOfDay())
+    }
 }

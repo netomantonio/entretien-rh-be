@@ -77,7 +77,7 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         val interviewsStats = interviewService.getCandidateInterviewStats(id)
 
         var recruiterDashboardResponse = DashboardRecruiterResponse()
-        recruiterDashboardResponse.nextInterview = nextInterview.startingAt!!
+        recruiterDashboardResponse.nextInterview = nextInterview?.startingAt
         recruiterDashboardResponse.lastUpdate = lastUpdate
         recruiterDashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }
         recruiterDashboardResponse.interviewsHistory = interviewsHistory.map { interview -> DashboardResponse.fromInterview(interview) }

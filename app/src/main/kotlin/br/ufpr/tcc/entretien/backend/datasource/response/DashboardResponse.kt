@@ -8,7 +8,7 @@ open class DashboardResponse {
     lateinit var lastUpdate: LocalDateTime
 
     class InterviewListItem(
-        var date: LocalDateTime?,
+        var startingAt: LocalDateTime?,
         val company: String,
         val recruiter: String,
         val candidate: String,

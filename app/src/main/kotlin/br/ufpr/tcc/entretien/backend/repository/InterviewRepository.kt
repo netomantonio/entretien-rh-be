@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import java.sql.Timestamp
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Optional
 
@@ -135,7 +134,7 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         nativeQuery = false,
         value = "select i from Interview i where i.interviewStatus = 'SCHEDULE' and i.startingAt >= :from and i.startingAt < :to"
     )
-    fun findAllByStatusWithinPeriod(
+    fun findAllScheduleWithinPeriod(
         @Param("from") from: LocalDateTime,
         @Param("to") to: LocalDateTime
     ): List<Interview>
