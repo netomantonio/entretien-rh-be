@@ -252,6 +252,7 @@ class InterviewService {
     }
 
     fun getUnregisteredCpfQtd(): Long = interviewRepository.getQtdByStatus(InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION)
+
     fun getInterviewsWithinPeriod(from: LocalDate, to: LocalDate): List<Interview> {
         return interviewRepository.findAllScheduleWithinPeriod(from.atStartOfDay(), to.atStartOfDay())
     }

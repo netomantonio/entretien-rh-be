@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
@@ -53,14 +54,18 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
 
     override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardRecruiterResponse {
         val nextInterview = interviewService.getRecruiterNextInterview(id)
-        val lastScheduleUpdate = scheduleRepository.getLastByRecruiter(id).get()
+        val lastScheduleUpdate = scheduleRepository.getLastByRecruiter(id)
         val thisMonthScheduledInterviews = interviewService.getRecruiterInterviewsWithinPeriod(id, from, to)
         val interviewsHistory = interviewService.getRecruiterInterviewHistory(id)
         val interviewsStats = interviewService.getRecruiterInterviewStats(id)
 
         var recruiterDashboardResponse = DashboardRecruiterResponse()
-        recruiterDashboardResponse.nextInterview = nextInterview.startingAt!!
-        recruiterDashboardResponse.lastUpdate = lastScheduleUpdate.updatedAt
+        recruiterDashboardResponse.nextInterview = nextInterview?.startingAt
+        if (lastScheduleUpdate.isEmpty){
+            recruiterDashboardResponse.lastUpdate = LocalDateTime.now()
+        } else {
+            recruiterDashboardResponse.lastUpdate = lastScheduleUpdate.get().createdAt
+        }
         recruiterDashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }
         recruiterDashboardResponse.interviewsHistory = interviewsHistory.map { interview -> DashboardResponse.fromInterview(interview) }
         recruiterDashboardResponse.interviewsStats = interviewsStats
