@@ -148,5 +148,35 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         nativeQuery = true,
         value = "select count(i) from public.interview i where i.fk_candidate = :id and i.interview_status = :status"
     )
-    fun getCandidateQtdByStatus(id: Long, status: String): Long
+    fun getCandidateQtdByStatus(@Param("id") id: Long, status: String): Long
+
+    @Query(
+        value = "select i from Interview i where i.manager.id = :id order by i.createdAt"
+    )
+    fun getManagerLastInterview(@Param("id") id: Long): Iterable<Interview>
+
+    @Query(
+        "SELECT i FROM Interview i WHERE i.interviewStatus = 'SCHEDULE' AND i.manager.id = :id AND i.startingAt >= :from AND i.startingAt < :to"
+    )
+    fun getWithinPeriodByManager(
+        @Param("id") id: Long,
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime
+    ): Iterable<Interview>
+
+    @Query(
+        value = "select i from Interview i where i.manager.id = :id and i.interviewStatus = 'CONCLUDED' order by startingAt"
+    )
+    fun getManagerConcludedInterviews(@Param("id") recruiterId: Long): Iterable<Interview>
+
+    @Query(
+        nativeQuery = true,
+        value = "select count(i) from public.interview i where i.fk_manager = :id and i.interview_status = :status"
+    )
+    fun getManagerQtdByStatus(@Param("id") id: Long, @Param("status") status: String): Long
+
+    @Query(
+        value = "select count(i) from Interview i where i.manager.id = :id"
+    )
+    fun getManagerTotalInterviewsQtd(@Param("id") id: Long): Long
 }
