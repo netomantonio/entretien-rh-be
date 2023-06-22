@@ -22,8 +22,20 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
 
     fun findByCandidateId(candidateId: Long): Optional<Interview>
 
+    @Query("""
+        SELECT i FROM Interview i 
+        WHERE i.recruiter.id = :recruiterId 
+        AND i.interviewStatus <> 'ABSENT_RECRUITER' 
+        AND i.interviewStatus <> 'ABSENT_CANDIDATE'
+        AND i.interviewStatus <> 'DID_NOT_OCCUR'
+    """)
     fun findByRecruiterId(recruiterId: Long): Optional<Iterable<Interview>>
 
+    @Query("""
+        SELECT i FROM Interview i 
+        WHERE i.manager.id = :managerId
+        AND i.interviewStatus <> 'DID_NOT_OCCUR'
+    """)
     fun findByManagerId(managerId: Long): Optional<Iterable<Interview>>
 
     @Query(
@@ -38,6 +50,13 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
     )
     fun findAnyByPeriod(@Param("from") from: Timestamp, @Param("to") to: Timestamp): Optional<Iterable<Interview>>
 
+    @Query("""
+        SELECT i FROM Interview i 
+        WHERE i.candidate.id = :id 
+        AND i.interviewStatus <> 'ABSENT_RECRUITER' 
+        AND i.interviewStatus <> 'ABSENT_CANDIDATE'
+        AND i.interviewStatus <> 'DID_NOT_OCCUR'
+    """)
     fun findAllByCandidateId(id: Long): Optional<List<Interview>>
 
     @Query(
@@ -179,4 +198,6 @@ interface InterviewRepository : CrudRepository<Interview, Long> {
         value = "select count(i) from Interview i where i.manager.id = :id"
     )
     fun getManagerTotalInterviewsQtd(@Param("id") id: Long): Long
+
+    fun findBySessionId(sessionId: String): Optional<Interview>
 }
