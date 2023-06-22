@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Collections
-import java.util.Optional
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.NoSuchElementException
 
 @Service
 class InterviewService {
@@ -300,7 +300,6 @@ class InterviewService {
 
         return DashboardResponse.InterviewsStats(scheduledQtd, toBeScheduledQtd, concluded, total)
     }
-}
 
     fun setUserPresent(
         userDetails: UserDetailsImpl,
