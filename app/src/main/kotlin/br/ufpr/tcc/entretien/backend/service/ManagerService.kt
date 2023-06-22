@@ -1,6 +1,8 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.ManagerSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.infra.Role
 import br.ufpr.tcc.entretien.backend.model.users.Manager
@@ -10,12 +12,17 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class ManagerService : IUserService<Manager, ManagerSignupRequest> {
 
     @Autowired
     lateinit var managerRepository: UserRepository<Manager>
+
+    @Autowired
+    lateinit var interviewService: InterviewService
 
     @Autowired
     lateinit var roleRepository: RoleRepository
@@ -37,6 +44,25 @@ class ManagerService : IUserService<Manager, ManagerSignupRequest> {
                 "Error: Role is not found."
             )
         }
+
+    override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardResponse {
+        val lastInterviewCreated = interviewService.getLastByManager(id)
+        val thisMonthScheduledInterviews = interviewService.getManagerInterviewsWithinPeriod(id, from, to)
+        val interviewsHistory = interviewService.getManagerInterviewHistory(id)
+        val interviewsStats = interviewService.getManagerInterviewStats(id)
+
+        var dashboardResponse = DashboardRecruiterResponse()
+        if (lastInterviewCreated != null) {
+            dashboardResponse.lastUpdate = lastInterviewCreated.createdAt
+        } else {
+            dashboardResponse.lastUpdate = LocalDateTime.now()
+        }
+        dashboardResponse.interviewsHistory = interviewsHistory.map { interview -> DashboardResponse.fromInterview(interview) }
+        dashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }
+        dashboardResponse.interviewsStats = interviewsStats
+
+        return dashboardResponse
+    }
 
     override fun build(managerSignupRequest: ManagerSignupRequest): Manager {
         val roles: MutableSet<Role> = HashSet()

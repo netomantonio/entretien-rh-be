@@ -1,8 +1,10 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
+import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.Role
@@ -15,6 +17,7 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -32,6 +35,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
 
     @Autowired
     lateinit var resumeService: ResumeService
+
+    @Autowired
+    lateinit var interviewService: InterviewService
 
     @Autowired
     lateinit var encoder: PasswordEncoder
@@ -62,6 +68,23 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
                 "Error: Role is not found."
             )
         }
+
+    override fun getDashboard(id: Long, from: LocalDate, to: LocalDate): DashboardResponse {
+        val nextInterview = interviewService.getCandidateNextInterview(id)
+        val lastUpdate = resumeService.getCandidateResumeLastUpdate(id)
+        val thisMonthScheduledInterviews = interviewService.getCandidateInterviewsWithinPeriod(id, from, to)
+        val interviewsHistory = interviewService.getCandidateInterviewHistory(id)
+        val interviewsStats = interviewService.getCandidateInterviewStats(id)
+
+        var recruiterDashboardResponse = DashboardRecruiterResponse()
+        recruiterDashboardResponse.nextInterview = nextInterview?.startingAt
+        recruiterDashboardResponse.lastUpdate = lastUpdate
+        recruiterDashboardResponse.thisMonthScheduledInterviews = thisMonthScheduledInterviews.map { interview -> DashboardResponse.fromInterview(interview) }
+        recruiterDashboardResponse.interviewsHistory = interviewsHistory.map { interview -> DashboardResponse.fromInterview(interview) }
+        recruiterDashboardResponse.interviewsStats = interviewsStats
+
+        return recruiterDashboardResponse
+    }
 
     override fun build(signupRequest: CandidateSignupRequest): Candidate {
         val roles: MutableSet<Role> = HashSet()

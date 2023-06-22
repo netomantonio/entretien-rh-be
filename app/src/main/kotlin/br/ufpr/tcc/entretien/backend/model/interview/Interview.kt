@@ -22,8 +22,8 @@ class Interview(
     @Column(columnDefinition = "TEXT")
     var candidateObservation: String? = "",
     @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
-    @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
     var startingAt: LocalDateTime? = null,
     var endingAt: LocalDateTime? = null,
     var cpf: String? = "",
