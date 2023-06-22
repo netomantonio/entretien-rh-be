@@ -241,6 +241,20 @@ class InterviewController {
         return ResponseEntity.ok<Any>(interviewService.getRecruiterInterviewsWithinPeriod(recruiterId, from, to))
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @GetMapping("/manager/period")
+    fun getManagerInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*>{
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val managerId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getManagerInterviewsWithinPeriod(managerId, from, to))
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/period")
     fun getInterviewsWithinPeriod(
