@@ -256,4 +256,33 @@ class InterviewService {
     fun getInterviewsWithinPeriod(from: LocalDate, to: LocalDate): List<Interview> {
         return interviewRepository.findAllScheduleWithinPeriod(from.atStartOfDay(), to.atStartOfDay())
     }
+
+    fun getLastByManager(id: Long): Interview? {
+        val interviews = interviewRepository.getManagerLastInterview(id)
+        return interviews.firstOrNull()
+    }
+
+    fun getManagerInterviewsWithinPeriod(id: Long, from: LocalDate, to: LocalDate): Iterable<Interview> {
+        val interviews = interviewRepository.getWithinPeriodByManager(
+            id,
+            from.atStartOfDay(),
+            to.atStartOfDay()
+        )
+        if (interviews.none())
+            return emptyList()
+
+        return interviews
+    }
+
+    fun getManagerInterviewHistory(id: Long): Iterable<Interview> =
+        interviewRepository.getManagerConcludedInterviews(id)
+
+    fun getManagerInterviewStats(id: Long): DashboardResponse.InterviewsStats {
+        var scheduledQtd = interviewRepository.getManagerQtdByStatus(id, InterviewStatusTypes.SCHEDULE.toString())
+        var toBeScheduledQtd = interviewRepository.getManagerQtdByStatus(id, InterviewStatusTypes.TO_BE_SCHEDULE.toString())
+        var concluded = interviewRepository.getManagerQtdByStatus(id, InterviewStatusTypes.CONCLUDED.toString())
+        var total = interviewRepository.getManagerTotalInterviewsQtd(id)
+
+        return DashboardResponse.InterviewsStats(scheduledQtd, toBeScheduledQtd, concluded, total)
+    }
 }
