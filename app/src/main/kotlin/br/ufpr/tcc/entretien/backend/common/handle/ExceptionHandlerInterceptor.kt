@@ -5,6 +5,7 @@ import br.ufpr.tcc.entretien.backend.common.error.BusinessErrorCode
 import br.ufpr.tcc.entretien.backend.common.error.FieldViolation
 import br.ufpr.tcc.entretien.backend.common.exception.interview.ContentNotFoundException
 import br.ufpr.tcc.entretien.backend.common.exception.interview.UnavailableTimeException
+import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
 import br.ufpr.tcc.entretien.backend.common.exception.jwt.InvalidTokenException
 import br.ufpr.tcc.entretien.backend.common.exception.jwt.TokenGeneratorException
 import org.springframework.http.HttpHeaders
@@ -99,9 +100,23 @@ class ExceptionHandlerAdvice : ResponseEntityExceptionHandler() {
             field = "token",
             description = ex.message.toString()
         )
-        val apiError = ApiError(message = "Invalid Credentials. Please try again with the correct credentials.")
+        val apiError = ApiError(message = "Invalid Credentials. Please try again with the correct credentials.", fieldViolations = listOf(fieldViolation))
 
         return ResponseEntity(apiError, HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler(UserIsNotAuthorizedException::class)
+    fun handleUserIsNotAuthorizedException(
+        ex: UserIsNotAuthorizedException,
+        request: WebRequest
+    ) : ResponseEntity<ApiError> {
+        val fieldViolation = FieldViolation(
+            field = "candidateId",
+            description = "user does not have permission to perform this action"
+        )
+        val apiError = ApiError(message = ex.message.toString(), fieldViolations = listOf(fieldViolation))
+
+        return ResponseEntity(apiError, HttpStatus.FORBIDDEN)
     }
 
     override fun handleMethodArgumentNotValid(

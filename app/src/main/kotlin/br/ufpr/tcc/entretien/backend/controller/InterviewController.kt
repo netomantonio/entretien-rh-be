@@ -1,16 +1,19 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import java.util.Optional
 import javax.validation.Valid
 
@@ -32,11 +35,11 @@ class InterviewController {
 
         val candidateCpf: String = interviewRequest.candidateCpf
 
-        val managerObservation: String = interviewRequest.managerObservation
+        val recruiterObservation: String = interviewRequest.recruiterObservation
 
         val managerId = userDetails.getId()
         return try {
-            interviewService.createInterview(candidateCpf, managerObservation, managerId)
+            interviewService.createInterview(candidateCpf, recruiterObservation, managerId)
             ResponseEntity.ok<Any>("Interview registered successfully!")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
@@ -86,7 +89,7 @@ class InterviewController {
             val dbInterview = optInterview.get()
             if (dbInterview.manager.id != managerId) return ResponseEntity<Any>(HttpStatus.UNAUTHORIZED)
             if (dbInterview.getId() != id) return ResponseEntity<Any>(HttpStatus.FORBIDDEN)
-            if (interviewRequest.candidateCpf.isEmpty() && interviewRequest.managerObservation.isEmpty()) return ResponseEntity<Any>(
+            if (interviewRequest.candidateCpf.isEmpty() && interviewRequest.recruiterObservation.isEmpty()) return ResponseEntity<Any>(
                 "Dados para atualização não podem estar vazios!",
                 HttpStatus.BAD_REQUEST
             )
@@ -98,7 +101,7 @@ class InterviewController {
                 interviewService.adjustInterview(
                     dbInterview,
                     interviewRequest.candidateCpf,
-                    interviewRequest.managerObservation
+                    interviewRequest.recruiterObservation
                 ), HttpStatus.OK
             )
         } catch (e: NoSuchElementException) {
@@ -170,9 +173,11 @@ class InterviewController {
         val date = commitInterviewRequest.date
         val candidateId = userDetails.getId()
         val interviewId = commitInterviewRequest.interviewId
+
+        if (interviewService.getInterview(interviewId).get().candidate!!.id != candidateId) throw UserIsNotAuthorizedException()
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
-            interviewService.commitInterview(scheduleId, interviewId, date, candidateId)
+            interviewService.commitInterview(scheduleId, interviewId, date)
             ResponseEntity.ok<Any>("Interview updated")
         } catch (ex: Exception) {
             println("[ERROR] ------------------------------------------")
@@ -206,5 +211,58 @@ class InterviewController {
         } catch (e: Exception) {
             ResponseEntity<Any>(HttpStatus.INTERNAL_SERVER_ERROR)
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @GetMapping("/candidate/period")
+    fun getCandidateInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*>{
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val candidateId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewsWithinPeriod(candidateId, from, to))
+    }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @GetMapping("/recruiter/period")
+    fun getRecruiterInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*>{
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val recruiterId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getRecruiterInterviewsWithinPeriod(recruiterId, from, to))
+    }
+
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @GetMapping("/manager/period")
+    fun getManagerInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+        authentication: Authentication
+    ): ResponseEntity<*>{
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val managerId = userDetails.getId()
+        return ResponseEntity.ok<Any>(interviewService.getManagerInterviewsWithinPeriod(managerId, from, to))
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/period")
+    fun getInterviewsWithinPeriod(
+        @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        from: LocalDate,
+        @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
+        to: LocalDate,
+    ): ResponseEntity<*>{
+        return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
     }
 }

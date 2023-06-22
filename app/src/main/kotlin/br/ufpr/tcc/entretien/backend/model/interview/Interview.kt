@@ -11,21 +11,23 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
+
 @Entity
 class Interview(
     var score: Int? = 0,
-    var mainObservation: String? = "",
+    var recruiterObservation: String? = "",
     var managerObservation: String? = "",
     var candidateObservation: String? = "",
     @Column(nullable = false) @Enumerated(EnumType.STRING) var interviewStatus: InterviewStatusTypes = InterviewStatusTypes.WAITING_CANDIDATE,
-    @Temporal(TemporalType.TIMESTAMP) val createdAt: Date = Date.from(Instant.now()),
-    @Temporal(TemporalType.TIMESTAMP) val updatedAt: Date = Date.from(Instant.now()),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
     var startingAt: LocalDateTime? = null,
     var endingAt: LocalDateTime? = null,
     var cpf: String? = "",
     @ManyToOne @JoinColumn(name = "fk_recruiter") var recruiter: Recruiter? = null,
     @ManyToOne @JoinColumn(name = "fk_candidate") var candidate: Candidate? = null,
-    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null
+    @ManyToOne @JoinColumn(name = "fk_schedule") var schedule: Schedule? = null,
+    var sessionId: String? = null
 ) : AbstractJpaPersistable() {
 
     @ManyToOne
