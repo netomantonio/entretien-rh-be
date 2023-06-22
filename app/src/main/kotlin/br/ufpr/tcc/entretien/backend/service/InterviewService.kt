@@ -179,9 +179,14 @@ class InterviewService {
         else interviewRepository.getCandidateNextInterview(candidateId, today).get()
     }
 
-    fun getRecruiterNextInterview(recruiterId: Long): Interview {
+    fun getRecruiterNextInterview(recruiterId: Long): Interview? {
         val today = LocalDateTime.now()
-        return interviewRepository.getRecruiterNextInterview(recruiterId, today).get()
+        val optional = interviewRepository.getRecruiterNextInterview(recruiterId, today)
+        return if (optional.isEmpty) {
+            return null
+        } else {
+            optional.get()
+        }
     }
 
     fun getRecruiterInterviewsWithinPeriod(id: Long, from: LocalDate, to: LocalDate): Iterable<Interview> {
