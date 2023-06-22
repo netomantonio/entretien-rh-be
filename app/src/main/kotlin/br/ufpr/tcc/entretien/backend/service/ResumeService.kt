@@ -7,6 +7,7 @@ import br.ufpr.tcc.entretien.backend.repository.ResumeRepository
 import br.ufpr.tcc.entretien.backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class ResumeService {
@@ -139,6 +140,10 @@ class ResumeService {
         }
 
         return candidateRepository.save(candidate).resume
+    }
+
+    fun getCandidateResumeLastUpdate(candidateId: Long): LocalDateTime {
+        return resumeRepository.getCandidateResumeLastUpdate(candidateId)
     }
 
 }
