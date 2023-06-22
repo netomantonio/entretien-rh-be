@@ -1,3 +1,6 @@
+cron:
+  job:
+    expression: "0 0 * * * ?"
 entretien:
   app:
     jwtSecret: secret
@@ -7,6 +10,19 @@ server:
     enabled: false
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
+  task:
+    scheduling:
+      enabled: true
+  quartz:
+    job-store-type: MEMORY
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: cronScheduler
+            instanceId: AUTO
+            jobStore:
+              class: org.quartz.simpl.RAMJobStore
   mvc:
     interceptor:
       enabled: true

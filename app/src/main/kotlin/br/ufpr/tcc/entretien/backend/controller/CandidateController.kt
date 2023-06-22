@@ -4,7 +4,6 @@ import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.UpdateCandidateDataRequest
-import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.service.CandidateService
 import br.ufpr.tcc.entretien.backend.service.ResumeService
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.lang.IllegalArgumentException
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
@@ -116,23 +114,6 @@ class CandidateController {
             println("[ERROR] ------------------------------------------")
             println(ex.message)
             ResponseEntity.internalServerError().body("Something went wrong.")
-        }
-    }
-
-    @GetMapping("/interviews")
-    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
-    fun getAllInterviewsByCandidate(
-        authentication: Authentication
-    ): ResponseEntity<InterviewsByCandidateResponse> {
-        try {
-            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
-            val candidateId = userDetails.getId()
-            logger.info(LOG_TAG, "received request from user", mapOf("user-id" to candidateId.toString()))
-            val candidateInterviews = candidateService.getAllInterviews(candidateId)
-            return ResponseEntity.ok(candidateInterviews)
-        } catch (ex: Exception) {
-            logger.error(LOG_TAG, ex.message, ex.stackTrace)
-            throw IllegalArgumentException()
         }
     }
 

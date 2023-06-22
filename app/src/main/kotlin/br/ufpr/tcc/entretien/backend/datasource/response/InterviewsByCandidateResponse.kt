@@ -10,5 +10,6 @@ data class InterviewByCandidateResponse(
     val id: String,
     val companyName: String,
     val status: String,
-    val appointmentDate: String? = null
+    val appointmentDate: String? = null,
+    val sessionId: String? = null
 )
