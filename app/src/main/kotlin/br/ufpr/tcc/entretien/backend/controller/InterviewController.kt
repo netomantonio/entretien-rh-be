@@ -1,8 +1,11 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
+import br.ufpr.tcc.entretien.backend.datasource.request.CommitObservationInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
+import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
@@ -13,14 +16,19 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.time.LocalDate
-import java.util.Optional
 import javax.validation.Valid
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
 @RequestMapping("/api/interview")
 class InterviewController {
+
+    companion object {
+        private const val LOG_TAG = "entretien-backend-interview-controller"
+        private val logger = LOGGER.getLogger(AuthController::class.java)
+    }
 
     @Autowired
     lateinit var interviewService: InterviewService
@@ -264,5 +272,56 @@ class InterviewController {
         to: LocalDate,
     ): ResponseEntity<*>{
         return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
+    }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @PatchMapping("/{id}")
+    fun commitObservationInterview(
+        @Valid @PathVariable id: Long,
+        @Valid @RequestBody commitObservationInterviewRequest: CommitObservationInterviewRequest,
+        authentication: Authentication
+    ): ResponseEntity<*> {
+        try {
+            val userDetails = authentication.principal as UserDetailsImpl
+            logger.info(LOG_TAG, "receive request for recruiter add observation in interview", mapOf(
+                "user-id" to userDetails.getId().toString()
+            ))
+            val interview = interviewService.getInterview(id).filter { it.recruiter!!.id == userDetails.getId() }
+                .orElseThrow()
+
+            interview.managerObservation = commitObservationInterviewRequest.managerObservation
+            interview.candidateObservation = commitObservationInterviewRequest.candidateObservation
+            interview.score = commitObservationInterviewRequest.score!!.toInt()
+            interview.interviewStatus = commitObservationInterviewRequest.interviewStatus!!
+
+            interviewService.updateInterview(interview)
+            return ResponseEntity<Any>(HttpStatus.OK)
+        } catch (ex: NoSuchElementException) {
+            throw NoSuchElementException()
+        } catch (ex: Exception) {
+            when(ex) {
+                is IllegalArgumentException -> {
+                    throw IllegalArgumentException("error updating interview data",ex)
+                }
+            }
+            throw Exception()
+        }
+    }
+
+    @GetMapping("/candidate")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    fun getAllInterviewsByCandidate(
+        authentication: Authentication
+    ): ResponseEntity<InterviewsByCandidateResponse> {
+        try {
+            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+            val candidateId = userDetails.getId()
+            logger.info(LOG_TAG, "received request from user", mapOf("user-id" to candidateId.toString()))
+            val candidateInterviews = interviewService.getAllInterviewsByCandidate(candidateId)
+            return ResponseEntity.ok(candidateInterviews)
+        } catch (ex: Exception) {
+            logger.error(LOG_TAG, ex.message, ex.stackTrace)
+            throw java.lang.IllegalArgumentException()
+        }
     }
 }
