@@ -33,6 +33,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-devtools")
 
+    //SANITIZATION
+    implementation("org.owasp.encoder:encoder:1.2.3")
     // LOGS
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     // OPENVIDU

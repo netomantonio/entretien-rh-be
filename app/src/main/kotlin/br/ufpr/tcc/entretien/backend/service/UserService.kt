@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardAdminResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
@@ -161,7 +162,7 @@ class UserService : IUserService<Admin, SignupRequest> {
         admin.firstName = signupRequest.firstName
         admin.lastName = signupRequest.lastName
 //      admindidade.birthDay = signupRequest.birthDay
-        admin.cpf = signupRequest.cpf
+        admin.cpf = signupRequest.cpf.sanitizeDocuments()
         admin.email = signupRequest.email
         admin.phone = signupRequest.phone
 
