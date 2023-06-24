@@ -96,4 +96,8 @@ class ManagerService : IUserService<Manager, ManagerSignupRequest> {
             )
         }
 
+    fun update(manager: Manager) {
+        managerRepository.save(manager)
+    }
+
 }
