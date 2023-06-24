@@ -1,7 +1,9 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterScheduleRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
+import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterUpdateModelRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.ScheduleResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.toResponse
 import br.ufpr.tcc.entretien.backend.model.Schedule
@@ -25,6 +27,10 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/recruiters")
 class RecruiterController {
+    companion object {
+        private const val LOG_TAG = "entretien-backend-recruiter-controller"
+        private val logger = LOGGER.getLogger(RecruiterController::class.java)
+    }
 
     @Autowired
     lateinit var recruiterService: RecruiterService
@@ -215,4 +221,40 @@ class RecruiterController {
 
         return ResponseEntity.ok(recruiterService.getDashboard(recruiterId, from, to))
     }
+
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @PutMapping
+    fun updated(
+        @Valid @RequestBody recruiterUpdateRequest: RecruiterUpdateModelRequest,
+        authentication: Authentication
+    ): ResponseEntity<String?>? {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val recruiterId = userDetails.getId()
+        logger.info(LOG_TAG, "receive request update recruiter user", mapOf("user-id" to recruiterId.toString()))
+        try {
+            val recruiterUpdated = recruiterUpdateRequest.toModel(recruiterService.getRecruiterById(recruiterId))
+            recruiterService.update(recruiterUpdated)
+            return ResponseEntity(HttpStatus.OK)
+        } catch (ex: Exception) {
+            throw Exception()
+        }
+    }
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    fun getMe(
+        authentication: Authentication
+    ): ResponseEntity<Recruiter> {
+        logger.info(LOG_TAG, "getMe")
+        try {
+            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+            val recruiterId = userDetails.getId()
+            logger.info(LOG_TAG, "received request from user", mapOf("user-id" to recruiterId.toString()))
+            val me = recruiterService.getRecruiterById(recruiterId)
+            return ResponseEntity.ok(me)
+        } catch (ex: Exception) {
+            logger.error(LOG_TAG, ex.message, ex.stackTrace)
+            throw IllegalArgumentException()
+        }
+    }
+    
 }

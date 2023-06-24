@@ -1,7 +1,6 @@
 package br.ufpr.tcc.entretien.backend.datasource.request
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import java.util.Date
 
 open class UpdateUserDataRequest(
     var username: String = "",
@@ -10,5 +9,5 @@ open class UpdateUserDataRequest(
     var phone: String = "",
     var email: String = "",
     @JsonFormat(pattern = "yyyy-MM-dd")
-    var birthDay: Date? = null
+    var birthDay: String? = null
 )

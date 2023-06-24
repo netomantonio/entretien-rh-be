@@ -11,6 +11,5 @@ class Manager(
     @NotBlank var companyName: String = "",
     var tradingName: String? = null,
     @NotBlank var cnpj: String = "",
-    var operationArea: String? = null,
-    var credits: Int = 0
+    var operationArea: String? = null
 ) : User()

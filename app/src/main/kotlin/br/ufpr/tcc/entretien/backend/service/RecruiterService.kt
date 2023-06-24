@@ -106,5 +106,8 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
         }
 
     fun getAllRecruiters(): Iterable<Recruiter> = recruiterRepository.findAll()
+    fun update(recruiterModel: Recruiter) {
+        recruiterRepository.save(recruiterModel)
+    }
 
 }
