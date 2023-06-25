@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.request.RecruiterSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
@@ -80,7 +80,7 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
         roles.add(recruiterRole)
 
         var recruiter = Recruiter()
-        recruiter.cnpj = candidateSignupRequest.cnpj.sanitizeDocuments()
+        recruiter.cnpj = candidateSignupRequest.cnpj.sanitizeNumbers()
         recruiter.presentation = candidateSignupRequest.presentation
         recruiter.professionalRecord = candidateSignupRequest.professionalRecord
         recruiter.specialities = candidateSignupRequest.specialities
@@ -91,9 +91,9 @@ class RecruiterService : IUserService<Recruiter, RecruiterSignupRequest> {
         recruiter.firstName = candidateSignupRequest.firstName
         recruiter.lastName = candidateSignupRequest.lastName
 //      TODO: candidade.birthDay = candidateSignupRequest.birthDay
-        recruiter.cpf = candidateSignupRequest.cpf.sanitizeDocuments()
+        recruiter.cpf = candidateSignupRequest.cpf.sanitizeNumbers()
         recruiter.email = candidateSignupRequest.email
-        recruiter.phone = candidateSignupRequest.phone
+        recruiter.phone = candidateSignupRequest.phone.sanitizeNumbers()
 
         return recruiter
     }

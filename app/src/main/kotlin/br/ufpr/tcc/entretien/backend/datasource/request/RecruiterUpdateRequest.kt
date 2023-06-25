@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.datasource.request
 
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.common.utils.toDate
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import javax.validation.constraints.NotBlank
@@ -12,7 +12,7 @@ data class RecruiterUpdateModelRequest(
     val recruiterUpdateRequest: RecruiterUpdateRequest
 ) {
     fun toModel(recruiterModel: Recruiter): Recruiter {
-        recruiterModel.cnpj = this.recruiterUpdateRequest.cnpj?.sanitizeDocuments() ?: recruiterModel.cnpj
+        recruiterModel.cnpj = this.recruiterUpdateRequest.cnpj?.sanitizeNumbers() ?: recruiterModel.cnpj
         recruiterModel.presentation = this.recruiterUpdateRequest.presentation
         recruiterModel.professionalRecord = this.recruiterUpdateRequest.professionalRecord!!
         recruiterModel.specialities = this.recruiterUpdateRequest.specialities

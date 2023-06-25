@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
@@ -98,9 +98,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         candidade.firstName = signupRequest.firstName
         candidade.lastName = signupRequest.lastName
 //      TODO: candidade.birthDay = candidateSignupRequest.birthDay
-        candidade.cpf = signupRequest.cpf.sanitizeDocuments()
+        candidade.cpf = signupRequest.cpf.sanitizeNumbers()
         candidade.email = signupRequest.email
-        candidade.phone = signupRequest.phone
+        candidade.phone = signupRequest.phone.sanitizeNumbers()
 
         return candidade
     }

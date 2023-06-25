@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.datasource.request
 
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.common.utils.toDate
 import br.ufpr.tcc.entretien.backend.model.users.Manager
 import javax.validation.constraints.NotBlank
@@ -17,7 +17,7 @@ class ManagerUpdateModelRequest(
         managerModel.firstName = this.managerUpdateRequest.firstName
         managerModel.lastName = this.managerUpdateRequest.lastName
         managerModel.birthDay = this.managerUpdateRequest.birthDay.toDate()
-        managerModel.cnpj = this.managerUpdateRequest.cnpj?.sanitizeDocuments() ?: managerModel.cnpj
+        managerModel.cnpj = this.managerUpdateRequest.cnpj?.sanitizeNumbers() ?: managerModel.cnpj
         managerModel.email = this.managerUpdateRequest.email!!
         managerModel.phone = this.managerUpdateRequest.phone
 
