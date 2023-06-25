@@ -1,6 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.request.ManagerSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
@@ -71,7 +71,7 @@ class ManagerService : IUserService<Manager, ManagerSignupRequest> {
         roles.add(managerRole)
 
         var manager = Manager()
-        manager.cnpj = managerSignupRequest.cnpj.sanitizeDocuments()
+        manager.cnpj = managerSignupRequest.cnpj.sanitizeNumbers()
         manager.companyName = managerSignupRequest.companyName
         manager.operationArea = managerSignupRequest.operationArea
         manager.tradingName = managerSignupRequest.tradingName
@@ -82,9 +82,9 @@ class ManagerService : IUserService<Manager, ManagerSignupRequest> {
         manager.firstName = managerSignupRequest.firstName
         manager.lastName = managerSignupRequest.lastName
 //      TODO: candidade.birthDay = candidateSignupRequest.birthDay
-        manager.cpf = managerSignupRequest.cpf.sanitizeDocuments()
+        manager.cpf = managerSignupRequest.cpf.sanitizeNumbers()
         manager.email = managerSignupRequest.email
-        manager.phone = managerSignupRequest.phone
+        manager.phone = managerSignupRequest.phone.sanitizeNumbers()
 
         return manager
     }

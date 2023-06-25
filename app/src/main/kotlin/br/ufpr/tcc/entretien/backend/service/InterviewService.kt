@@ -1,7 +1,7 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
-import br.ufpr.tcc.entretien.backend.common.utils.sanitizeDocuments
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
@@ -48,7 +48,7 @@ class InterviewService {
 
 
     fun createInterview(candidateCpf: String, recruiterObservation: String, managerId: Long): Interview {
-        val cpfSanitized = candidateCpf.sanitizeDocuments()
+        val cpfSanitized = candidateCpf.sanitizeNumbers()
         val manager: Manager = this.getManagerById(managerId)
 
         val candidate: Candidate? = try {
