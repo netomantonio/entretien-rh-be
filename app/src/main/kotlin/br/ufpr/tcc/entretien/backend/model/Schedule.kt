@@ -4,7 +4,6 @@ import br.ufpr.tcc.entretien.backend.model.enums.DaysOfTheWeek
 import br.ufpr.tcc.entretien.backend.model.infra.AbstractJpaPersistable
 import br.ufpr.tcc.entretien.backend.model.users.Recruiter
 import com.fasterxml.jackson.annotation.JsonBackReference
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
@@ -20,8 +19,8 @@ class Schedule(
     @JsonBackReference
     val recruiter: Recruiter,
     var available: Boolean = true,
-    val createdAt: LocalDateTime = LocalDateTime.from(Instant.now()),
-    var updatedAt: LocalDateTime = LocalDateTime.from(Instant.now()),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
     @Enumerated(EnumType.ORDINAL) var dayOfTheWeek: DaysOfTheWeek,
     @Basic var startingAt: LocalTime,
     @Basic var endingAt: LocalTime
