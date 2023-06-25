@@ -11,8 +11,9 @@ phases:
     commands:
       - echo Gradle Build em `date`
       - java -version
-      - chmod +x ./app/gradlew
-      - ./app/gradlew clean build
+      - cd app
+      - chmod +x ./gradlew
+      - ./gradlew clean build
   post_build:
     commands:
       - echo Build concluído em `date`
