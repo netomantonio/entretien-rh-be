@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  pre_build:
+    commands:
+      - echo Configurar aqui coisas que são pré-build
+  build:
+    commands:
+      - echo Gradle Build em `date`
+      - java -version
+      - cd app
+      - chmod +x ./gradlew
+      - ./gradlew clean build
+  post_build:
+    commands:
+      - echo Build concluído em `date`
+artifacts:
+  files:
+    - 'app/build/libs/entretien-backend-app-0.0.1-SNAPSHOT.jar'
+
+  cache:
+    paths:
+      - path bucket s3

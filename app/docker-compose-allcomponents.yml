@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+
+  db:
+    container_name: postgres-container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      TZ: America/Sao_Paulo
+      PGTZ: America/Sao_Paulo
+    ports:
+      - 6543:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8181:8080
+    depends_on:
+      - db
+
+  entretien-backend-app:
+    image: netomantonio/entretien-backend-app
+    restart: always
+    build: ./
+    working_dir: /
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/$${POSTGRES_DB:db}?timezone=America/Sao_Paulo
+      SPRING.DATASOURCE.PASSWORD: $${POSTGRES_PASSWORD:password}
+      SPRING.DATASOURCE.USERNAME: $${POSTGRES_USER:user}
+    ports:
+      - 5000:5000
+    command: bash -c "./gradlew bootRun -Dorg.gradle.daemon=false"
+    depends_on:
+      - db
+
+  openvidu:
+    image: openvidu/openvidu-dev:2.27.0
+    restart: always
+    environment:
+      OPENVIDU_SECRET: $${NOME_VARIAVEL:entretien-rh}
+      TZ: America/Sao_Paulo
+    ports:
+      - 4443:4443
