@@ -33,15 +33,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-devtools")
 
+    //OBSERVABILITY
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     // LOGS
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     // OPENVIDU
     implementation("io.openvidu:openvidu-java-client:2.24.0")
 
-    // OPENAPI - REST DOCUMENTATION
-    implementation("org.springdoc:springdoc-openapi-data-rest:1.7.0")
-    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
 
 
 
