@@ -120,7 +120,7 @@ Use o endpoint do swagger-ui para interagir com a api de forma simplificada, ao 
 a todos os endpoints da aplicação além de todos os schemas usados, podendo ser facilmente substituídos e tem integração
 direta com a aplicação.
 
-* acessar usando a url [clicando aqui](http://localhost:5000/swagger-ui/index.html)
+* acessar usando a url [clicando aqui](http://localhost:5000/api/swagger-ui/index.html)
 
 ## Usando a ``API`` com o frontend
 Rode o projeto frontend [clicando aqui](https://github.com/netomantonio/entretien-fe/) para abrir o projeto no github e seguir as instruções.
