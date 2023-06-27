@@ -30,7 +30,7 @@ spring:
       enabled: true
       exclude: /health
   datasource:
-    url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:6543}/${DATABASE_NAME:db}?timezone=America/Sao_Paulo
+    url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:6543}/${DATABASE_NAME:db}?timezone=America/Sao_Paulo&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
     driverClassName: org.postgresql.Driver
     username: ${DATABASE_USER:user}
     password: ${DATABASE_PASSWORD:password}
