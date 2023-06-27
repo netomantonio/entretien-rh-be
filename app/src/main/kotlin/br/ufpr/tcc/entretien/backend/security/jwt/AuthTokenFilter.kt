@@ -28,9 +28,14 @@ class AuthTokenFilter : OncePerRequestFilter() {
 
     private fun parseJwt(request: HttpServletRequest): String? {
         val headerAuth = request.getHeader("Authorization")
-        return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            log.info(LOG_TAG, "Parse Successful", mapOf("headerAuth" to headerAuth.substring(7, 14) + "**********"))
-            headerAuth.substring(7)
+        return if (headerAuth === null){
+            null
+        } else if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ") && !headerAuth.contains("null")) {
+            log.info(LOG_TAG,"Parse Successful", mapOf("headerAuth" to headerAuth.substring(7, 14) + "**********"))
+            headerAuth.substring(7, headerAuth.length)
+        } else if (headerAuth.contains("null")) {
+            log.info(LOG_TAG,"Parse Successful", mapOf("headerAuth" to headerAuth.substring(7, headerAuth.length)))
+            headerAuth.substring(7, headerAuth.length)
         } else {
             null
         }

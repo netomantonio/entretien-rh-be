@@ -3,9 +3,10 @@ package br.ufpr.tcc.entretien.backend.controller
 import br.ufpr.tcc.entretien.backend.common.exception.interview.UserIsNotAuthorizedException
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
 import br.ufpr.tcc.entretien.backend.datasource.request.CommitInterviewRequest
-import br.ufpr.tcc.entretien.backend.datasource.request.CommitObservationInterviewRequest
+import br.ufpr.tcc.entretien.backend.datasource.request.UpdateParcialInterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.InterviewRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
+import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.service.InterviewService
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
@@ -119,7 +120,7 @@ class InterviewController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_RECRUITER') or hasRole('ROLE_CANDIDATE')")
     @GetMapping("/{id}")
     fun getInterview(
         @PathVariable id: Long,
@@ -130,7 +131,7 @@ class InterviewController {
         val optInterview: Optional<Interview> = interviewService.getInterview(id)
         return try {
             val interview = optInterview.get()
-            if (interviewService.isInterviewRelated(userId, interview))
+            if (interviewService.isInterviewRelated(userId, interview) || userDetails.isAdmin())
                 ResponseEntity<Any>(interview, HttpStatus.OK)
             else
                 ResponseEntity<Any>(HttpStatus.FORBIDDEN)
@@ -182,7 +183,9 @@ class InterviewController {
         val candidateId = userDetails.getId()
         val interviewId = commitInterviewRequest.interviewId
 
-        if (interviewService.getInterview(interviewId).get().candidate!!.id != candidateId) throw UserIsNotAuthorizedException()
+        if (interviewService.getInterview(interviewId)
+                .get().candidate!!.id != candidateId
+        ) throw UserIsNotAuthorizedException()
         val scheduleId = commitInterviewRequest.scheduleId
         return try {
             interviewService.commitInterview(scheduleId, interviewId, date)
@@ -229,7 +232,7 @@ class InterviewController {
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
         to: LocalDate,
         authentication: Authentication
-    ): ResponseEntity<*>{
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val candidateId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getCandidateInterviewsWithinPeriod(candidateId, from, to))
@@ -243,7 +246,7 @@ class InterviewController {
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
         to: LocalDate,
         authentication: Authentication
-    ): ResponseEntity<*>{
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val recruiterId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getRecruiterInterviewsWithinPeriod(recruiterId, from, to))
@@ -257,7 +260,7 @@ class InterviewController {
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
         to: LocalDate,
         authentication: Authentication
-    ): ResponseEntity<*>{
+    ): ResponseEntity<*> {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val managerId = userDetails.getId()
         return ResponseEntity.ok<Any>(interviewService.getManagerInterviewsWithinPeriod(managerId, from, to))
@@ -270,42 +273,61 @@ class InterviewController {
         from: LocalDate,
         @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd")
         to: LocalDate,
-    ): ResponseEntity<*>{
+    ): ResponseEntity<*> {
         return ResponseEntity.ok<Any>(interviewService.getInterviewsWithinPeriod(from, to))
     }
 
-    @PreAuthorize("hasRole('ROLE_RECRUITER')")
+    @PreAuthorize("hasRole('ROLE_RECRUITER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}")
-    fun commitObservationInterview(
+    fun updateParcialInterview(
         @Valid @PathVariable id: Long,
-        @Valid @RequestBody commitObservationInterviewRequest: CommitObservationInterviewRequest,
+        @Valid @RequestBody updateParcialInterviewRequest: UpdateParcialInterviewRequest,
         authentication: Authentication
     ): ResponseEntity<*> {
         try {
             val userDetails = authentication.principal as UserDetailsImpl
-            logger.info(LOG_TAG, "receive request for recruiter add observation in interview", mapOf(
-                "user-id" to userDetails.getId().toString()
-            ))
-            val interview = interviewService.getInterview(id).filter { it.recruiter!!.id == userDetails.getId() }
+            logger.info(
+                LOG_TAG, "receive request for recruiter add observation in interview", mapOf(
+                    "user-id" to userDetails.getId().toString()
+                )
+            )
+            val interview = interviewService.getInterview(id).filter {
+                it.recruiter!!.id == userDetails.getId() ||
+                        userDetails.isAdmin()
+            }
                 .orElseThrow()
 
-            interview.managerObservation = commitObservationInterviewRequest.managerObservation
-            interview.candidateObservation = commitObservationInterviewRequest.candidateObservation
-            interview.score = commitObservationInterviewRequest.score!!.toInt()
-            interview.interviewStatus = commitObservationInterviewRequest.interviewStatus!!
+            val interviewUpdated = updateinterview(interview, updateParcialInterviewRequest)
 
-            interviewService.updateInterview(interview)
+            interviewService.updateInterview(interviewUpdated)
             return ResponseEntity<Any>(HttpStatus.OK)
         } catch (ex: NoSuchElementException) {
             throw NoSuchElementException()
         } catch (ex: Exception) {
-            when(ex) {
+            when (ex) {
                 is IllegalArgumentException -> {
-                    throw IllegalArgumentException("error updating interview data",ex)
+                    throw IllegalArgumentException("error updating interview data", ex)
                 }
             }
             throw Exception()
         }
+    }
+
+    private fun updateinterview(
+        interview: Interview,
+        updateParcialInterviewRequest: UpdateParcialInterviewRequest
+    ): Interview {
+        interview.managerObservation =
+            updateParcialInterviewRequest.managerObservation ?: interview.managerObservation
+        interview.candidateObservation =
+            updateParcialInterviewRequest.candidateObservation ?: interview.candidateObservation
+        interview.score = updateParcialInterviewRequest.score?.toInt() ?: interview.score
+        interview.interviewStatus = updateParcialInterviewRequest.interviewStatus ?: interview.interviewStatus
+        if (InterviewStatusTypes.TO_BE_SCHEDULE == updateParcialInterviewRequest.interviewStatus) {
+            interview.startingAt = null
+        }
+
+        return interview
     }
 
     @GetMapping("/candidate")
