@@ -19,7 +19,7 @@ phases:
       - echo Build concluído em `date`
 artifacts:
   files:
-    - 'app/build/libs/*.jar'
+    - 'app/build/libs/entretien-backend-app-0.0.1-SNAPSHOT.jar'
 
   cache:
     paths:

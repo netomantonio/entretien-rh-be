@@ -10,6 +10,8 @@ server:
     enabled: false
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
+  application:
+    name: "EntretienBackend"
   task:
     scheduling:
       enabled: true
@@ -32,6 +34,11 @@ spring:
     driverClassName: org.postgresql.Driver
     username: ${POSTGRES_USER:user}
     password: ${POSTGRES_PASSWORD:password}
+    aws:
+      enabled: ${AWS_ENABLED:false}
+    rds:
+      region: ${AWS_REGION:local}
+      iam-role-arn: ${AWS_IAM_ROLE_ARN_RDS:local}
   sql:
     init:
       mode: always
@@ -47,6 +54,12 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  devtools:
+    restart:
+      enabled: true
+springdoc:
+  swagger-ui:
+    path: "/api/swagger-iu.html"
 OPENVIDU:
   url: ${OPENVID_URL:http://localhost:4443}
   secret: ${OPENVIDU_SECRET:entretien-rh}

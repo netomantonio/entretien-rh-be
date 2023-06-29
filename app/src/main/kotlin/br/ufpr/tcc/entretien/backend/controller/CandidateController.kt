@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.controller
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.common.utils.toDate
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateResumeRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.UpdateCandidateDataRequest
@@ -145,14 +146,14 @@ class CandidateController {
         try {
             val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
             val candidateId = userDetails.getId()
-            var candidate = candidateService.getCandidateById(candidateId)
+            val candidate = candidateService.getCandidateById(candidateId)
             candidate.firstName = updateCandidateDataRequest.firstName
             candidate.lastName = updateCandidateDataRequest.lastName
             candidate.phone = updateCandidateDataRequest.phone
             candidate.email = updateCandidateDataRequest.email
             candidate.cep = updateCandidateDataRequest.cep
             candidate.socialNetworking = updateCandidateDataRequest.socialNetworking
-            candidate.birthDay = updateCandidateDataRequest.birthDay
+            candidate.birthDay = updateCandidateDataRequest.birthDay.toDate()
             candidate.pcd = updateCandidateDataRequest.pcd
             candidate.cep = updateCandidateDataRequest.cep
             candidate.updatedAt = Date.from(Instant.now())

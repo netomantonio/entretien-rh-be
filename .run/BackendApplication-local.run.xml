@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BackendApplication-local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="backend.main" />
+    <option name="ACTIVE_PROFILES" />
+    <module name="entretien-backend-app.main" />
     <selectedOptions>
       <option name="environmentVariables" />
     </selectedOptions>
@@ -20,6 +21,11 @@
       <ENTRIES>
         <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
       </ENTRIES>
+    </extension>
+    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
     </extension>
     <method v="2">
       <option name="Make" enabled="true" />
