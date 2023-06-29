@@ -50,3 +50,5 @@ out/
 .vscode/
 /.env
 /.gradle/
+/app/src/main/resources/.env.aws
+/app/src/main/resources/docker-command-aws

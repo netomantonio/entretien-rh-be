@@ -38,7 +38,6 @@ spring:
       enabled: ${AWS_ENABLED:false}
     rds:
       region: ${AWS_REGION:local}
-      iam-role-arn: ${AWS_IAM_ROLE_ARN_RDS:local}
   sql:
     init:
       mode: always
