@@ -1,5 +1,6 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardAdminResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
@@ -15,7 +16,6 @@ import br.ufpr.tcc.entretien.backend.service.interfaces.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.function.Consumer
@@ -161,9 +161,9 @@ class UserService : IUserService<Admin, SignupRequest> {
         admin.firstName = signupRequest.firstName
         admin.lastName = signupRequest.lastName
 //      admindidade.birthDay = signupRequest.birthDay
-        admin.cpf = signupRequest.cpf
+        admin.cpf = signupRequest.cpf.sanitizeNumbers()
         admin.email = signupRequest.email
-        admin.phone = signupRequest.phone
+        admin.phone = signupRequest.phone.sanitizeNumbers()
 
         return admin
     }
@@ -172,5 +172,13 @@ class UserService : IUserService<Admin, SignupRequest> {
 
     fun getAll(): Iterable<User> {
         return userRepository.findAll()
+    }
+
+    fun getAdminById(adminId: Long): Admin {
+        return userRepository.findById(adminId).orElseThrow()
+    }
+
+    fun update(adminUpdated: Admin) {
+        userRepository.save(adminUpdated)
     }
 }

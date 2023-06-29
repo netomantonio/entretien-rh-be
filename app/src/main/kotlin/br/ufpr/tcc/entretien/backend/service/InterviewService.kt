@@ -1,6 +1,7 @@
 package br.ufpr.tcc.entretien.backend.service
 
 import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
@@ -47,11 +48,11 @@ class InterviewService {
 
 
     fun createInterview(candidateCpf: String, recruiterObservation: String, managerId: Long): Interview {
-
+        val cpfSanitized = candidateCpf.sanitizeNumbers()
         val manager: Manager = this.getManagerById(managerId)
 
         val candidate: Candidate? = try {
-            this.candidateRepository.findByCpf(candidateCpf).get()
+            this.candidateRepository.findByCpf(cpfSanitized).get()
         } catch (e: NoSuchElementException) {
             null
         }
@@ -61,7 +62,7 @@ class InterviewService {
         if (candidate != null) {
             interview.candidate = candidate
         } else {
-            interview.cpf = candidateCpf
+            interview.cpf = cpfSanitized
             interview.interviewStatus = InterviewStatusTypes.WAITING_CANDIDATE_REGISTRATION
         }
         interview.manager = manager

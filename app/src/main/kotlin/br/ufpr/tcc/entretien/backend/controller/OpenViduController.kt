@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.annotation.PostConstruct
 import javax.validation.Valid
+import kotlin.NoSuchElementException
 
 @CrossOrigin(origins = ["*"])
 @RestController
@@ -162,6 +164,7 @@ class OpenviduController {
         newInterview.interviewStatus = InterviewStatusTypes.TO_BE_SCHEDULE
         newInterview.candidate = interview.candidate
         newInterview.recruiterObservation = interview.recruiterObservation
+        newInterview.sessionId = UUID.randomUUID().toString()
 
         return interviewService.registerInterview(newInterview)
     }

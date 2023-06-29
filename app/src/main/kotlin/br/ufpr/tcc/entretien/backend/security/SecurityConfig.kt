@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.RegexRequestMatcher
 
 
 @Configuration
@@ -70,7 +71,7 @@ class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http
             .authorizeHttpRequests()
-//            .requestMatchers(RegexRequestMatcher("/api/auth", "POST")).permitAll()
+            .requestMatchers(RegexRequestMatcher("/actuator", "GET")).permitAll()
             .anyRequest().permitAll()
 //            .anyRequest().authenticated()
         http

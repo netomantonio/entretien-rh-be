@@ -75,8 +75,7 @@ data class UserDetailsImpl(
     }
 
     fun isAdmin(): Boolean {
-        println(authorities.toString())
-        return false
+        return authorities.toString() == "[ROLE_ADMIN]"
     }
 
     override fun hashCode(): Int {

@@ -1,10 +1,15 @@
 package br.ufpr.tcc.entretien.backend.controller
 
+import br.ufpr.tcc.entretien.backend.common.logger.LOGGER
+import br.ufpr.tcc.entretien.backend.common.utils.toDate
+import br.ufpr.tcc.entretien.backend.datasource.request.AdminUpdateRequest
 import br.ufpr.tcc.entretien.backend.datasource.request.SignupRequest
+import br.ufpr.tcc.entretien.backend.model.users.Admin
 import br.ufpr.tcc.entretien.backend.service.UserDetailsImpl
 import br.ufpr.tcc.entretien.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -17,6 +22,10 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/user")
 class UserController {
+    companion object {
+        private const val LOG_TAG = "entretien-backend-user-controller"
+        private val logger = LOGGER.getLogger(UserController::class.java)
+    }
 
     @Autowired
     lateinit var userService: UserService
@@ -74,11 +83,59 @@ class UserController {
         val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
         val id = userDetails.getId()
 
-        return ResponseEntity.ok<Any>(userService.getDashboard(id, from,  to))
+        return ResponseEntity.ok<Any>(userService.getDashboard(id, from, to))
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    fun getMe(
+        authentication: Authentication
+    ): ResponseEntity<Admin> {
+        logger.info(LOG_TAG, "getMe")
+        try {
+            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+            val adminId = userDetails.getId()
+            logger.info(LOG_TAG, "received request from user", mapOf("user-id" to adminId.toString()))
+            val me = userService.getAdminById(adminId)
+            return ResponseEntity.ok(me)
+        } catch (ex: Exception) {
+            logger.error(LOG_TAG, ex.message, ex.stackTrace)
+            throw IllegalArgumentException()
+        }
+    }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping
+    fun updated(
+        @Valid @RequestBody adminUpdateRequest: AdminUpdateRequest,
+        authentication: Authentication
+    ): ResponseEntity<String?>? {
+        val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+        val adminId = userDetails.getId()
+        logger.info(LOG_TAG, "receive request update admin user", mapOf("user-id" to adminId.toString()))
+        try {
+            val adminModel = userService.getAdminById(adminId)
+            val adminUpdated = adminUpdateRequest.toModelAdmin(adminModel)
+            userService.update(adminUpdated)
+            return ResponseEntity(HttpStatus.OK)
+        } catch (ex: Exception) {
+            throw Exception()
+        }
+    }
+
+}
+
+private fun AdminUpdateRequest.toModelAdmin(adminModel: Admin): Admin {
+    adminModel.firstName = this.firstName
+    adminModel.firstName = this.firstName
+    adminModel.lastName = this.lastName
+    adminModel.phone = this.phone
+    adminModel.birthDay = this.birthDay.toDate()
+    return adminModel
+}
+
+
+//    @PreAuthorize("hasRole('ADMIN')")
 //    @GetMapping
 //    fun findAll() =
 //        userService.findAll()
@@ -121,4 +178,3 @@ class UserController {
 //        userService.assignRole(userId, role)
 //    }
 
-}
