@@ -1,0 +1,2566 @@
+{
+	"info": {
+		"_postman_id": "09eaf50a-7261-442c-a1ca-cd38cfc3ffae",
+		"name": "Entretien-RH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7911762",
+		"_collection_link": "https://ufpr-tcc-entretien.postman.co/workspace/Entretien-RH~bc983f4c-053d-44a6-afc3-5611d860eae2/collection/25663959-09eaf50a-7261-442c-a1ca-cd38cfc3ffae?action=share&creator=7911762&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Interview",
+			"item": [
+				{
+					"name": "Create new Interview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"candidateCpf\": \"41353085031\",\n\t\"recruiterObservation\": \"observation for recruiter\"\t\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/interview",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Interview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_url}}/interview/:id",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Adjust Interview",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"candidateCpf\": \"74790710002\",\r\n\t\"managerObservation\": \"ALT managerObservation\"\t\r\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/interview/adjust/2",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"adjust",
+								"2"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Commit to Interview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scheduleId\": 16,\n\t\"interviewId\": 3,\n    \"date\": \"15-05-2023\"    \n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/interview/commit",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"commit"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Interview",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview/:id",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Candidate next Interview",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview/candidate/next",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"candidate",
+								"next"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Candidate Interview LastUpdated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/candidate/resume/last-update",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate",
+								"resume",
+								"last-update"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Interview",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview/:id",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Interviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Interviews by Candidate within period",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview/candidate/period?from=2023-06-01&to=2023-07-01",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"candidate",
+								"period"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2023-06-01"
+								},
+								{
+									"key": "to",
+									"value": "2023-07-01"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Interviews by Recruiter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_recruiter}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/recruiters/interviews",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"interviews"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Interviews by Manager",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_manager}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/interview/manager",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"manager"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get interview connection properties by candidate e interview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/candidate/interviews/20/connection-properties",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate",
+								"interviews",
+								"20",
+								"connection-properties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Commit Interview Observation by Recruiter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_recruiter}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateObservation\": \"lalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalala\",\n    \"managerObservation\": \"lalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalalala\",\n    \"score\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/interview/7",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"interview",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schedule",
+			"item": [
+				{
+					"name": "Save Recruiter Schedule",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_recruiter}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"agenda\": {\n        \"dayOfTheWeek\": \"MONDAY\",\n        \"timesOfTheDay\": [\n            {\n                \"startingAt\": \"00:00:00\",\n                \"endingAt\": \"23:00:00\"\n            }\n        ]\n    }\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/recruiters/schedules",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"schedules"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Schedule",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/recruiters/schedules/:id",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"schedules",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove All Schedules by Recruiter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/recruiters/schedules",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"schedules"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Schedule by Recruiter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/recruiters/schedules/:recruiterId",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"schedules",
+								":recruiterId"
+							],
+							"variable": [
+								{
+									"key": "recruiterId",
+									"value": "3"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Schedules",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/schedules",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"schedules"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Available Schedules by Period",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/schedules/period?from=2023-06-05&to=2023-06-06",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"schedules",
+								"period"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2023-06-05"
+								},
+								{
+									"key": "to",
+									"value": "2023-06-06"
+								}
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Recruiter´s Schedules",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/recruiters/schedules/",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters",
+								"schedules",
+								""
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Resume",
+			"item": [
+				{
+					"name": "Save my Resume",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"desiredJobTitle\": \"Designer\",\r\n    \"presentation\": \"\",\r\n    \"educationLevel\": \"GRADUACAO\",\r\n    \"academicEducation\": [\r\n        {\r\n            \"institution\": \"UFPR\",\r\n            \"courseName\": \"Design\",\r\n            \"ongoing\": false,\r\n            \"startedAt\": \"2018-05-15\",\r\n            \"endedAt\": \"2022-01-28\"\r\n        }\r\n    ],\r\n    \"professionalExperience\": [\r\n        {\r\n            \"position\": \"Designer JR.\",\r\n            \"company\": \"ACME Agency\",\r\n            \"jobDescription\": \"\",\r\n            \"currentPosition\": true,\r\n            \"startedAt\": \"2021-12-09\",\r\n            \"endedAt\": null\r\n        }\r\n    ],\r\n    \"languages\": [\r\n        {\r\n            \"language\": \"Inglês\",\r\n            \"languageProficiencyLevel\": \"ELEMENTARY\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/candidate/resume",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate",
+								"resume"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get my Resume",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/candidate/resume",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate",
+								"resume"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken_candidate}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Register new Admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"admin1\",\n\t\"firstName\": \"David\",\n\t\"lastName\": \"Chase\",\n\t\"cpf\": \"79446004489\",\n\t\"phone\": \"71992021676\",\n\t\"email\": \"admin1@email.com\",\n\t\"password\": \"password\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/user",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"user"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Admin's Dashboard",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken_admin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/user/admin/dashboard?from=2023-06-01&to=2023-07-01",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"user",
+										"admin",
+										"dashboard"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "2023-06-01"
+										},
+										{
+											"key": "to",
+											"value": "2023-07-01"
+										}
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Candidate",
+					"item": [
+						{
+							"name": "Resume",
+							"item": [
+								{
+									"name": "[OLD] Save Candidate's Resume",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"candidateId\": 3,\n\t\"educationLevel\": \"Doutorado\",\n\t\"presentation\": \"presentation\",\n\t\"desiredJobTitle\": \"desired job title\",\n\t\"professionalHistory\": [\"professional history A\", \"professional history A\"],\n\t\"languages\": [\"english\", \"japanese\"]\n}"
+										},
+										"url": {
+											"raw": "{{api_url}}/candidate/resume",
+											"host": [
+												"{{api_url}}"
+											],
+											"path": [
+												"candidate",
+												"resume"
+											]
+										},
+										"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Register Candidate A",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"candidate1\",\n    \"firstName\": \"Matthew\",\n    \"lastName\": \"Bevilaqua\",\n    \"cpf\": \"41353085031\",\n    \"phone\": \"98981814597\",\n    \"email\": \"candidate1@email.com\",\n    \"password\": \"password\",\n    \"socialNetworking\": \"https://www.linkedin.com/in/amneto\",\n    \"pcd\": false,\n    \"cep\": \"77829062\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/candidate",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"candidate"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Register Candidate B",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"candidate2\",\n\t\"firstName\": \"Sean\",\n\t\"lastName\": \"Gismonte\",\n\t\"cpf\": \"02712505182\",\n\t\"phone\": \"65993561622\",\n\t\"email\": \"candidate2@email.com\",\n\t\"password\": \"password\",\t\n\t\"socialNetworking\": \"https://www.linkedin.com/in/sean-gismonte\",\n\t\"pcd\": false,\n\t\"cep\": \"69921839\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/candidate",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"candidate"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Candidates",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken_admin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"candidate2\",\n\t\"firstName\": \"firstName\",\n\t\"lastName\": \"lastName\",\n\t\"cpf\": \"74790710009\",\n\t\"phone\": \"phone\",\n\t\"email\": \"candidate2@email.com\",\n\t\"password\": \"password\",\t\n\t\"socialNetworking\": \"socialNetworkig\",\n\t\"pcd\": true,\n\t\"cep\": \"59114202\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/candidate",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"candidate"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Interviews By Candidate ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken_candidate}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/candidate/interviews",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"candidate",
+										"interviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Candidate's Dashboard",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken_candidate}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/candidate/dashboard?from=2023-06-01&to=2023-07-01",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"candidate",
+										"dashboard"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "2023-06-01"
+										},
+										{
+											"key": "to",
+											"value": "2023-07-01"
+										}
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Manager",
+					"item": [
+						{
+							"name": "Register Manager",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY3NTY5NTkzNywiZXhwIjoxNjc1NzgyMzM3fQ.e5toI5dK_jImXtY-Xuf01WEKkJYy0r4cnmrhCPpskDVBZEZg-KwU8xRaI7DPAB-nglERwowW7UNiIpzA7IgtQg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"manager1\",\n\t\"firstName\": \"firstName\",\n\t\"lastName\": \"lastName\",\n\t\"cpf\": \"74790710019\",\n\t\"phone\": \"96 998433089\",\n\t\"email\": \"manager2@email.com\",\n\t\"password\": \"password\",\n\t\"cnpj\": \"23896996000160\",\n\t\"companyName\": \"Catarina e Fernando Limpeza Ltda\",\n\t\"tradingName\": \"Catarina e Fernando Limpeza Ltda\",\n\t\"operationArea\": \"operationArea\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/manager",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"manager"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Manager's Dashboard",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken_manager}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/manager/dashboard?from=2023-06-01&to=2023-07-01",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"manager",
+										"dashboard"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "2023-06-01"
+										},
+										{
+											"key": "to",
+											"value": "2023-07-01"
+										}
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Recruiter",
+					"item": [
+						{
+							"name": "Register new Recruiter",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"recruiter1\",\n\t\"firstName\": \"Lorraine\",\n\t\"lastName\": \"Bracco\",\n\t\"cpf\": \"82934787214\",\n\t\"phone\": \"15992751867\",\n\t\"email\": \"recruiter1@email.com\",\n\t\"password\": \"password\",\n\t\"professionalRecord\": \"58214141367\",\n\t\"presentation\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus vulputate lacus. Aenean at mollis magna, nec vestibulum nunc.\",\n\t\"cnpj\": \"23896996000160\",\n\t\"specialities\": \"Avaliação Vocacional\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/recruiters",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"recruiters"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Register new Recruiter 2",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"recruiter2\",\n\t\"firstName\": \"Lorraine\",\n\t\"lastName\": \"Bracco\",\n\t\"cpf\": \"12345678901\",\n\t\"phone\": \"15992751867\",\n\t\"email\": \"recruiter2@email.com\",\n\t\"password\": \"password\",\n\t\"professionalRecord\": \"58214141367\",\n\t\"presentation\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus vulputate lacus. Aenean at mollis magna, nec vestibulum nunc.\",\n\t\"cnpj\": \"23896996000160\",\n\t\"specialities\": \"Avaliação Vocacional\"\n}"
+								},
+								"url": {
+									"raw": "{{api_url}}/recruiters",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"recruiters"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Recruiters",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/recruiters",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"recruiters"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Recruiters Dashboard",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/recruiters/dashboard?from=2023-06-01&to=2023-07-01",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"recruiters",
+										"dashboard"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "2023-06-01"
+										},
+										{
+											"key": "to",
+											"value": "2023-07-01"
+										}
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Recruiter by Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/recruiters/1",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"recruiters",
+										"1"
+									]
+								},
+								"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{authToken_recruiter}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken_candidate}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/candidate/me",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate",
+								"me"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Call",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mediaMode\": \"ROUTED\",\n    \"recordingMode\": \"MANUAL\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4443/openvidu/api/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"path": [
+								"openvidu",
+								"api",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "enthetien-rh"
+								},
+								{
+									"key": "client_secret",
+									"value": "HbXlpTfnpNsc4LMr13arBvCqYijjtiJh"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8282/realms/enthetien-rh/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8282",
+							"path": [
+								"realms",
+								"enthetien-rh",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/public",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"public"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fruit salad",
+			"item": [
+				{
+					"name": "Find fruit by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/fruit/name/:fruit?fruit=Orange",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit",
+								"name",
+								":fruit"
+							],
+							"query": [
+								{
+									"key": "fruit",
+									"value": "Orange"
+								}
+							],
+							"variable": [
+								{
+									"key": "fruit"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find fruit by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/fruit/:id?id=16",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit",
+								":id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "16"
+								}
+							],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find all fruits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/fruits",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Public info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/public",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save fruit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Banana\"\n}"
+						},
+						"url": {
+							"raw": "{{ _.api_url }}/fruit",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save fruits",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"name\": \"Pineapple\"\n\t},\n\t{\n\t\t\"name\": \"Lemon\"\n\t}\n]"
+						},
+						"url": {
+							"raw": "{{ _.api_url }}/fruits",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update fruit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Lime\",\n\t\"id\": 16\n}"
+						},
+						"url": {
+							"raw": "{{ _.api_url }}/fruit",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete fruit by name",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/fruit/name/:name?name=Orange",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit",
+								"name",
+								":name"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Orange"
+								}
+							],
+							"variable": [
+								{
+									"key": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete fruit by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ _.api_url }}/fruit/:id?id=22",
+							"host": [
+								"{{ _.api_url }}"
+							],
+							"path": [
+								"fruit",
+								":id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "22"
+								}
+							],
+							"variable": [
+								{
+									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"manager2\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken_admin\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"admin1\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin Candidate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken_candidate\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"candidate1\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin Recruiter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken_recruiter\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"recruiter1\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin Recruiter 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken_recruiter\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"recruiter2\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Signin Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"authToken_manager\", res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"manager1\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/auth/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Init",
+			"item": [
+				{
+					"name": "Register Admin A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"admin1\",\n\t\"firstName\": \"James\",\n\t\"lastName\": \"Bond\",\n\t\"cpf\": \"60658722026\",\n\t\"phone\": \"phone\",\n\t\"email\": \"james.bond@email.com\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Admin B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"admin2\",\n\t\"firstName\": \"Indiana\",\n\t\"lastName\": \"Jones\",\n\t\"cpf\": \"91321994060\",\n\t\"phone\": \"phone\",\n\t\"email\": \"indiana.jones@email.com\",\n\t\"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Candidate A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"candidate1\",\n\t\"firstName\": \"Han\",\n\t\"lastName\": \"Solo\",\n\t\"cpf\": \"74790710009\",\n\t\"phone\": \"phone\",\n\t\"email\": \"han.solo@email.com\",\n\t\"password\": \"password\",\t\n\t\"socialNetworking\": \"socialNetworkig\",\n\t\"pcd\": true,\n\t\"cep\": \"59114202\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/candidate",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Candidate B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"candidate2\",\n\t\"firstName\": \"Ellen\",\n\t\"lastName\": \"Ripley\",\n\t\"cpf\": \"24079835051\",\n\t\"phone\": \"phone\",\n\t\"email\": \"ellen.ripley@email.com\",\n\t\"password\": \"password\",\t\n\t\"socialNetworking\": \"socialNetworkig\",\n\t\"pcd\": true,\n\t\"cep\": \"59114202\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/candidate",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"candidate"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Manager A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"manager1\",\n\t\"firstName\": \"Tony\",\n\t\"lastName\": \"Soprano\",\n\t\"cpf\": \"32637477709\",\n\t\"phone\": \"96998433089\",\n\t\"email\": \"tony.soprano@email.com\",\n\t\"password\": \"password\",\n\t\"cnpj\": \"14595982000116\",\n\t\"companyName\": \"Barone Sanitation\",\n\t\"tradingName\": \"Barone Sanitation Ltda\",\n\t\"operationArea\": \"Gerenciamento de Resíduos\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/manager",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"manager"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Manager B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"manager2\",\n\t\"firstName\": \"Tyler\",\n\t\"lastName\": \"Durden\",\n\t\"cpf\": \"96087929088\",\n\t\"phone\": \"96998433089\",\n\t\"email\": \"tyler.durder@email.com\",\n\t\"password\": \"password\",\n\t\"cnpj\": \"36566250000130\",\n\t\"companyName\": \"ACME\",\n\t\"tradingName\": \"A.C.M.E. Ltda\",\n\t\"operationArea\": \"Marketplace\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/manager",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"manager"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Recruiter A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"recruiter1\",\n\t\"firstName\": \"Doc\",\n\t\"lastName\": \"Brown\",\n\t\"cpf\": \"36660615083\",\n\t\"phone\": \"phone\",\n\t\"email\": \"doc.brown@email.com\",\n\t\"password\": \"password\",\n\t\"professionalRecord\": \"professionalRecord\",\n\t\"presentation\": \"presentation\",\n\t\"cnpj\": \"23896996000160\",\n\t\"specialities\": \"specialities\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/recruiters",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Recruiter B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"recruiter2\",\n\t\"firstName\": \"Michael\",\n\t\"lastName\": \"Corleone\",\n\t\"cpf\": \"43730600028\",\n\t\"phone\": \"phone\",\n\t\"email\": \"michael.corleone@email.com\",\n\t\"password\": \"password\",\n\t\"professionalRecord\": \"professionalRecord\",\n\t\"presentation\": \"presentation\",\n\t\"cnpj\": \"23896996000160\",\n\t\"specialities\": \"specialities\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/recruiters",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"recruiters"
+							]
+						},
+						"description": "This will only work if the public client is set to use \"Direct access grants\" Authentication flow"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OpenVidu",
+			"item": [
+				{
+					"name": "rooms",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic T1BFTlZJRFVBUFA6ZW50cmV0aWVuLXJo"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4443/openvidu/api/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"path": [
+								"openvidu",
+								"api",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic T1BFTlZJRFVBUFA6ZW50cmV0aWVuLXJo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"session\": \"ses_WH1aBALW55\",\n  \"role\": \"PUBLISHER\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4443/openvidu/api/tokens",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"path": [
+								"openvidu",
+								"api",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create room",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic T1BFTlZJRFVBUFA6ZW50cmV0aWVuLXJo"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"role\": \"PUBLISHER\",\"data\": \"user_moderator\"}"
+						},
+						"url": {
+							"raw": "http://localhost:4443/openvidu/api/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"path": [
+								"openvidu",
+								"api",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Room",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic T1BFTlZJRFVBUFA6ZW50cmV0aWVuLXJo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4443/openvidu/api/sessions/ses_SoviNZW2lr",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"path": [
+								"openvidu",
+								"api",
+								"sessions",
+								"ses_SoviNZW2lr"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "routes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic T1BFTlZJRFVBUFA6ZW50cmV0aWVuLXJo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "ws://localhost:4443?sessionId=ses_SoviNZW2lr&token=tok_A5kPpfzpFBw0Q8WC",
+							"protocol": "ws",
+							"host": [
+								"localhost"
+							],
+							"port": "4443",
+							"query": [
+								{
+									"key": "sessionId",
+									"value": "ses_SoviNZW2lr"
+								},
+								{
+									"key": "token",
+									"value": "tok_A5kPpfzpFBw0Q8WC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_url",
+			"value": "localhost:5000"
+		}
+	]
+}

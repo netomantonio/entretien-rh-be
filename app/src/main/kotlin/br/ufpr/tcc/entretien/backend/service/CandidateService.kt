@@ -1,14 +1,12 @@
 package br.ufpr.tcc.entretien.backend.service
 
+import br.ufpr.tcc.entretien.backend.common.utils.sanitizeNumbers
 import br.ufpr.tcc.entretien.backend.datasource.request.CandidateSignupRequest
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardResponse
-import br.ufpr.tcc.entretien.backend.datasource.response.InterviewByCandidateResponse
-import br.ufpr.tcc.entretien.backend.datasource.response.InterviewsByCandidateResponse
 import br.ufpr.tcc.entretien.backend.datasource.response.DashboardRecruiterResponse
 import br.ufpr.tcc.entretien.backend.model.enums.ERole
 import br.ufpr.tcc.entretien.backend.model.enums.InterviewStatusTypes
 import br.ufpr.tcc.entretien.backend.model.infra.Role
-import br.ufpr.tcc.entretien.backend.model.interview.Interview
 import br.ufpr.tcc.entretien.backend.model.users.Candidate
 import br.ufpr.tcc.entretien.backend.repository.InterviewRepository
 import br.ufpr.tcc.entretien.backend.repository.RoleRepository
@@ -18,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Service
 class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
@@ -102,9 +98,9 @@ class CandidateService : IUserService<Candidate, CandidateSignupRequest> {
         candidade.firstName = signupRequest.firstName
         candidade.lastName = signupRequest.lastName
 //      TODO: candidade.birthDay = candidateSignupRequest.birthDay
-        candidade.cpf = signupRequest.cpf
+        candidade.cpf = signupRequest.cpf.sanitizeNumbers()
         candidade.email = signupRequest.email
-        candidade.phone = signupRequest.phone
+        candidade.phone = signupRequest.phone.sanitizeNumbers()
 
         return candidade
     }
