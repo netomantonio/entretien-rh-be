@@ -7,7 +7,7 @@ entretien:
     jwtExpirationMs: ${JWT_EXPIRATION_MS:86400000}
 server:
   ssl:
-    enabled: false
+    enabled: true
   port: ${APPLICATION_SERVER_PORT:5000}
 spring:
   application:
