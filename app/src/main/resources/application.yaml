@@ -30,15 +30,16 @@ spring:
       enabled: true
       exclude: /health
   datasource:
-    url: jdbc:postgresql://${POSTGRES_URL:localhost}:${POSTGRES_PORT:6543}/${POSTGRES_DB:db}?timezone=America/Sao_Paulo
+    hikari:
+      max-lifetime: 1800000
+    url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:6543}/${DATABASE_NAME:db}?timezone=America/Sao_Paulo&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
     driverClassName: org.postgresql.Driver
-    username: ${POSTGRES_USER:user}
-    password: ${POSTGRES_PASSWORD:password}
+    username: ${DATABASE_USER:user}
+    password: ${DATABASE_PASSWORD:password}
     aws:
       enabled: ${AWS_ENABLED:false}
     rds:
       region: ${AWS_REGION:local}
-      iam-role-arn: ${AWS_IAM_ROLE_ARN_RDS:local}
   sql:
     init:
       mode: always
