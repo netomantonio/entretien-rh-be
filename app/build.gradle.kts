@@ -45,7 +45,7 @@ dependencies {
     // LOGS
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     // OPENVIDU
-    implementation("io.openvidu:openvidu-java-client:2.24.0")
+    implementation("io.openvidu:openvidu-java-client:2.27.0")
 
 
 
