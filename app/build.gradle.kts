@@ -39,11 +39,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
 
+    // Adicione a dependência abaixo para suporte a SSL
+    implementation("org.apache.tomcat.embed:tomcat-embed-core")
 
     // LOGS
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     // OPENVIDU
-    implementation("io.openvidu:openvidu-java-client:2.24.0")
+    implementation("io.openvidu:openvidu-java-client:2.27.0")
 
 
 

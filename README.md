@@ -9,7 +9,7 @@
   </a>
 </p>
 
-> Api backend entretien application
+> Projeto backend para plataforma de gerenciamento de entrevistas por competências no processo de Recrutamento e Seleção de novos talentos, cujo publico alvo é ofertar a oportunidade de melhorar pontualmente, numa das etapas mais importantes e crítica do processo de R&S que é a entrevista por competência com recrutadores profissionais.
 
 ### 🏠 [Homepage](https://www.entretienrh.com) <sub><sup><sub>not working</sub></sup></sub>
 
@@ -125,15 +125,13 @@ direta com a aplicação.
 ## Usando a ``API`` com o frontend
 Rode o projeto frontend [clicando aqui](https://github.com/netomantonio/entretien-fe/) para abrir o projeto no github e seguir as instruções.
 
-## Authors
+## Author
 
 👤 **Entretien**
 
-  👤 _**Antonio Miranda Neto**_
-  👤 _**Leonardo Wrobel**_
-
-* Github: [@netomantonio](https://github.com/netomantonio)
-* Github: [@leonardowrobel](https://github.com/leonardowrobel)
+* Website: www.entretien.com.br
+* Github: [@netomantonio](https://github.com/netomantonio) \ [@leonardowrobel](https://github.com/leonardowrobel)
+* LinkedIn: [@amneto](https://linkedin.com/in/amneto) \ [@leonardowrobel](https://linkedin.com/in/leonardo-wrobel-b26b07189)
 
 ## Show your support
 
