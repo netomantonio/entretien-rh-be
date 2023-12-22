@@ -11,11 +11,13 @@
 
 > Projeto backend para plataforma de gerenciamento de entrevistas por competências no processo de Recrutamento e Seleção de novos talentos, cujo publico alvo é ofertar a oportunidade de melhorar pontualmente, numa das etapas mais importantes e crítica do processo de R&S que é a entrevista por competência com recrutadores profissionais.
 
-### 🏠 [Homepage](https://www.entretienrh.com) <sub><sup><sub>not working</sub></sup></sub>
-
-### ✨ [Demo](https://www.demo.entretienrh.com) <sub><sup><sub>not working</sub></sup></sub>
 
 ## Pré-requisitos
+
+> VIDEO CALL APP - [Entretien-VC](https://github.com/netomantonio/entretien-video-call-fe)
+
+> FRONTEND - [Entretien-FE](https://github.com/netomantonio/entretien-fe)
+
 ### Instalação
 
 Para instalar manualmente as dependências necessárias antes de executar o projeto, você precisará garantir que todas as seguintes dependências estejam instaladas em seu sistema:
